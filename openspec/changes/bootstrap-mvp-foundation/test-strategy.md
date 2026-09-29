@@ -1,6 +1,6 @@
 # Estrategia de pruebas — M0
 
-Plan, no suite implementada. Probar contratos y fallas reales, sin tests de “clase existe” ni reglas financieras no especificadas. No requiere modelos.
+Probar contratos y fallas reales, sin tests de “clase existe” ni reglas financieras no especificadas. No requiere modelos.
 
 | ID | Nivel / caso | Método y oráculo |
 |---|---|---|
@@ -22,8 +22,8 @@ Plan, no suite implementada. Probar contratos y fallas reales, sin tests de “c
 
 Tests de contrato permiten inyección controlada de fallas para deadlines determinísticos y se complementan con integración real. No sustituir smoke Docker fallido por simulación. Aislar volúmenes/streams con prefijo único y limpiar sólo recursos de esa ejecución. CI usa datos sintéticos efímeros.
 
-Guardar commit, comandos, versiones, SO/arquitectura, resultado/test, logs sanitizados y duración. Infraestructura real puede reportarse MEASURED con ese alcance; no extrapolar a accuracy ni IA. Check omitido = SKIPPED con razón, no satisface aceptación. Los comandos de lint/type/test/smoke se fijarán junto a versiones al implementar. Comando documental actual: `openspec validate bootstrap-mvp-foundation --strict --no-interactive`.
+Guardar commit, comandos, versiones, SO/arquitectura, resultado/test, logs sanitizados y duración. Infraestructura real puede reportarse MEASURED con ese alcance; no extrapolar a accuracy ni IA. Check omitido = SKIPPED con razón, no satisface aceptación. Comandos: `uv run python scripts/gate.py static` (lock, Ruff, mypy, pytest unit, política, trazabilidad, `openspec validate --all --strict`, gate negativo) y `uv run python scripts/gate.py smoke` (Compose real). CI ejecuta los mismos pasos. Evidencia: [evidence/](evidence/README.md).
 
 ## Stop condition
 
-En esta entrega sólo validar estructura documental, enlaces y consistencia. No crear tests ejecutables, endpoints, contenedores, modelos ni CI. T01–T13 se ejecutan en la implementación posterior de M0.
+La implementación de M0 crea sólo los tests, endpoints de salud, contenedores y CI necesarios para T01–T13. No crear modelos, endpoints financieros/agénticos ni tests de M1. Un T sin ejecutar o fallido deja su criterio en PENDING/FAIL.

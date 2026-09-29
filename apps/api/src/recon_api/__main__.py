@@ -1,0 +1,41 @@
+from __future__ import annotations
+
+import json
+import sys
+
+import uvicorn
+
+from recon_api.app import create_app
+from recon_api.config import ConfigurationError, load_settings
+from recon_api.logs import configure_logging
+
+EXIT_INVALID_CONFIG = 2
+
+
+def main() -> int:
+    try:
+        settings = load_settings()
+    except ConfigurationError as exc:
+        error = {
+            "level": "ERROR",
+            "logger": "recon_api.config",
+            "message": "invalid configuration; refusing to start",
+            "fields": [{"field": field, "problem": problem} for field, problem in exc.problems],
+        }
+        print(json.dumps(error, ensure_ascii=True), file=sys.stderr)
+        return EXIT_INVALID_CONFIG
+
+    configure_logging(settings.log_level)
+    uvicorn.run(
+        create_app(settings),
+        host=settings.http_host,
+        port=settings.http_port,
+        log_config=None,
+        access_log=False,
+        server_header=False,
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

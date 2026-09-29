@@ -1,7 +1,8 @@
 schema: spec-driven
 
 context: |
-  Project: fintech-ai-reconciliation-agent. Current phase: documentation only; do not implement code.
+  Project: fintech-ai-reconciliation-agent. Current phase: implementing M0 (bootstrap-mvp-foundation) only;
+  no payment, reconciliation, AI or M1 code.
   FastAPI modular monolith, PostgreSQL + pgvector, NATS JetStream, read-only MCP.
   Synthetic data only. Deterministic reconciliation first; AI only for ambiguity.
   Operational decisions require human approval; no financial execution in M0-M10.

@@ -1,0 +1,132 @@
+# M0 local stack. Images are pinned by multi-arch index digest (never `latest`).
+# Only the API is published, and only on 127.0.0.1. PostgreSQL and NATS live on an
+# internal network with no published ports.
+name: recon-m0
+
+x-postgres-image: &postgres-image pgvector/pgvector:0.8.6-pg17-trixie@sha256:724a4041afdb1750446e3f6b5cfa8f3b0ac5a2cf538ddfa6bfee4f94c2fa85c6
+x-nats-image: &nats-image nats:2.14.7-alpine3.22@sha256:4063edae0717ba5f7501bfde75f97fd9b57f5b93597b92c70b6a6fbbf6a74e06
+
+x-app-env: &app-env
+  APP_DB_HOST: postgres
+  APP_DB_PORT: "5432"
+  APP_DB_NAME: ${POSTGRES_DB:?set POSTGRES_DB in .env (copy .env.example)}
+  APP_DB_USER: ${APP_DB_USER:?set APP_DB_USER in .env (copy .env.example)}
+  APP_DB_PASSWORD: ${APP_DB_PASSWORD:?set APP_DB_PASSWORD in .env (copy .env.example)}
+  APP_NATS_URL: nats://nats:4222
+  APP_NATS_USER: ${NATS_APP_USER:?set NATS_APP_USER in .env (copy .env.example)}
+  APP_NATS_PASSWORD: ${NATS_APP_PASSWORD:?set NATS_APP_PASSWORD in .env (copy .env.example)}
+  APP_LOG_LEVEL: ${APP_LOG_LEVEL:-INFO}
+  APP_READY_TIMEOUT_SECONDS: ${APP_READY_TIMEOUT_SECONDS:-2.5}
+
+services:
+  postgres:
+    image: *postgres-image
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env (copy .env.example)}
+      POSTGRES_USER: ${POSTGRES_ADMIN_USER:?set POSTGRES_ADMIN_USER in .env (copy .env.example)}
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?set POSTGRES_ADMIN_PASSWORD in .env (copy .env.example)}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks: [backend]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  db-init:
+    image: *postgres-image
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGHOST: postgres
+      PGDATABASE: ${POSTGRES_DB:?set POSTGRES_DB in .env (copy .env.example)}
+      PGUSER: ${POSTGRES_ADMIN_USER:?set POSTGRES_ADMIN_USER in .env (copy .env.example)}
+      PGPASSWORD: ${POSTGRES_ADMIN_PASSWORD:?set POSTGRES_ADMIN_PASSWORD in .env (copy .env.example)}
+      APP_DB_USER: ${APP_DB_USER:?set APP_DB_USER in .env (copy .env.example)}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?set APP_DB_PASSWORD in .env (copy .env.example)}
+    volumes:
+      - ./infra/postgres/init.sql:/init/init.sql:ro
+    entrypoint: ["psql", "--no-psqlrc", "--quiet", "-f", "/init/init.sql"]
+    networks: [backend]
+    restart: "no"
+
+  nats:
+    image: *nats-image
+    command: ["-c", "/etc/nats/nats.conf"]
+    environment:
+      NATS_APP_USER: ${NATS_APP_USER:?set NATS_APP_USER in .env (copy .env.example)}
+      NATS_APP_PASSWORD: ${NATS_APP_PASSWORD:?set NATS_APP_PASSWORD in .env (copy .env.example)}
+    volumes:
+      - ./infra/nats/nats.conf:/etc/nats/nats.conf:ro
+      - natsdata:/data
+    networks: [backend]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8222/healthz?js-enabled-only=true"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: runtime
+    image: recon-m0-api:local
+    environment:
+      <<: *app-env
+      APP_HTTP_HOST: 0.0.0.0
+      APP_HTTP_PORT: "8000"
+    ports:
+      - "127.0.0.1:${API_HOST_PORT:-8000}:8000"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+      nats:
+        condition: service_healthy
+    networks: [backend, edge]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  # --- smoke profile: test-only services, never started by a plain `docker compose up` ---
+  nats-nojs:
+    profiles: [smoke]
+    image: *nats-image
+    command: ["--name", "recon-m0-nats-nojs", "-p", "4222"]
+    networks: [backend]
+
+  smoke:
+    profiles: [smoke]
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: smoke
+    image: recon-m0-smoke:local
+    environment:
+      <<: *app-env
+      SMOKE_PG_ADMIN_USER: ${POSTGRES_ADMIN_USER:?set POSTGRES_ADMIN_USER in .env (copy .env.example)}
+      SMOKE_PG_ADMIN_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?set POSTGRES_ADMIN_PASSWORD in .env (copy .env.example)}
+      SMOKE_NATS_NOJS_URL: nats://nats-nojs:4222
+    depends_on:
+      nats-nojs:
+        condition: service_started
+    networks: [backend]
+    read_only: true
+    tmpfs: [/tmp]
+
+networks:
+  backend:
+    internal: true
+  edge: {}
+
+volumes:
+  pgdata:
+  natsdata:

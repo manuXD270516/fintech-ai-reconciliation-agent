@@ -1,0 +1,70 @@
+# M0 quality gate. Runs exactly the steps of `scripts/gate.py` (same commands as local).
+# No AI provider secrets are defined or required. Actions are pinned by commit SHA.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          version: "0.12.20"
+          enable-cache: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install locked dependencies
+        run: |
+          uv sync --locked
+          npm ci --no-audit --no-fund
+
+      - name: Prerequisites
+        run: |
+          cp .env.example .env
+          uv run python scripts/doctor.py
+
+      - name: Lock check
+        run: uv run python scripts/gate.py lock
+      - name: Lint (Ruff)
+        run: uv run python scripts/gate.py lint
+      - name: Types (mypy)
+        run: uv run python scripts/gate.py types
+      - name: Unit and contract tests (pytest)
+        run: uv run python scripts/gate.py test
+      - name: Repository policy
+        run: uv run python scripts/gate.py policy
+      - name: Traceability
+        run: uv run python scripts/gate.py trace
+      - name: OpenSpec strict validation
+        run: uv run python scripts/gate.py openspec
+      - name: Negative gate
+        run: uv run python scripts/gate.py negative
+      - name: Compose smoke (real PostgreSQL/pgvector and NATS JetStream)
+        run: uv run python scripts/gate.py smoke
+
+      - name: Smoke evidence
+        if: always()
+        run: cat .smoke/*.json || true
+
+      - name: Stop stack (volumes kept)
+        if: always()
+        run: docker compose --profile smoke down || true

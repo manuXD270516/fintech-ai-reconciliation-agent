@@ -18,7 +18,7 @@ Versiones soportadas iniciales propuestas: Python 3.12, PostgreSQL 17, NATS 2.x 
 
 ### D2 — Docker Compose y ciclo local
 
-Ruta soportada: API, PostgreSQL/pgvector y NATS en Compose sobre Linux o Windows con Docker Desktop/WSL2. Contributor requiere Docker/Compose y tooling de specs documentado; desarrollo Python nativo es opcional. Readiness maneja dependencias arrancando: `depends_on` no sustituye verificación de capacidades.
+Ruta soportada: API, PostgreSQL/pgvector y NATS en Compose sobre Linux o Windows con Docker Desktop/WSL2. Contributor requiere Docker/Compose, uv (gestiona Python 3.12 y el gate local: lint, tipos, tests, orquestación del smoke) y Node para OpenSpec fijado; ejecutar la API fuera de Compose es opcional y no es ruta soportada. Readiness maneja dependencias arrancando: `depends_on` no sustituye verificación de capacidades.
 
 DB y NATS sólo en red interna; API publicada en `127.0.0.1`. Volúmenes nombrados. Stop conserva datos; reset separado advierte eliminación. Inicialización/migración idempotente de extensión con rol distinto del runtime. Instalaciones manuales descartadas como ruta principal por divergencia de entornos. Locks y contenedores no garantizan reproducibilidad bit a bit entre arquitecturas: reportar plataforma.
 

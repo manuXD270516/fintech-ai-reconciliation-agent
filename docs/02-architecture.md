@@ -1,6 +1,6 @@
 # Propuesta de arquitectura
 
-Estado: decisiones propuestas para el MVP, sin software ni benchmarks. Objetivo: demostrar corrección, trazabilidad y recuperación ante fallas con complejidad operativa acotada.
+Estado: decisiones propuestas para el MVP. Sólo M0 (bootstrap de salud e infraestructura local) está implementado; no hay software de negocio ni benchmarks. Objetivo: demostrar corrección, trazabilidad y recuperación ante fallas con complejidad operativa acotada.
 
 ## ADR-001 — Backend FastAPI
 
@@ -21,7 +21,7 @@ No introducir ambos backends en el MVP. No ejecutar trabajos durables en tareas 
 
 API, worker de ingestion/reconciliation y worker de investigación comparten un núcleo de dominio y contratos, pero tienen procesos y permisos distintos. Knowledge ingestion es un job del worker al inicio. `fintech-mcp-server` es un proceso separado para ejercitar un límite MCP real. React consume la API; jamás accede directamente a DB ni al LLM.
 
-Estructura futura, no creada en esta fase: `apps/api`, `apps/worker`, `apps/mcp-server`, `apps/web`, `packages/domain`, `packages/contracts`, `evals`, `tests`, `infra`. Adaptadores externos reemplazables; reglas puras sin imports de LLM, bus o HTTP. Partir en servicios por contexto sólo cuando haya necesidades medidas de ownership, despliegue o escalado.
+Estructura objetivo: `apps/api`, `apps/worker`, `apps/mcp-server`, `apps/web`, `packages/domain`, `packages/contracts`, `evals`, `tests`, `infra`. M0 creó sólo `apps/api` (salud), `infra` y `tests`; el resto sigue sin crear. Adaptadores externos reemplazables; reglas puras sin imports de LLM, bus o HTTP. Partir en servicios por contexto sólo cuando haya necesidades medidas de ownership, despliegue o escalado.
 
 ## ADR-003 — PostgreSQL + pgvector
 

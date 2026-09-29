@@ -1,0 +1,55 @@
+[project]
+name = "fintech-ai-reconciliation-agent"
+version = "0.0.0"
+description = "M0 bootstrap: workspace root for development tooling"
+requires-python = "==3.12.*"
+dependencies = ["recon-api"]
+
+[dependency-groups]
+dev = [
+    "ruff==0.16.9",
+    "mypy==2.3.1",
+    "pytest==9.1.1",
+    "pytest-asyncio==1.4.0",
+    "httpx==0.28.1",
+]
+
+[tool.uv]
+package = false
+required-version = "==0.12.20"
+
+[tool.uv.workspace]
+members = ["apps/api"]
+
+[tool.uv.sources]
+recon-api = { workspace = true }
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["apps/api/src", "scripts", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC", "RUF", "PL"]
+ignore = ["PLR2004"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106", "S603", "S607", "PLR0913"]
+# Identifiers are built from generated hex run IDs, never from external input.
+"tests/integration/**" = ["S608"]
+"scripts/**" = ["S603", "S607", "PLR0911", "PLR0912", "PLR0915", "T201"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+mypy_path = ["apps/api/src"]
+files = ["apps/api/src", "scripts", "tests"]
+explicit_package_bases = true
+
+[tool.pytest.ini_options]
+pythonpath = ["apps/api/src", "."]
+testpaths = ["tests/unit"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-ra --strict-markers"
+markers = ["integration: requires the real Compose dependencies (runs inside the smoke container)"]
