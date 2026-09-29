@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# uv / virtualenvs
+.venv/
+.uv-cache/
+
+# Tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node (OpenSpec pinned as dev tool)
+node_modules/
+
+# Local secrets and configuration
+.env
+.env.*
+!.env.example
+
+# Local data / volume bind mounts
+data/
+volumes/
+*.db
+
+# Test evidence scratch (sanitized evidence is committed under docs/evidence)
+.smoke/
+
+# Editors / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
