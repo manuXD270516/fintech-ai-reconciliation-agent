@@ -128,7 +128,7 @@ class Api:
 class Smoke:
     def __init__(self, env: dict[str, str]) -> None:
         self.env = env
-        self.api = Api(int(env.get("API_HOST_PORT", "8000")))
+        self.api = Api(int(env.get("API_HOST_PORT", "18180")))
         self.results: list[Result] = []
         self.secrets = [env[k] for k in SECRET_KEYS if env.get(k)]
 
@@ -216,7 +216,7 @@ class Smoke:
         for item in items:
             pubs = [p for p in item.get("Publishers") or [] if p.get("PublishedPort")]
             published[item["Service"]] = [f"{p['URL']}:{p['PublishedPort']}" for p in pubs]
-        port = self.env.get("API_HOST_PORT", "8000")
+        port = self.env.get("API_HOST_PORT", "18180")
         expect(published.get("api") == [f"127.0.0.1:{port}"], published)
         for service in ("postgres", "nats"):
             expect(published.get(service) == [], f"{service} publishes {published.get(service)}")

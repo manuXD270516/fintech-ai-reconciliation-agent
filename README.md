@@ -41,13 +41,13 @@ uv run python scripts/gate.py smoke   # Compose real: arranque, fallos, aislamie
 
 bash (Linux/macOS): igual, con `cp .env.example .env`.
 
-Si `127.0.0.1:8000` ya está ocupado, cambia `API_HOST_PORT` en `.env`. Los valores de `.env.example` son marcadores `dev-only-*`, no secretos; `.env` está ignorado por git.
+La API se publica en `127.0.0.1:18180` por defecto (no usa 8000 ni 5432, habitualmente ocupados por otros stacks locales). PostgreSQL y NATS no se publican en el host. Si 18180 está ocupado, cambia `API_HOST_PORT` en `.env`. Los valores de `.env.example` son marcadores `dev-only-*`, no secretos; `.env` está ignorado por git.
 
 ## Ciclo de vida local
 
 ```text
 docker compose up -d --build     # postgres, db-init (one-shot), nats, api
-curl http://127.0.0.1:8000/health/ready
+curl http://127.0.0.1:18180/health/ready
 docker compose stop              # detiene; conserva datos
 docker compose start             # reanuda con los mismos volúmenes
 docker compose down              # elimina contenedores; conserva volúmenes nombrados

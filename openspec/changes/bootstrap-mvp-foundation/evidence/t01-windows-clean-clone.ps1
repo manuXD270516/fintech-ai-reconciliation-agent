@@ -2,7 +2,7 @@
 # an isolated Compose project, then remove only that project's containers and volumes.
 # Usage (from the repository root):
 #   powershell -NoProfile -ExecutionPolicy Bypass -File openspec/changes/bootstrap-mvp-foundation/evidence/t01-windows-clean-clone.ps1
-param([string]$ApiPort = "18081")
+param([string]$ApiPort = "18280")
 $ErrorActionPreference = "Continue"
 $src = (Resolve-Path "$PSScriptRoot\..\..\..\..").Path
 $base = Join-Path $env:TEMP "m0-clean-win"
