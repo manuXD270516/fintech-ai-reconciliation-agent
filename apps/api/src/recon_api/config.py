@@ -55,17 +55,28 @@ class ConfigurationError(Exception):
         super().__init__("invalid configuration: " + ", ".join(f for f, _ in problems))
 
 
-def _env_name(loc: tuple[int | str, ...]) -> str:
-    field = str(loc[0]) if loc else "<root>"
-    return f"{ENV_PREFIX}{field.upper()}"
+SECRET_FIELDS = frozenset({"db_password", "nats_password"})
+
+
+def _field(loc: tuple[int | str, ...]) -> str:
+    return str(loc[0]) if loc else "<root>"
+
+
+def _problem(field: str, error_type: str, message: str) -> str:
+    if field in SECRET_FIELDS and error_type != "missing":
+        # Validator messages can reveal properties of the value (e.g. its length).
+        return "invalid secret value (minimum 8 characters)"
+    return message
 
 
 def load_settings() -> Settings:
     try:
         return Settings()  # type: ignore[call-arg]
     except ValidationError as exc:
-        problems = [
-            (_env_name(error["loc"]), str(error["msg"]))
-            for error in exc.errors(include_input=False, include_url=False, include_context=False)
-        ]
+        problems = []
+        for error in exc.errors(include_input=False, include_url=False, include_context=False):
+            field = _field(error["loc"])
+            problems.append(
+                (f"{ENV_PREFIX}{field.upper()}", _problem(field, error["type"], error["msg"]))
+            )
         raise ConfigurationError(problems) from None

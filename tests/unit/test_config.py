@@ -56,6 +56,17 @@ def test_invalid_configuration_names_field_without_value(
         assert value not in rendered
 
 
+def test_secret_problem_does_not_reveal_value_properties(
+    valid_env: dict[str, str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("APP_NATS_PASSWORD", "abcde")
+    with pytest.raises(ConfigurationError) as info:
+        load_settings()
+    assert info.value.problems == [
+        ("APP_NATS_PASSWORD", "invalid secret value (minimum 8 characters)")
+    ]
+
+
 def test_process_refuses_to_start_with_invalid_config() -> None:
     env = {k: v for k, v in os.environ.items() if not k.startswith("APP_")}
     env.update(VALID_ENV)

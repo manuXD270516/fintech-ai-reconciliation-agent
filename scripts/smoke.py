@@ -243,8 +243,9 @@ class Smoke:
         resp = self.api.get("/health/ready", request_id=request_id)
         expect(resp.headers["x-request-id"] == request_id)
         time.sleep(1)
+        all_logs = compose("--profile", "smoke", "logs", "--no-log-prefix")
+        self.assert_no_secrets(all_logs.stdout + all_logs.stderr, "service logs")
         logs = compose("logs", "api", "--no-log-prefix").stdout
-        self.assert_no_secrets(logs, "api logs")
         matches = []
         for line in logs.splitlines():
             try:
