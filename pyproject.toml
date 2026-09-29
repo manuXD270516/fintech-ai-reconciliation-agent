@@ -1,9 +1,9 @@
 [project]
 name = "fintech-ai-reconciliation-agent"
 version = "0.0.0"
-description = "M0 bootstrap: workspace root for development tooling"
+description = "Workspace root for development tooling"
 requires-python = "==3.12.*"
-dependencies = ["recon-api"]
+dependencies = ["recon-api", "recon-domain", "recon-store"]
 
 [dependency-groups]
 dev = [
@@ -12,6 +12,7 @@ dev = [
     "pytest==9.1.1",
     "pytest-asyncio==1.4.0",
     "httpx==0.28.1",
+    "hypothesis==6.168.3",
 ]
 
 [tool.uv]
@@ -19,15 +20,17 @@ package = false
 required-version = "==0.12.20"
 
 [tool.uv.workspace]
-members = ["apps/api"]
+members = ["apps/api", "packages/domain", "packages/store"]
 
 [tool.uv.sources]
 recon-api = { workspace = true }
+recon-domain = { workspace = true }
+recon-store = { workspace = true }
 
 [tool.ruff]
 target-version = "py312"
 line-length = 100
-src = ["apps/api/src", "scripts", "tests"]
+src = ["apps/api/src", "packages/domain/src", "packages/store/src", "scripts", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC", "RUF", "PL"]
@@ -38,16 +41,18 @@ ignore = ["PLR2004"]
 # Identifiers are built from generated hex run IDs, never from external input.
 "tests/integration/**" = ["S608"]
 "scripts/**" = ["S603", "S607", "PLR0911", "PLR0912", "PLR0915", "T201"]
+# Role and schema names are validated identifiers, never external input.
+"packages/store/src/recon_store/migrations/**" = ["S608"]
 
 [tool.mypy]
 python_version = "3.12"
 strict = true
-mypy_path = ["apps/api/src"]
-files = ["apps/api/src", "scripts", "tests"]
+mypy_path = ["apps/api/src", "packages/domain/src", "packages/store/src"]
+files = ["apps/api/src", "packages/domain/src", "packages/store/src", "scripts", "tests"]
 explicit_package_bases = true
 
 [tool.pytest.ini_options]
-pythonpath = ["apps/api/src", "."]
+pythonpath = ["apps/api/src", "packages/domain/src", "packages/store/src", "."]
 testpaths = ["tests/unit"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"

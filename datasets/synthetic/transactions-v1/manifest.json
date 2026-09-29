@@ -1,0 +1,19 @@
+{
+  "content_hash": "f4195e3b0cf8b8387bdf9a54158441160cd114f8fb44f6454299981d7b4d43b6",
+  "counts": {
+    "internal": 44,
+    "payments": 44,
+    "provider": 48
+  },
+  "data_origin": "SYNTHETIC",
+  "dataset_id": "transactions",
+  "files": {
+    "internal_ledger.csv": "576184a707a22a356a50f22e0ec4792af8265b99702536f6172e4bb4a7dcc752",
+    "labels.csv": "8cb53bc4dc06876e3dfc7e2fbc01f667ad5d0a9c812888d8f0132d021a9aa551",
+    "provider_report.csv": "1cbb0a7903965ea690c428e9a426c5e79de0d0a9de9f13a72abdaab3b8ae94a9"
+  },
+  "generator": "synthetic-transactions/v1",
+  "schema_version": "raw-observation-csv/v1",
+  "seed": 20260929,
+  "version": "v1"
+}

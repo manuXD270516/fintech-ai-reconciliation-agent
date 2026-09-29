@@ -54,6 +54,32 @@ services:
     networks: [backend]
     restart: "no"
 
+  # One-shot Alembic job. Uses the bootstrap role to own the schema and grants the
+  # runtime role only the DML it needs (observations and audit are append-only).
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: runtime
+    image: recon-m0-api:local
+    command: ["python", "-m", "recon_store.migrate"]
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    environment:
+      MIGRATE_DB_HOST: postgres
+      MIGRATE_DB_PORT: "5432"
+      MIGRATE_DB_NAME: ${POSTGRES_DB:?set POSTGRES_DB in .env (copy .env.example)}
+      MIGRATE_DB_USER: ${POSTGRES_ADMIN_USER:?set POSTGRES_ADMIN_USER in .env (copy .env.example)}
+      MIGRATE_DB_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?set POSTGRES_ADMIN_PASSWORD in .env (copy .env.example)}
+      APP_DB_USER: ${APP_DB_USER:?set APP_DB_USER in .env (copy .env.example)}
+    networks: [backend]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: "no"
+
   nats:
     image: *nats-image
     command: ["-c", "/etc/nats/nats.conf"]
@@ -83,7 +109,7 @@ services:
     ports:
       - "127.0.0.1:${API_HOST_PORT:-18180}:8000"
     depends_on:
-      db-init:
+      migrate:
         condition: service_completed_successfully
       nats:
         condition: service_healthy

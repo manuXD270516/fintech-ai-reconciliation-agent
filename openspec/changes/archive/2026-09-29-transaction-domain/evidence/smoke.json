@@ -1,0 +1,334 @@
+{
+  "kind": "MEASURED",
+  "scope": "local Compose smoke of M0 infrastructure; not a performance benchmark",
+  "started_utc": "2026-09-29T07:29:05+00:00",
+  "commit": "2a45f30",
+  "dirty": true,
+  "host": "Windows 11 AMD64",
+  "docker": "linux/amd64 29.8.0",
+  "compose": "5.5.1",
+  "images": "nats:2.14.7-alpine3.22@sha256:4063edae0717ba5f7501bfde75f97fd9b57f5b93597b92c70b6a6fbbf6a74e06\nrecon-m0-smoke:local\npgvector/pgvector:0.8.6-pg17-trixie@sha256:724a4041afdb1750446e3f6b5cfa8f3b0ac5a2cf538ddfa6bfee4f94c2fa85c6\npgvector/pgvector:0.8.6-pg17-trixie@sha256:724a4041afdb1750446e3f6b5cfa8f3b0ac5a2cf538ddfa6bfee4f94c2fa85c6\nrecon-m0-api:local\nnats:2.14.7-alpine3.22@sha256:4063edae0717ba5f7501bfde75f97fd9b57f5b93597b92c70b6a6fbbf6a74e06\nrecon-m0-api:local",
+  "results": [
+    {
+      "test_id": "T03",
+      "name": "startup: compose up, API ready",
+      "ok": true,
+      "seconds": 8.88,
+      "details": {
+        "seconds_until_ready": 2.08
+      }
+    },
+    {
+      "test_id": "T05",
+      "name": "healthy live/ready contract from host",
+      "ok": true,
+      "seconds": 0.01,
+      "details": {
+        "live": {
+          "status": "alive",
+          "request_id": "49c8add7cf6e4487b737129aa033a1cc"
+        },
+        "ready": {
+          "status": "ready",
+          "request_id": "bf665e792644480295b2ab8bd70dca4d",
+          "checks": {
+            "database": "ok",
+            "vector": "ok",
+            "messaging": "ok"
+          }
+        },
+        "ready_seconds": 0.009
+      }
+    },
+    {
+      "test_id": "T03",
+      "name": "vector + JetStream + role + readiness integration",
+      "ok": true,
+      "seconds": 10.06,
+      "details": {
+        "pytest": [
+          "tests/integration/test_infrastructure.py::test_vector_extension_supports_knn_query PASSED [  5%]",
+          "tests/integration/test_infrastructure.py::test_runtime_role_can_use_vector_type PASSED [ 10%]",
+          "tests/integration/test_infrastructure.py::test_runtime_role_has_no_initialization_privileges PASSED [ 15%]",
+          "tests/integration/test_infrastructure.py::test_jetstream_durable_publish_consume_ack PASSED [ 20%]",
+          "tests/integration/test_readiness_real.py::test_ready_with_real_dependencies PASSED [ 25%]",
+          "tests/integration/test_readiness_real.py::test_not_ready_when_vector_extension_missing PASSED [ 30%]",
+          "tests/integration/test_readiness_real.py::test_not_ready_when_jetstream_disabled PASSED [ 35%]",
+          "tests/integration/test_readiness_real.py::test_hung_dependency_is_bounded_by_deadline[database] PASSED [ 40%]",
+          "tests/integration/test_readiness_real.py::test_hung_dependency_is_bounded_by_deadline[messaging] PASSED [ 45%]",
+          "tests/integration/test_store.py::test_schema_matches_sqlalchemy_metadata PASSED [ 50%]",
+          "tests/integration/test_store.py::test_ingest_outcomes_and_effects PASSED [ 55%]",
+          "tests/integration/test_store.py::test_failed_transaction_leaves_no_partial_effects PASSED [ 60%]",
+          "tests/integration/test_store.py::test_concurrent_ingest_of_same_key_creates_one_row PASSED [ 65%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[UPDATE recon.transaction_observations SET amount_minor = 1 WHERE false] PASSED [ 70%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[DELETE FROM recon.transaction_observations WHERE false] PASSED [ 75%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[DELETE FROM recon.audit_entries WHERE false] PASSED [ 80%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[UPDATE recon.audit_entries SET outcome = 'x' WHERE false] PASSED [ 85%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[UPDATE recon.outbox SET payload = '{}' WHERE false] PASSED [ 90%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[CREATE TABLE recon.intruder (id int)] PASSED [ 95%]",
+          "tests/integration/test_store.py::test_database_rejects_invalid_rows PASSED [100%]"
+        ]
+      }
+    },
+    {
+      "test_id": "T03",
+      "name": "db-init idempotent re-run",
+      "ok": true,
+      "seconds": 2.94,
+      "details": {
+        "db_init_exit_codes": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "test_id": "M1-T08",
+      "name": "alembic migrate idempotent re-run",
+      "ok": true,
+      "seconds": 5.81,
+      "details": {
+        "migrate": [
+          [
+            "migrate ok: revision 0001_transaction_domain"
+          ],
+          [
+            "migrate ok: revision 0001_transaction_domain"
+          ]
+        ]
+      }
+    },
+    {
+      "test_id": "T08",
+      "name": "API loopback-only, dependencies private",
+      "ok": true,
+      "seconds": 2.54,
+      "details": {
+        "published": {
+          "api": [
+            "127.0.0.1:18180"
+          ],
+          "nats": [],
+          "nats-nojs": [],
+          "postgres": []
+        },
+        "backend_internal": true,
+        "lan_ip_checked": true
+      }
+    },
+    {
+      "test_id": "T09",
+      "name": "request ID correlated in header and JSON log",
+      "ok": true,
+      "seconds": 1.47,
+      "details": {
+        "log_entry": {
+          "ts": "2026-09-29T07:29:35.960+00:00",
+          "level": "INFO",
+          "logger": "recon_api.access",
+          "message": "request",
+          "request_id": "smoke-c06cdfd0c81b",
+          "request_id_source": "client",
+          "method": "GET",
+          "path": "/health/ready",
+          "status": 200,
+          "duration_ms": 7.43
+        }
+      }
+    },
+    {
+      "test_id": "T06",
+      "name": "postgres stop: ready 503 <= 3s, live 200, recovery",
+      "ok": true,
+      "seconds": 9.52,
+      "details": {
+        "samples": [
+          {
+            "ready": 503,
+            "seconds": 2.505,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.517,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.502,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          }
+        ],
+        "max_ready_seconds": 2.517,
+        "recovery_seconds": 1.06
+      }
+    },
+    {
+      "test_id": "T06",
+      "name": "postgres pause: ready 503 <= 3s, live 200, recovery",
+      "ok": true,
+      "seconds": 8.04,
+      "details": {
+        "samples": [
+          {
+            "ready": 503,
+            "seconds": 2.504,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.523,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.517,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          }
+        ],
+        "max_ready_seconds": 2.523,
+        "recovery_seconds": 0.01
+      }
+    },
+    {
+      "test_id": "T06",
+      "name": "nats stop: ready 503 <= 3s, live 200, recovery",
+      "ok": true,
+      "seconds": 8.54,
+      "details": {
+        "samples": [
+          {
+            "ready": 503,
+            "seconds": 2.515,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.528,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.518,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          }
+        ],
+        "max_ready_seconds": 2.528,
+        "recovery_seconds": 0.03
+      }
+    },
+    {
+      "test_id": "T06",
+      "name": "nats pause: ready 503 <= 3s, live 200, recovery",
+      "ok": true,
+      "seconds": 8.15,
+      "details": {
+        "samples": [
+          {
+            "ready": 503,
+            "seconds": 2.505,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.505,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.516,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          }
+        ],
+        "max_ready_seconds": 2.516,
+        "recovery_seconds": 0.03
+      }
+    },
+    {
+      "test_id": "T04",
+      "name": "marker and pending message survive stop/start",
+      "ok": true,
+      "seconds": 12.07,
+      "details": {
+        "write": {
+          "step": "write",
+          "marker_rows": 1,
+          "stream_seq": 1,
+          "num_pending": 1
+        },
+        "verify": {
+          "step": "verify",
+          "marker_survived": true,
+          "pending_before_consume": 1,
+          "payload_ok": true,
+          "pending_after_ack": 0,
+          "ok": true
+        },
+        "volumes": {
+          "recon-m0_pgdata": "2026-09-29T05:26:57Z",
+          "recon-m0_natsdata": "2026-09-29T05:26:57Z"
+        }
+      }
+    }
+  ]
+}
