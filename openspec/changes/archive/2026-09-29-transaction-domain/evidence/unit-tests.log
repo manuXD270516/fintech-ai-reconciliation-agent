@@ -1,0 +1,61 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent\.venv\Scripts\python.exe
+hypothesis profile 'default'
+rootdir: D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent
+configfile: pyproject.toml
+plugins: anyio-4.15.1, hypothesis-6.168.3, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 50 items
+
+tests/unit/test_money.py::test_decimal_roundtrip_is_exact PASSED         [  2%]
+tests/unit/test_money.py::test_addition_and_subtraction_are_exact_inverses PASSED [  4%]
+tests/unit/test_money.py::test_excess_precision_is_rejected[10.005] PASSED [  6%]
+tests/unit/test_money.py::test_excess_precision_is_rejected[0.001] PASSED [  8%]
+tests/unit/test_money.py::test_excess_precision_is_rejected[1e-3] PASSED [ 10%]
+tests/unit/test_money.py::test_excess_precision_is_rejected[-0.009] PASSED [ 12%]
+tests/unit/test_money.py::test_equivalent_precision_is_accepted[10.5] PASSED [ 14%]
+tests/unit/test_money.py::test_equivalent_precision_is_accepted[10.50] PASSED [ 16%]
+tests/unit/test_money.py::test_equivalent_precision_is_accepted[10.500] PASSED [ 18%]
+tests/unit/test_money.py::test_equivalent_precision_is_accepted[1E+2] PASSED [ 20%]
+tests/unit/test_money.py::test_equivalent_precision_is_accepted[-3.10] PASSED [ 22%]
+tests/unit/test_money.py::test_float_inputs_are_rejected PASSED          [ 24%]
+tests/unit/test_money.py::test_non_numeric_or_non_finite_are_rejected[abc] PASSED [ 26%]
+tests/unit/test_money.py::test_non_numeric_or_non_finite_are_rejected[NaN] PASSED [ 28%]
+tests/unit/test_money.py::test_non_numeric_or_non_finite_are_rejected[Infinity] PASSED [ 30%]
+tests/unit/test_money.py::test_non_numeric_or_non_finite_are_rejected[] PASSED [ 32%]
+tests/unit/test_money.py::test_range_and_currency_are_validated PASSED   [ 34%]
+tests/unit/test_money.py::test_cross_currency_operations_are_rejected PASSED [ 36%]
+tests/unit/test_observation.py::test_valid_observation_is_immutable PASSED [ 38%]
+tests/unit/test_observation.py::test_naive_timestamps_are_rejected PASSED [ 40%]
+tests/unit/test_observation.py::test_dual_time_keeps_original_offset_and_utc PASSED [ 42%]
+tests/unit/test_observation.py::test_invalid_fields_are_rejected[overrides0] PASSED [ 44%]
+tests/unit/test_observation.py::test_invalid_fields_are_rejected[overrides1] PASSED [ 46%]
+tests/unit/test_observation.py::test_invalid_fields_are_rejected[overrides2] PASSED [ 48%]
+tests/unit/test_observation.py::test_invalid_fields_are_rejected[overrides3] PASSED [ 50%]
+tests/unit/test_observation.py::test_invalid_fields_are_rejected[overrides4] PASSED [ 52%]
+tests/unit/test_observation.py::test_invalid_fields_are_rejected[overrides5] PASSED [ 54%]
+tests/unit/test_observation.py::test_invalid_fields_are_rejected[overrides6] PASSED [ 56%]
+tests/unit/test_observation.py::test_invalid_fields_are_rejected[overrides7] PASSED [ 58%]
+tests/unit/test_observation.py::test_references_are_scoped_by_provider_and_account PASSED [ 60%]
+tests/unit/test_observation.py::test_comparison_never_crosses_scope_or_same_source PASSED [ 62%]
+tests/unit/test_observation.py::test_canonical_hash_is_order_independent_and_content_sensitive PASSED [ 64%]
+tests/unit/test_observation.py::test_offset_bounds PASSED                [ 66%]
+tests/unit/test_observation.py::test_domain_package_has_no_infrastructure_imports PASSED [ 68%]
+tests/unit/test_revisions_batches_mappings.py::test_revision_outcomes PASSED [ 70%]
+tests/unit/test_revisions_batches_mappings.py::test_replaying_a_stored_revision_never_creates_an_effect PASSED [ 72%]
+tests/unit/test_revisions_batches_mappings.py::test_batch_window_is_half_open PASSED [ 74%]
+tests/unit/test_revisions_batches_mappings.py::test_batch_admits_only_its_scope PASSED [ 76%]
+tests/unit/test_revisions_batches_mappings.py::test_batch_closure_uses_cutoff PASSED [ 78%]
+tests/unit/test_revisions_batches_mappings.py::test_invalid_batches_are_rejected[overrides0] PASSED [ 80%]
+tests/unit/test_revisions_batches_mappings.py::test_invalid_batches_are_rejected[overrides1] PASSED [ 82%]
+tests/unit/test_revisions_batches_mappings.py::test_invalid_batches_are_rejected[overrides2] PASSED [ 84%]
+tests/unit/test_revisions_batches_mappings.py::test_invalid_batches_are_rejected[overrides3] PASSED [ 86%]
+tests/unit/test_revisions_batches_mappings.py::test_invalid_batches_are_rejected[overrides4] PASSED [ 88%]
+tests/unit/test_revisions_batches_mappings.py::test_invalid_batches_are_rejected[overrides5] PASSED [ 90%]
+tests/unit/test_revisions_batches_mappings.py::test_mappings_translate_known_values_and_reject_unknown PASSED [ 92%]
+tests/unit/test_synthetic_dataset.py::test_committed_dataset_matches_generator PASSED [ 94%]
+tests/unit/test_synthetic_dataset.py::test_generation_is_deterministic_per_seed PASSED [ 96%]
+tests/unit/test_synthetic_dataset.py::test_every_scenario_is_labelled_and_marked_synthetic PASSED [ 98%]
+tests/unit/test_synthetic_dataset.py::test_dataset_has_no_card_like_numbers PASSED [100%]
+
+============================= 50 passed in 1.18s ==============================

@@ -1,0 +1,75 @@
+﻿gate: removed AI credential variables from environment: ANTHROPIC_BASE_URL
+
+=== gate: lock ===
+uv : Resolved 45 packages in 1ms
+At C:\Users\Manuel Saavedra\AppData\Local\Temp\ps-script-0a119028-d3ad-4bf1-b7aa-591d0d499560.ps1:94 char:62
++ ... conciliation-agent; uv run python scripts/gate.py static 2>&1 | Out-F ...
++                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Resolved 45 packages in 1ms:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+=== gate: lint ===
+[1;32mAll checks passed![0m
+77 files already formatted
+
+=== gate: types ===
+Success: no issues found in 50 source files
+
+=== gate: test ===
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent
+configfile: pyproject.toml
+testpaths: tests/unit
+plugins: anyio-4.15.1, hypothesis-6.168.3, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 111 items
+
+tests\unit\test_ci_parity.py ....                                        [  3%]
+tests\unit\test_config.py ..........                                     [ 12%]
+tests\unit\test_doctor_and_policy.py ...........                         [ 22%]
+tests\unit\test_health_contract.py ...........                           [ 32%]
+tests\unit\test_money.py ..................                              [ 48%]
+tests\unit\test_observation.py ................                          [ 63%]
+tests\unit\test_request_logging.py ........                              [ 70%]
+tests\unit\test_revisions_batches_mappings.py ............               [ 81%]
+tests\unit\test_scope.py ...                                             [ 83%]
+tests\unit\test_synthetic_dataset.py ....                                [ 87%]
+tests\unit\test_traceability_gate.py ..............                      [100%]
+
+============================= 111 passed in 9.86s =============================
+
+=== gate: policy ===
+policy: OK
+
+=== gate: trace ===
+traceability: OK
+
+=== gate: openspec ===
+Γ£ô change/bootstrap-mvp-foundation
+Γ£ô spec/transaction-domain
+Totals: 2 passed, 0 failed (2 items)
+
+=== gate: negative ===
+[OK] control: openspec: step=openspec expected=pass exit=0 :: Totals: 2 passed, 0 failed (2 items)
+[OK] control: traceability: step=trace expected=pass exit=0 :: traceability: OK
+[OK] control: contract tests: step=contract expected=pass exit=0 :: 14 passed in 7.44s
+[OK] requirement RF-03 without scenarios: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] requirement RF-03 without SHALL/MUST: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] test-strategy.md removed: step=trace expected=fail exit=1 :: traceability: 1 problem(s)
+[OK] criterion references unknown requirement: step=trace expected=fail exit=1 :: traceability: 2 problem(s)
+[OK] readiness returns 200 when a dependency fails: step=contract expected=fail exit=1 :: 10 failed, 4 passed in 7.45s
+[OK] non-health route added: step=contract expected=fail exit=1 :: 3 failed, 11 passed in 7.44s
+[OK] real working tree unchanged
+negative gate: OK
+
+=== gate summary ===
+PASS  lock      exit=0 (0.0s)
+PASS  lint      exit=0 (1.7s)
+PASS  types     exit=0 (2.0s)
+PASS  test      exit=0 (11.2s)
+PASS  policy    exit=0 (0.3s)
+PASS  trace     exit=0 (0.1s)
+PASS  openspec  exit=0 (0.9s)
+PASS  negative  exit=0 (29.7s)

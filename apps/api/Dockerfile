@@ -18,8 +18,12 @@ FROM base AS builder
 COPY --from=uv /uv /usr/local/bin/uv
 COPY pyproject.toml uv.lock .python-version ./
 COPY apps/api/pyproject.toml apps/api/pyproject.toml
+COPY packages/domain/pyproject.toml packages/domain/pyproject.toml
+COPY packages/store/pyproject.toml packages/store/pyproject.toml
 RUN uv sync --locked --no-dev --no-install-workspace --package recon-api
 COPY apps/api/src apps/api/src
+COPY packages/domain/src packages/domain/src
+COPY packages/store/src packages/store/src
 RUN uv sync --locked --no-dev --no-editable --package recon-api
 
 FROM base AS runtime
@@ -35,6 +39,7 @@ CMD ["python", "-m", "recon_api"]
 FROM builder AS smoke
 RUN uv sync --locked --no-editable
 COPY tests tests
+COPY datasets datasets
 ENV PATH=/app/.venv/bin:$PATH
 USER 10001:10001
 CMD ["pytest", "-p", "no:cacheprovider", "-m", "integration", "tests/integration"]

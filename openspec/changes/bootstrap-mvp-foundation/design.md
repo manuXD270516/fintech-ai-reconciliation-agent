@@ -1,6 +1,6 @@
 ## Context
 
-Ver [proposal](proposal.md) para motivación. Directorio nuevo, sin software ni infraestructura existente. OpenSpec 1.11.0 con schema `spec-driven`. La [arquitectura objetivo](../../../docs/02-architecture.md) cubre M0–M10; este change sólo prepara M0 cuando se implemente.
+Ver [proposal](proposal.md) para motivación. Directorio nuevo, sin software ni infraestructura existente. OpenSpec 1.11.0 con schema `spec-driven`. La [arquitectura objetivo](../../../docs/02-architecture.md) cubre M0–M10; este change sólo prepara M0 cuando se implemente. Las decisiones de implementación de M1–M10 están en [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md).
 
 ## Goals / Non-Goals
 

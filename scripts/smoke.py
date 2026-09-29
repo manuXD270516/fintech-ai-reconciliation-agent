@@ -206,6 +206,16 @@ class Smoke:
         expect(self.api.get("/health/ready").status == 200)
         return {"db_init_exit_codes": outputs}
 
+    def migrations_idempotent(self) -> dict[str, Any]:
+        outputs = []
+        for _ in range(2):
+            proc = compose("run", "--rm", "migrate", check=False, timeout=300)
+            expect(proc.returncode == 0, proc.stderr[-800:])
+            self.assert_no_secrets(proc.stdout + proc.stderr, "migrate output")
+            outputs.append(proc.stdout.strip().splitlines()[-1:])
+        expect(all(o == outputs[0] for o in outputs), outputs)
+        return {"migrate": outputs}
+
     def isolation(self) -> dict[str, Any]:
         proc = compose("ps", "--format", "json")
         raw = proc.stdout.strip()
@@ -402,6 +412,7 @@ def main() -> int:
         smoke.check("T05", "healthy live/ready contract from host", smoke.healthy_contract)
         smoke.check("T03", "vector + JetStream + role + readiness integration", smoke.infra_tests)
         smoke.check("T03", "db-init idempotent re-run", smoke.db_init_idempotent)
+        smoke.check("M1-T08", "alembic migrate idempotent re-run", smoke.migrations_idempotent)
         smoke.check("T08", "API loopback-only, dependencies private", smoke.isolation)
         smoke.check("T09", "request ID correlated in header and JSON log", smoke.correlation)
         for service in ("postgres", "nats"):

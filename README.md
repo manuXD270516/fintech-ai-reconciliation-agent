@@ -2,7 +2,7 @@
 
 Diseño de una plataforma de conciliación de pagos: reglas determinísticas primero, investigación con IA sólo cuando aporta contexto y aprobación humana para decisiones operativas.
 
-**Estado: sólo M0 (bootstrap técnico) implementado localmente.** Existen una API con endpoints de salud, PostgreSQL + pgvector y NATS JetStream en Docker Compose, y gates de calidad. **No hay** modelos de pagos, ingestion, conciliación, RAG, MCP, agentes, aprobación ni dashboard: siguen siendo diseño (M1–M10). Remoto: [manuXD270516/fintech-ai-reconciliation-agent](https://github.com/manuXD270516/fintech-ai-reconciliation-agent) (privado). El workflow de CI está en el repo; GitHub no ha llegado a ejecutar jobs porque la cuenta tiene un bloqueo de facturación/límite de gasto.
+**Estado: M0 (bootstrap técnico) y M1 (modelo de dominio transaccional) implementados localmente.** Existen una API con endpoints de salud, PostgreSQL + pgvector y NATS JetStream en Docker Compose, gates de calidad, el dominio puro (`packages/domain`), su persistencia con SQLAlchemy Core + Alembic (`packages/store`) y un dataset sintético versionado. **No hay** ingestion, conciliación, RAG, MCP, agentes, aprobación ni dashboard: siguen siendo diseño (M2–M10). Decisiones de implementación: [docs/11-implementation-decisions.md](docs/11-implementation-decisions.md). Remoto: [manuXD270516/fintech-ai-reconciliation-agent](https://github.com/manuXD270516/fintech-ai-reconciliation-agent) (privado). El workflow de CI está en el repo; GitHub no ha llegado a ejecutar jobs porque la cuenta tiene un bloqueo de facturación/límite de gasto.
 
 ## Qué incluye M0
 
@@ -47,7 +47,7 @@ La API se publica en `127.0.0.1:18180` por defecto (no usa 8000 ni 5432, habitua
 ## Ciclo de vida local
 
 ```text
-docker compose up -d --build     # postgres, db-init (one-shot), nats, api
+docker compose up -d --build     # postgres, db-init y migrate (one-shot), nats, api
 curl http://127.0.0.1:18180/health/ready
 docker compose stop              # detiene; conserva datos
 docker compose start             # reanuda con los mismos volúmenes
@@ -56,7 +56,7 @@ docker compose down              # elimina contenedores; conserva volúmenes nom
 
 **Reset destructivo (borra la base de datos y los streams JetStream locales):** `docker compose --profile smoke down --volumes`. No forma parte de ningún gate ni se ejecuta por defecto.
 
-Aislamiento: sólo la API se publica, y únicamente en `127.0.0.1`. PostgreSQL y NATS están en una red Compose `internal` sin puertos publicados. `db-init` usa el superusuario de bootstrap para crear la extensión `vector` y el rol `recon_app` de forma idempotente. La API se conecta como `recon_app`, sin SUPERUSER, CREATEDB, CREATEROLE ni CREATE sobre la base o `public`. El contenedor de la API corre sin root, con filesystem de sólo lectura y sin capabilities.
+Aislamiento: sólo la API se publica, y únicamente en `127.0.0.1`. PostgreSQL y NATS están en una red Compose `internal` sin puertos publicados. `db-init` usa el superusuario de bootstrap para crear la extensión `vector` y el rol `recon_app` de forma idempotente. La API se conecta como `recon_app`, sin SUPERUSER, CREATEDB, CREATEROLE ni CREATE sobre la base o `public`. El contenedor de la API corre sin root, con filesystem de sólo lectura y sin capabilities. El job `migrate` aplica las migraciones Alembic del esquema `recon` con el rol de bootstrap y concede a `recon_app` sólo `SELECT, INSERT` sobre observaciones y auditoría (historia append-only).
 
 Configuración: la API lee `APP_*`. Si un valor obligatorio falta o es inválido, el proceso termina con código 2 y una línea JSON que nombra cada campo (`APP_DB_PASSWORD`, `APP_NATS_URL`, …) sin mostrar su valor. `APP_NATS_URL` no admite credenciales embebidas.
 
@@ -85,7 +85,8 @@ Configuración: la API lee `APP_*`. Si un valor obligatorio falta o es inválido
 | Base de la API | `python:3.12.14-slim-trixie@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f` |
 | uv en la imagen | `ghcr.io/astral-sh/uv:0.12.20@sha256:100047e74f30778ab704942321a09750d6158739573ff58bf3924085cc6cd2d8` |
 | Python (runtime) | fastapi 0.141.1, uvicorn 0.54.0, pydantic 2.13.5, pydantic-settings 2.15.0, psycopg[binary] 3.3.6, nats-py 2.16.0 (resto en `uv.lock`) |
-| Python (dev) | ruff 0.16.9, mypy 2.3.1, pytest 9.1.1, pytest-asyncio 1.4.0, httpx 0.28.1 |
+| Python (persistencia, M1) | sqlalchemy 2.1.1, alembic 1.20.0, tzdata 2026.4 |
+| Python (dev) | ruff 0.16.9, mypy 2.3.1, pytest 9.1.1, pytest-asyncio 1.4.0, httpx 0.28.1, hypothesis 6.168.3 |
 | OpenSpec | @fission-ai/openspec 1.11.0 |
 
 Son las versiones verificadas juntas en este repositorio; no se afirma que sean las últimas.
@@ -93,16 +94,19 @@ Son las versiones verificadas juntas en este repositorio; no se afirma que sean 
 ## Estructura
 
 ```text
-apps/api/        adaptador HTTP (FastAPI): sólo salud; Dockerfile (runtime + smoke)
-infra/           init idempotente de PostgreSQL y configuración de NATS
-scripts/         doctor, gate, smoke, trazabilidad, política, gate negativo
-tests/unit       contratos sin infraestructura (inyección controlada de fallas)
+apps/api/          adaptador HTTP (FastAPI): sólo salud; Dockerfile (runtime + smoke)
+packages/domain/   dominio puro: Money, observaciones, revisiones, lotes, mappings, fixtures
+packages/store/    SQLAlchemy Core + migraciones Alembic; ingesta atómica con auditoría y outbox
+datasets/          datasets sintéticos versionados con manifest (scripts/generate_synthetic.py)
+infra/             init idempotente de PostgreSQL y configuración de NATS
+scripts/           doctor, gate, smoke, trazabilidad, política, gate negativo
+tests/unit         contratos y propiedades sin infraestructura
 tests/integration  ejecutados dentro de la red Compose contra servicios reales
-openspec/        specs y change bootstrap-mvp-foundation (+ evidence/)
-docs/            diseño M0–M10
+openspec/          specs vigentes, changes activos y archivados (+ evidence/)
+docs/              diseño M0–M10 y decisiones de implementación
 ```
 
-`packages/domain` todavía no existe, a propósito. Cuando se cree en M1, contendrá reglas puras de dominio sin imports de HTTP, bus, base de datos ni LLM; `apps/api` sólo adaptará HTTP a esos casos de uso. M0 no crea clases de dominio vacías.
+`packages/domain` no importa HTTP, bus, base de datos ni LLM (un test AST lo verifica); `packages/store` depende del dominio, nunca al revés.
 
 ## Documentación de diseño
 
@@ -126,7 +130,9 @@ Todo objetivo de precisión, latencia o tokens de esos documentos es **EXPECTED*
 
 ## Change OpenSpec
 
-[bootstrap-mvp-foundation](openspec/changes/bootstrap-mvp-foundation/proposal.md) especifica M0: [requirements](openspec/changes/bootstrap-mvp-foundation/specs/repository-foundation/spec.md), [acceptance criteria](openspec/changes/bootstrap-mvp-foundation/acceptance-criteria.md) (estado y evidencia de cada AC), [design](openspec/changes/bootstrap-mvp-foundation/design.md), [tasks](openspec/changes/bootstrap-mvp-foundation/tasks.md) y [test strategy](openspec/changes/bootstrap-mvp-foundation/test-strategy.md). El archivo está confirmado; se pospone mientras AC06 siga PENDING. `openspec/specs/` permanece vacío.
+[bootstrap-mvp-foundation](openspec/changes/bootstrap-mvp-foundation/proposal.md) especifica M0: [requirements](openspec/changes/bootstrap-mvp-foundation/specs/repository-foundation/spec.md), [acceptance criteria](openspec/changes/bootstrap-mvp-foundation/acceptance-criteria.md) (estado y evidencia de cada AC), [design](openspec/changes/bootstrap-mvp-foundation/design.md), [tasks](openspec/changes/bootstrap-mvp-foundation/tasks.md) y [test strategy](openspec/changes/bootstrap-mvp-foundation/test-strategy.md). El archivo está confirmado; se pospone mientras AC06 siga PENDING.
+
+[transaction-domain](openspec/changes/archive/2026-09-29-transaction-domain/proposal.md) (M1) está archivado con AC01–AC09 en PASS ([evidencia](openspec/changes/archive/2026-09-29-transaction-domain/evidence/README.md)); su spec vigente es [openspec/specs/transaction-domain](openspec/specs/transaction-domain/spec.md).
 
 ## Límites de la demostración
 
