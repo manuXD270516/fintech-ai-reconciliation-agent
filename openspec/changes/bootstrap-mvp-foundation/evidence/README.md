@@ -6,7 +6,7 @@ Resultados reales de T01–T13 del 2026-09-29. Los tiempos son **MEASURED** sól
 
 | Elemento | Valor |
 |---|---|
-| Commit del código probado | `6b462c0` (árbol limpio; `dirty: false` en los JSON) |
+| Commit del código probado | `6b462c0` (árbol limpio; `dirty: false` en los JSON). El gate estático se repitió en `022ab98`, tras ajustar la regla de trazabilidad y los artefactos: [log](gate-static-final.log) |
 | Host | Windows 11 (10.0.26200) AMD64, Docker Desktop con Docker 29.8.0 linux/amd64, kernel WSL2 6.6.87.2, Compose 5.5.1 |
 | Linux (T01) | Contenedor Debian 13 (trixie) x86_64 sobre el mismo kernel WSL2 |
 | Toolchain | uv 0.12.20, CPython 3.12.14 (gestionado por uv), Node 22.23.1, OpenSpec 1.11.0 |

@@ -1,0 +1,71 @@
+commit: 022ab98
+gate: removed AI credential variables from environment: ANTHROPIC_BASE_URL
+
+=== gate: lock ===
+uv : Resolved 37 packages in 0.81ms
+At %USERPROFILE%\AppData\Local\Temp\ps-script-b6608c53-9e0d-4fbc-bc91-b4a723bc37c5.ps1:95 char:218
++ ... commit $c"; uv run python scripts/gate.py static *> .smoke\gate-stati ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Resolved 37 packages in 0.81ms:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+=== gate: lint ===
+All checks passed!
+47 files already formatted
+
+=== gate: types ===
+Success: no issues found in 29 source files
+
+=== gate: test ===
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent
+configfile: pyproject.toml
+testpaths: tests/unit
+plugins: anyio-4.15.1, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 61 items
+
+tests\unit\test_ci_parity.py ....                                        [  6%]
+tests\unit\test_config.py ..........                                     [ 22%]
+tests\unit\test_doctor_and_policy.py ...........                         [ 40%]
+tests\unit\test_health_contract.py ...........                           [ 59%]
+tests\unit\test_request_logging.py ........                              [ 72%]
+tests\unit\test_scope.py ...                                             [ 77%]
+tests\unit\test_traceability_gate.py ..............                      [100%]
+
+============================= 61 passed in 8.70s ==============================
+
+=== gate: policy ===
+policy: OK
+
+=== gate: trace ===
+traceability: OK
+
+=== gate: openspec ===
+Γ£ô change/bootstrap-mvp-foundation
+Totals: 1 passed, 0 failed (1 items)
+
+=== gate: negative ===
+[OK] control: openspec: step=openspec expected=pass exit=0 :: Totals: 1 passed, 0 failed (1 items)
+[OK] control: traceability: step=trace expected=pass exit=0 :: traceability: OK
+[OK] control: contract tests: step=contract expected=pass exit=0 :: 14 passed in 7.21s
+[OK] requirement RF-03 without scenarios: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] requirement RF-03 without SHALL/MUST: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] test-strategy.md removed: step=trace expected=fail exit=1 :: traceability: 1 problem(s)
+[OK] criterion references unknown requirement: step=trace expected=fail exit=1 :: traceability: 2 problem(s)
+[OK] readiness returns 200 when a dependency fails: step=contract expected=fail exit=1 :: 10 failed, 4 passed in 7.28s
+[OK] non-health route added: step=contract expected=fail exit=1 :: 3 failed, 11 passed in 7.31s
+[OK] real working tree unchanged
+negative gate: OK
+
+=== gate summary ===
+PASS  lock      exit=0 (0.0s)
+PASS  lint      exit=0 (0.2s)
+PASS  types     exit=0 (0.3s)
+PASS  test      exit=0 (9.6s)
+PASS  policy    exit=0 (0.2s)
+PASS  trace     exit=0 (0.1s)
+PASS  openspec  exit=0 (1.0s)
+PASS  negative  exit=0 (29.9s)
