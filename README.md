@@ -2,7 +2,7 @@
 
 Diseño de una plataforma de conciliación de pagos: reglas determinísticas primero, investigación con IA sólo cuando aporta contexto y aprobación humana para decisiones operativas.
 
-**Estado: sólo M0 (bootstrap técnico) implementado localmente.** Existen una API con endpoints de salud, PostgreSQL + pgvector y NATS JetStream en Docker Compose, y gates de calidad. **No hay** modelos de pagos, ingestion, conciliación, RAG, MCP, agentes, aprobación ni dashboard: siguen siendo diseño (M1–M10). El repositorio no está publicado; el workflow de CI existe, pero todavía no se ha ejecutado en GitHub.
+**Estado: sólo M0 (bootstrap técnico) implementado localmente.** Existen una API con endpoints de salud, PostgreSQL + pgvector y NATS JetStream en Docker Compose, y gates de calidad. **No hay** modelos de pagos, ingestion, conciliación, RAG, MCP, agentes, aprobación ni dashboard: siguen siendo diseño (M1–M10). Remoto: [manuXD270516/fintech-ai-reconciliation-agent](https://github.com/manuXD270516/fintech-ai-reconciliation-agent) (privado). El workflow de CI está en el repo; GitHub no ha llegado a ejecutar jobs porque la cuenta tiene un bloqueo de facturación/límite de gasto.
 
 ## Qué incluye M0
 
@@ -30,7 +30,8 @@ No se requieren cuentas financieras ni claves de IA. El Python del sistema no se
 PowerShell (Windows):
 
 ```powershell
-git clone <url> fintech-ai-reconciliation-agent; cd fintech-ai-reconciliation-agent
+git clone https://github.com/manuXD270516/fintech-ai-reconciliation-agent.git
+cd fintech-ai-reconciliation-agent
 uv sync --locked                      # instala CPython 3.12.14 y las dependencias del lock
 npm ci                                # OpenSpec 1.11.0 local
 Copy-Item .env.example .env           # valores sintéticos, sólo locales
@@ -125,7 +126,7 @@ Todo objetivo de precisión, latencia o tokens de esos documentos es **EXPECTED*
 
 ## Change OpenSpec
 
-[bootstrap-mvp-foundation](openspec/changes/bootstrap-mvp-foundation/proposal.md) especifica M0: [requirements](openspec/changes/bootstrap-mvp-foundation/specs/repository-foundation/spec.md), [acceptance criteria](openspec/changes/bootstrap-mvp-foundation/acceptance-criteria.md) (estado y evidencia de cada AC), [design](openspec/changes/bootstrap-mvp-foundation/design.md), [tasks](openspec/changes/bootstrap-mvp-foundation/tasks.md) y [test strategy](openspec/changes/bootstrap-mvp-foundation/test-strategy.md). El change no está archivado y `openspec/specs/` sigue vacío hasta decidir su integración.
+[bootstrap-mvp-foundation](openspec/changes/bootstrap-mvp-foundation/proposal.md) especifica M0: [requirements](openspec/changes/bootstrap-mvp-foundation/specs/repository-foundation/spec.md), [acceptance criteria](openspec/changes/bootstrap-mvp-foundation/acceptance-criteria.md) (estado y evidencia de cada AC), [design](openspec/changes/bootstrap-mvp-foundation/design.md), [tasks](openspec/changes/bootstrap-mvp-foundation/tasks.md) y [test strategy](openspec/changes/bootstrap-mvp-foundation/test-strategy.md). El archivo está confirmado; se pospone mientras AC06 siga PENDING. `openspec/specs/` permanece vacío.
 
 ## Límites de la demostración
 
