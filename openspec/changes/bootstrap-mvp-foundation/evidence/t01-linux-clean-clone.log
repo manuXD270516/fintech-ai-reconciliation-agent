@@ -1,0 +1,155 @@
+### STEP git clone exit=0 seconds=1
+commit: 6b462c0
+platform: Linux 6.6.87.2-microsoft-standard-WSL2 x86_64; Debian GNU/Linux 13 (trixie)
+/usr/bin/python3
+### STEP python preinstalled? exit=0 seconds=0
+docker : Downloading cpython-3.12.14-linux-x86_64-gnu (download) (32.7MiB)
+At %USERPROFILE%\AppData\Local\Temp\ps-script-421b202a-8882-4ff2-9efa-a3061c6d8157.ps1:95 char:62
++ ... tion-agent; docker run --rm -v "${PWD}:/src:ro" -v "${PWD}\.smoke\t01 ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Downloading cpy...load) (32.7MiB):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Downloaded cpython-3.12.14-linux-x86_64-gnu (download)
+Using CPython 3.12.14
+Creating virtual environment at: .venv
+Resolved 37 packages in 7ms
+   Building recon-api @ file:///work/repo/apps/api
+Downloading mypy (14.6MiB)
+Downloading pygments (1.2MiB)
+Downloading ruff (9.9MiB)
+Downloading psycopg-binary (5.0MiB)
+Downloading ast-serialize (1.3MiB)
+Downloading pydantic-core (2.0MiB)
+ Downloaded pygments
+ Downloaded ast-serialize
+ Downloaded pydantic-core
+ Downloaded psycopg-binary
+ Downloaded ruff
+      Built recon-api @ file:///work/repo/apps/api
+ Downloaded mypy
+Prepared 34 packages in 3.70s
+Installed 34 packages in 239ms
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.15.1
+ + ast-serialize==0.11.2
+ + certifi==2026.7.22
+ + click==8.5.0
+ + fastapi==0.141.1
+ + h11==0.16.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + idna==3.20
+ + iniconfig==2.3.0
+ + librt==0.16.0
+ + mypy==2.3.1
+ + mypy-extensions==1.1.0
+ + nats-py==2.16.0
+ + packaging==26.3
+ + pathspec==1.1.1
+ + pluggy==1.6.0
+ + psycopg==3.3.6
+ + psycopg-binary==3.3.6
+ + pydantic==2.13.5
+ + pydantic-core==2.46.5
+ + pydantic-settings==2.15.0
+ + pygments==2.21.0
+ + pytest==9.1.1
+ + pytest-asyncio==1.4.0
+ + python-dotenv==1.2.3
+ + recon-api==0.0.0 (from file:///work/repo/apps/api)
+ + ruff==0.16.9
+ + starlette==1.7.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.4
+ + uvicorn==0.54.0
+### STEP uv sync --locked exit=0 seconds=9
+3.12.14 (main, Sep 24 2026, 17:57:43) [Clang 22.1.3 ] Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.41
+### STEP python version exit=0 seconds=0
+
+added 80 packages in 3s
+npm notice
+npm notice New major version of npm available! 10.9.8 -> 12.1.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.1.0
+npm notice To update run: npm install -g npm@12.1.0
+npm notice
+### STEP npm ci exit=0 seconds=4
+### STEP copy env exit=0 seconds=0
+[OK] uv: uv 0.12.20 (x86_64-unknown-linux-musl)
+[OK] python: 3.12.14 (/work/repo/.venv/bin/python)
+[FAIL] docker: docker not found on PATH
+       action: install Docker Desktop (WSL2) or Docker Engine
+[FAIL] compose: docker compose plugin not available
+       action: install Docker Compose v2 >= 2.24.0
+[OK] node: v22.23.1
+[OK] openspec: local 1.11.0
+[OK] .env: present (git-ignored)
+doctor: NOT ready (docker, compose)
+### STEP doctor (expected: docker missing) exit=1 seconds=0
+
+=== gate: lock ===
+Resolved 37 packages in 1ms
+
+=== gate: lint ===
+All checks passed!
+47 files already formatted
+
+=== gate: types ===
+Success: no issues found in 29 source files
+
+=== gate: test ===
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: /work/repo
+configfile: pyproject.toml
+testpaths: tests/unit
+plugins: asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 60 items
+
+tests/unit/test_ci_parity.py ....                                        [  6%]
+tests/unit/test_config.py ..........                                     [ 23%]
+tests/unit/test_doctor_and_policy.py ...........                         [ 41%]
+tests/unit/test_health_contract.py ...........                           [ 60%]
+tests/unit/test_request_logging.py ........                              [ 73%]
+tests/unit/test_scope.py ...                                             [ 78%]
+tests/unit/test_traceability_gate.py .............                       [100%]
+
+============================== 60 passed in 8.23s ==============================
+
+=== gate: policy ===
+policy: OK
+
+=== gate: trace ===
+traceability: OK
+
+=== gate: openspec ===
+Note: OpenSpec collects anonymous usage stats. Opt out: OPENSPEC_TELEMETRY=0 or openspec config set telemetry.enabled 
+false
+Γ£ô change/bootstrap-mvp-foundation
+Totals: 1 passed, 0 failed (1 items)
+
+=== gate: negative ===
+[OK] control: openspec: step=openspec expected=pass exit=0 :: Totals: 1 passed, 0 failed (1 items)
+[OK] control: traceability: step=trace expected=pass exit=0 :: traceability: OK
+[OK] control: contract tests: step=contract expected=pass exit=0 :: 14 passed in 7.08s
+[OK] requirement RF-03 without scenarios: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] requirement RF-03 without SHALL/MUST: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] test-strategy.md removed: step=trace expected=fail exit=1 :: traceability: 1 problem(s)
+[OK] criterion references unknown requirement: step=trace expected=fail exit=1 :: traceability: 2 problem(s)
+[OK] readiness returns 200 when a dependency fails: step=contract expected=fail exit=1 :: 10 failed, 4 passed in 7.11s
+[OK] non-health route added: step=contract expected=fail exit=1 :: 3 failed, 11 passed in 7.11s
+[OK] real working tree unchanged
+negative gate: OK
+
+=== gate summary ===
+PASS  lock      exit=0 (0.0s)
+PASS  lint      exit=0 (0.1s)
+PASS  types     exit=0 (5.0s)
+PASS  test      exit=0 (9.9s)
+PASS  policy    exit=0 (0.0s)
+PASS  trace     exit=0 (0.0s)
+PASS  openspec  exit=0 (0.8s)
+PASS  negative  exit=0 (25.9s)
+### STEP gate static exit=0 seconds=41

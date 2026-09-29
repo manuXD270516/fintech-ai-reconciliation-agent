@@ -40,6 +40,14 @@ Instalación locked → Ruff → mypy → pytest → Compose smoke → validaci�
 
 Schema estándar: proposal, design, specs y tasks; complementos explícitos `acceptance-criteria.md` y `test-strategy.md`. `config.yaml` guía el proyecto, pero CLI estándar no impone todos los seis artefactos ni prueba implementación. Gate adicional verificará presencia y trazabilidad; revisión humana confirma contenido. No se necesita schema personalizado ni agentes editores para bootstrap. En esta fase tasks sin marcar y change sin archivar.
 
+### Notas de implementación (M0)
+
+- Versiones exactas y digests en README; uv exige `required-version ==0.12.20`. `hatchling==1.32.4` (backend de build de `recon-api`) está fijado por versión, pero uv.lock no registra sus hashes.
+- Healthcheck de PostgreSQL por TCP: en un volumen nuevo, el servidor temporal de inicialización sólo escucha por socket Unix.
+- Readiness reporta `ok`/`fail`/`timeout`. Con un servicio detenido, la resolución DNS en la red interna se cuelga, así que el resultado observado es `timeout` al llegar el deadline (≈2.5 s), no un `fail` inmediato.
+- Integración real (vector, JetStream, rol runtime, vector ausente, broker sin JetStream, dependencia colgada) corre en un contenedor `smoke` dentro de la red interna, porque DB y bus no son accesibles desde el host. Perfil Compose `smoke`, fuera de `up` por defecto.
+- CI definido con los mismos pasos de `scripts/gate.py`; su ejecución remota queda pendiente mientras no exista remoto.
+
 ## Risks / Trade-offs
 
 - Docker ausente → diagnóstico, nunca declarar smoke exitoso con mocks.
@@ -55,4 +63,4 @@ Sin datos existentes. Implementación futura: archivos bootstrap → entorno ais
 
 ## Acceptance and Test Strategy
 
-Ver [acceptance criteria](acceptance-criteria.md) y [test strategy](test-strategy.md). No se han ejecutado tests de runtime en esta fase documental.
+Ver [acceptance criteria](acceptance-criteria.md), [test strategy](test-strategy.md) y [evidencia de ejecución](evidence/README.md).

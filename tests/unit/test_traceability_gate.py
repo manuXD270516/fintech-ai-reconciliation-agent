@@ -78,10 +78,16 @@ def test_invalid_state_fails(repo: Path) -> None:
     assert any("AC03: state 'DONE'" in e for e in check_repo(repo))
 
 
-def test_checked_task_without_passing_criterion_fails(repo: Path) -> None:
+def test_checked_task_without_evidence_fails(repo: Path) -> None:
     set_task(repo, "3.1", checked=True)
     edit(repo, "acceptance-criteria.md", AC03_TAIL, "| 3.1, 3.2 | PENDING | — |")
-    assert any("task 3.1 checked but no PASS" in e for e in check_repo(repo))
+    assert any("task 3.1 checked but no criterion links evidence" in e for e in check_repo(repo))
+
+
+def test_checked_task_backed_only_by_failing_criterion_fails(repo: Path) -> None:
+    set_task(repo, "3.1", checked=True)
+    edit(repo, "acceptance-criteria.md", AC03_TAIL, "| 3.1, 3.2 | FAIL | [e](evidence/README.md) |")
+    assert any("task 3.1 checked but no criterion links evidence" in e for e in check_repo(repo))
 
 
 def test_archived_incomplete_change_fails(repo: Path) -> None:

@@ -1,0 +1,307 @@
+{
+  "kind": "MEASURED",
+  "scope": "local Compose smoke of M0 infrastructure; not a performance benchmark",
+  "started_utc": "2026-09-29T06:04:51+00:00",
+  "commit": "6b462c0",
+  "dirty": false,
+  "host": "Windows 11 AMD64",
+  "docker": "linux/amd64 29.8.0",
+  "compose": "5.5.1",
+  "images": "pgvector/pgvector:0.8.6-pg17-trixie@sha256:724a4041afdb1750446e3f6b5cfa8f3b0ac5a2cf538ddfa6bfee4f94c2fa85c6\nnats:2.14.7-alpine3.22@sha256:4063edae0717ba5f7501bfde75f97fd9b57f5b93597b92c70b6a6fbbf6a74e06\nrecon-m0-api:local\nnats:2.14.7-alpine3.22@sha256:4063edae0717ba5f7501bfde75f97fd9b57f5b93597b92c70b6a6fbbf6a74e06\nrecon-m0-smoke:local\npgvector/pgvector:0.8.6-pg17-trixie@sha256:724a4041afdb1750446e3f6b5cfa8f3b0ac5a2cf538ddfa6bfee4f94c2fa85c6",
+  "results": [
+    {
+      "test_id": "T03",
+      "name": "startup: compose up, API ready",
+      "ok": true,
+      "seconds": 12.45,
+      "details": {
+        "seconds_until_ready": 2.08
+      }
+    },
+    {
+      "test_id": "T05",
+      "name": "healthy live/ready contract from host",
+      "ok": true,
+      "seconds": 0.01,
+      "details": {
+        "live": {
+          "status": "alive",
+          "request_id": "f5e1cb4a0b034fcc82356fad5df8c3e3"
+        },
+        "ready": {
+          "status": "ready",
+          "request_id": "07920163cd7e47bab623b1da583731d6",
+          "checks": {
+            "database": "ok",
+            "vector": "ok",
+            "messaging": "ok"
+          }
+        },
+        "ready_seconds": 0.01
+      }
+    },
+    {
+      "test_id": "T03",
+      "name": "vector + JetStream + role + readiness integration",
+      "ok": true,
+      "seconds": 20.34,
+      "details": {
+        "pytest": [
+          "tests/integration/test_infrastructure.py::test_vector_extension_supports_knn_query PASSED [ 11%]",
+          "tests/integration/test_infrastructure.py::test_runtime_role_can_use_vector_type PASSED [ 22%]",
+          "tests/integration/test_infrastructure.py::test_runtime_role_has_no_initialization_privileges PASSED [ 33%]",
+          "tests/integration/test_infrastructure.py::test_jetstream_durable_publish_consume_ack PASSED [ 44%]",
+          "tests/integration/test_readiness_real.py::test_ready_with_real_dependencies PASSED [ 55%]",
+          "tests/integration/test_readiness_real.py::test_not_ready_when_vector_extension_missing PASSED [ 66%]",
+          "tests/integration/test_readiness_real.py::test_not_ready_when_jetstream_disabled PASSED [ 77%]",
+          "tests/integration/test_readiness_real.py::test_hung_dependency_is_bounded_by_deadline[database] PASSED [ 88%]",
+          "tests/integration/test_readiness_real.py::test_hung_dependency_is_bounded_by_deadline[messaging] PASSED [100%]"
+        ]
+      }
+    },
+    {
+      "test_id": "T03",
+      "name": "db-init idempotent re-run",
+      "ok": true,
+      "seconds": 2.88,
+      "details": {
+        "db_init_exit_codes": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "test_id": "T08",
+      "name": "API loopback-only, dependencies private",
+      "ok": true,
+      "seconds": 2.54,
+      "details": {
+        "published": {
+          "api": [
+            "127.0.0.1:18081"
+          ],
+          "nats": [],
+          "nats-nojs": [],
+          "postgres": []
+        },
+        "backend_internal": true,
+        "lan_ip_checked": true
+      }
+    },
+    {
+      "test_id": "T09",
+      "name": "request ID correlated in header and JSON log",
+      "ok": true,
+      "seconds": 1.43,
+      "details": {
+        "log_entry": {
+          "ts": "2026-09-29T06:05:29.616+00:00",
+          "level": "INFO",
+          "logger": "recon_api.access",
+          "message": "request",
+          "request_id": "smoke-8c01f3e96998",
+          "request_id_source": "client",
+          "method": "GET",
+          "path": "/health/ready",
+          "status": 200,
+          "duration_ms": 8.61
+        }
+      }
+    },
+    {
+      "test_id": "T06",
+      "name": "postgres stop: ready 503 <= 3s, live 200, recovery",
+      "ok": true,
+      "seconds": 10.15,
+      "details": {
+        "samples": [
+          {
+            "ready": 503,
+            "seconds": 2.527,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.503,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.517,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          }
+        ],
+        "max_ready_seconds": 2.527,
+        "recovery_seconds": 1.02
+      }
+    },
+    {
+      "test_id": "T06",
+      "name": "postgres pause: ready 503 <= 3s, live 200, recovery",
+      "ok": true,
+      "seconds": 8.01,
+      "details": {
+        "samples": [
+          {
+            "ready": 503,
+            "seconds": 2.504,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.504,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.503,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          }
+        ],
+        "max_ready_seconds": 2.504,
+        "recovery_seconds": 0.01
+      }
+    },
+    {
+      "test_id": "T06",
+      "name": "nats stop: ready 503 <= 3s, live 200, recovery",
+      "ok": true,
+      "seconds": 8.41,
+      "details": {
+        "samples": [
+          {
+            "ready": 503,
+            "seconds": 2.504,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.518,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.515,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          }
+        ],
+        "max_ready_seconds": 2.518,
+        "recovery_seconds": 0.03
+      }
+    },
+    {
+      "test_id": "T06",
+      "name": "nats pause: ready 503 <= 3s, live 200, recovery",
+      "ok": true,
+      "seconds": 8.02,
+      "details": {
+        "samples": [
+          {
+            "ready": 503,
+            "seconds": 2.506,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.503,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.522,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          }
+        ],
+        "max_ready_seconds": 2.522,
+        "recovery_seconds": 0.02
+      }
+    },
+    {
+      "test_id": "T04",
+      "name": "marker and pending message survive stop/start",
+      "ok": true,
+      "seconds": 11.02,
+      "details": {
+        "write": {
+          "step": "write",
+          "marker_rows": 1,
+          "stream_seq": 1,
+          "num_pending": 1
+        },
+        "verify": {
+          "step": "verify",
+          "marker_survived": true,
+          "pending_before_consume": 1,
+          "payload_ok": true,
+          "pending_after_ack": 0,
+          "ok": true
+        },
+        "volumes": {
+          "recon-m0-clean_pgdata": "2026-09-29T06:04:57Z",
+          "recon-m0-clean_natsdata": "2026-09-29T06:04:57Z"
+        }
+      }
+    }
+  ]
+}

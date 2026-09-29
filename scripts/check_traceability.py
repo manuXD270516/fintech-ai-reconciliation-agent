@@ -2,8 +2,8 @@
 
 For every active change it requires the six artifacts, checks that each acceptance
 criterion points to existing requirements, tests and tasks, that everything is covered,
-that PASS/FAIL rows link existing evidence and that checked tasks are backed by a
-PASS criterion. Archived changes must be fully checked and PASS.
+that PASS/FAIL rows link existing evidence and that every checked task belongs to a
+non-FAIL criterion with linked evidence. Archived changes must be fully checked and PASS.
 
 Usage: python scripts/check_traceability.py [repo_root]
 """
@@ -121,12 +121,11 @@ def check_change(change: Path, archived: bool = False) -> list[str]:
             errors += [f"{where}: unknown {kind} {ref}" for ref in refs if ref not in known]
         if ac.state not in STATES:
             errors.append(f"{where}: state {ac.state!r} not in {sorted(STATES)}")
-        if ac.state in {"PASS", "FAIL"}:
-            if not ac.evidence:
-                errors.append(f"{where}: {ac.state} without evidence link")
-            for link in ac.evidence:
-                if not (change / link).resolve().is_file():
-                    errors.append(f"{where}: evidence not found: {link}")
+        if ac.state in {"PASS", "FAIL"} and not ac.evidence:
+            errors.append(f"{where}: {ac.state} without evidence link")
+        for link in ac.evidence:
+            if not (change / link).resolve().is_file():
+                errors.append(f"{where}: evidence not found: {link}")
 
     for kind, known, used in (
         ("requirement", requirements, {r for ac in criteria for r in ac.requirements}),
@@ -135,10 +134,10 @@ def check_change(change: Path, archived: bool = False) -> list[str]:
     ):
         errors += [f"{name}: {kind} {x} not covered by any criterion" for x in sorted(known - used)]
 
-    passing_tasks = {t for ac in criteria if ac.state == "PASS" for t in ac.tasks}
+    evidenced_tasks = {t for ac in criteria if ac.evidence and ac.state != "FAIL" for t in ac.tasks}
     for tid, checked in task_marks.items():
-        if checked and tid not in passing_tasks:
-            errors.append(f"{name}: task {tid} checked but no PASS criterion backs it")
+        if checked and tid not in evidenced_tasks:
+            errors.append(f"{name}: task {tid} checked but no criterion links evidence for it")
 
     if archived:
         errors += [

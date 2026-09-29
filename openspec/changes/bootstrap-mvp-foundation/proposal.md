@@ -24,7 +24,7 @@ Ninguna. No existen capacidades implementadas ni specs vigentes previas.
 
 En la futura implementación: raíz del repositorio, configuración de desarrollo, API de salud, dependencias/migraciones de infraestructura, CI, tests smoke y documentación de uso. No hay usuarios ni datos existentes que migrar. No cambia contratos de pagos porque todavía no existen.
 
-La entrega actual contiene únicamente documentación y especificaciones; todas las tareas de implementación quedan abiertas. El check de estructura OpenSpec no autoriza a aplicar este change ni demuestra un servicio funcionando.
+El estado de implementación y su evidencia están en [tasks](tasks.md), [acceptance criteria](acceptance-criteria.md) y [evidence](evidence/README.md). El check de estructura OpenSpec, por sí solo, no demuestra un servicio funcionando.
 
 ## Non-goals
 

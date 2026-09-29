@@ -1,0 +1,188 @@
+### STEP git clone exit=0 seconds=0.2
+commit: 6b462c0
+Using CPython 3.12.14 interpreter at: %USERPROFILE%\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\python.exe
+Creating virtual environment at: .venv
+Resolved 37 packages in 1ms
+   Building recon-api @ file:///C:/Users/Manuel%20Saavedra/AppData/Local/Temp/m0-clean-win/repo/apps/api
+Downloading pygments (1.2MiB)
+Downloading psycopg-binary (3.5MiB)
+Downloading ast-serialize (1.1MiB)
+Downloading mypy (10.7MiB)
+Downloading pydantic-core (1.9MiB)
+Downloading ruff (10.1MiB)
+      Built recon-api @ file:///C:/Users/Manuel%20Saavedra/AppData/Local/Temp/m0-clean-win/repo/apps/api
+ Downloaded ast-serialize
+ Downloaded pygments
+ Downloaded pydantic-core
+ Downloaded psycopg-binary
+ Downloaded ruff
+ Downloaded mypy
+Prepared 36 packages in 15.09s
+Installed 36 packages in 2.19s
+ + annotated-doc==0.0.5
+ + annotated-types==0.8.0
+ + anyio==4.15.1
+ + ast-serialize==0.11.2
+ + certifi==2026.7.22
+ + click==8.5.0
+ + colorama==0.4.6
+ + fastapi==0.141.1
+ + h11==0.16.0
+ + httpcore==1.0.9
+ + httpx==0.28.1
+ + idna==3.20
+ + iniconfig==2.3.0
+ + librt==0.16.0
+ + mypy==2.3.1
+ + mypy-extensions==1.1.0
+ + nats-py==2.16.0
+ + packaging==26.3
+ + pathspec==1.1.1
+ + pluggy==1.6.0
+ + psycopg==3.3.6
+ + psycopg-binary==3.3.6
+ + pydantic==2.13.5
+ + pydantic-core==2.46.5
+ + pydantic-settings==2.15.0
+ + pygments==2.21.0
+ + pytest==9.1.1
+ + pytest-asyncio==1.4.0
+ + python-dotenv==1.2.3
+ + recon-api==0.0.0 (from file:///C:/Users/Manuel%20Saavedra/AppData/Local/Temp/m0-clean-win/repo/apps/api)
+ + ruff==0.16.9
+ + starlette==1.7.0
+ + typing-extensions==4.16.0
+ + typing-inspection==0.4.4
+ + tzdata==2026.4
+ + uvicorn==0.54.0
+### STEP uv sync --locked exit=0 seconds=18.6
+3.12.14 (main, Sep 24 2026, 17:57:31) [MSC v.1944 64 bit (AMD64)] Windows-11-10.0.26200-SP0
+### STEP python version exit=0 seconds=1
+
+added 80 packages in 7s
+npm notice
+npm notice New major version of npm available! 10.9.8 -> 12.1.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.1.0
+npm notice To update run: npm install -g npm@12.1.0
+npm notice
+### STEP npm ci exit=0 seconds=7.2
+### STEP copy env exit=0 seconds=0
+[OK] uv: uv 0.12.20 (2274b80d6 2026-09-28 x86_64-pc-windows-msvc)
+[OK] python: 3.12.14 (%USERPROFILE%\AppData\Local\Temp\m0-clean-win\repo\.venv\Scripts\python.exe)
+[OK] docker: server 29.8.0 linux
+[OK] compose: 5.5.1
+[OK] node: v22.23.1
+[OK] openspec: local 1.11.0
+[OK] .env: present (git-ignored)
+doctor: ready
+### STEP doctor exit=0 seconds=0.5
+gate: removed AI credential variables from environment: ANTHROPIC_BASE_URL
+
+=== gate: lock ===
+Resolved 37 packages in 0.95ms
+
+=== gate: lint ===
+All checks passed!
+47 files already formatted
+
+=== gate: types ===
+Success: no issues found in 29 source files
+
+=== gate: test ===
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: %USERPROFILE%\AppData\Local\Temp\m0-clean-win\repo
+configfile: pyproject.toml
+testpaths: tests/unit
+plugins: anyio-4.15.1, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 60 items
+
+tests\unit\test_ci_parity.py ....                                        [  6%]
+tests\unit\test_config.py ..........                                     [ 23%]
+tests\unit\test_doctor_and_policy.py ...........                         [ 41%]
+tests\unit\test_health_contract.py ...........                           [ 60%]
+tests\unit\test_request_logging.py ........                              [ 73%]
+tests\unit\test_scope.py ...                                             [ 78%]
+tests\unit\test_traceability_gate.py .............                       [100%]
+
+============================= 60 passed in 8.83s ==============================
+
+=== gate: policy ===
+policy: OK
+
+=== gate: trace ===
+traceability: OK
+
+=== gate: openspec ===
+Γ£ô change/bootstrap-mvp-foundation
+Totals: 1 passed, 0 failed (1 items)
+
+=== gate: negative ===
+[OK] control: openspec: step=openspec expected=pass exit=0 :: Totals: 1 passed, 0 failed (1 items)
+[OK] control: traceability: step=trace expected=pass exit=0 :: traceability: OK
+[OK] control: contract tests: step=contract expected=pass exit=0 :: 14 passed in 7.16s
+[OK] requirement RF-03 without scenarios: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] requirement RF-03 without SHALL/MUST: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] test-strategy.md removed: step=trace expected=fail exit=1 :: traceability: 1 problem(s)
+[OK] criterion references unknown requirement: step=trace expected=fail exit=1 :: traceability: 2 problem(s)
+[OK] readiness returns 200 when a dependency fails: step=contract expected=fail exit=1 :: 10 failed, 4 passed in 7.31s
+[OK] non-health route added: step=contract expected=fail exit=1 :: 3 failed, 11 passed in 7.27s
+[OK] real working tree unchanged
+negative gate: OK
+
+=== gate summary ===
+PASS  lock      exit=0 (0.0s)
+PASS  lint      exit=0 (0.6s)
+PASS  types     exit=0 (5.1s)
+PASS  test      exit=0 (11.4s)
+PASS  policy    exit=0 (0.2s)
+PASS  trace     exit=0 (0.1s)
+PASS  openspec  exit=0 (5.3s)
+PASS  negative  exit=0 (29.3s)
+### STEP gate static exit=0 seconds=52
+gate: removed AI credential variables from environment: ANTHROPIC_BASE_URL
+
+=== gate: smoke ===
+[PASS] T03 startup: compose up, API ready (12.45s)
+[PASS] T05 healthy live/ready contract from host (0.01s)
+[PASS] T03 vector + JetStream + role + readiness integration (20.34s)
+[PASS] T03 db-init idempotent re-run (2.88s)
+[PASS] T08 API loopback-only, dependencies private (2.54s)
+[PASS] T09 request ID correlated in header and JSON log (1.43s)
+[PASS] T06 postgres stop: ready 503 <= 3s, live 200, recovery (10.15s)
+[PASS] T06 postgres pause: ready 503 <= 3s, live 200, recovery (8.01s)
+[PASS] T06 nats stop: ready 503 <= 3s, live 200, recovery (8.41s)
+[PASS] T06 nats pause: ready 503 <= 3s, live 200, recovery (8.02s)
+[PASS] T04 marker and pending message survive stop/start (11.02s)
+evidence: .smoke\smoke-20260929T060451Z.json
+smoke: 11 passed, 0 failed
+
+=== gate summary ===
+PASS  smoke     exit=0 (87.0s)
+### STEP gate smoke exit=0 seconds=87.1
+ Container recon-m0-clean-api-1 Stopping 
+ Container recon-m0-clean-api-1 Stopped 
+ Container recon-m0-clean-api-1 Removing 
+ Container recon-m0-clean-api-1 Removed 
+ Container recon-m0-clean-db-init-1 Stopping 
+ Container recon-m0-clean-nats-1 Stopping 
+ Container recon-m0-clean-db-init-1 Stopped 
+ Container recon-m0-clean-db-init-1 Removing 
+ Container recon-m0-clean-db-init-1 Removed 
+ Container recon-m0-clean-postgres-1 Stopping 
+ Container recon-m0-clean-nats-1 Stopped 
+ Container recon-m0-clean-nats-1 Removing 
+ Container recon-m0-clean-nats-1 Removed 
+ Container recon-m0-clean-postgres-1 Stopped 
+ Container recon-m0-clean-postgres-1 Removing 
+ Container recon-m0-clean-postgres-1 Removed 
+ Network recon-m0-clean_backend Removing 
+ Network recon-m0-clean_edge Removing 
+ Volume recon-m0-clean_natsdata Removing 
+ Volume recon-m0-clean_pgdata Removing 
+ Volume recon-m0-clean_natsdata Removed 
+ Volume recon-m0-clean_pgdata Removed 
+ Network recon-m0-clean_backend Removed 
+ Network recon-m0-clean_edge Removed 
+### STEP teardown clean project (own volumes) exit=0 seconds=1.9
