@@ -1,0 +1,33 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent\.venv\Scripts\python.exe
+hypothesis profile 'default'
+rootdir: D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent
+configfile: pyproject.toml
+plugins: anyio-4.15.1, hypothesis-6.168.3, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 22 items
+
+tests/unit/test_mcp_server.py::test_discovery_exposes_exactly_six_read_tools PASSED [  4%]
+tests/unit/test_mcp_server.py::test_protocol_revision_is_negotiated PASSED [  9%]
+tests/unit/test_mcp_server.py::test_get_transaction_current_and_historical_revisions PASSED [ 13%]
+tests/unit/test_mcp_server.py::test_invalid_arguments_are_structured_errors[args0] PASSED [ 18%]
+tests/unit/test_mcp_server.py::test_invalid_arguments_are_structured_errors[args1] PASSED [ 22%]
+tests/unit/test_mcp_server.py::test_invalid_arguments_are_structured_errors[args2] PASSED [ 27%]
+tests/unit/test_mcp_server.py::test_invalid_arguments_are_structured_errors[args3] PASSED [ 31%]
+tests/unit/test_mcp_server.py::test_other_tenant_resources_are_indistinguishable_from_missing PASSED [ 36%]
+tests/unit/test_mcp_server.py::test_related_candidates_pagination_and_cursor_binding PASSED [ 40%]
+tests/unit/test_mcp_server.py::test_batch_with_run_results_and_completeness_warning PASSED [ 45%]
+tests/unit/test_mcp_server.py::test_provider_status_is_explicit_about_validity PASSED [ 50%]
+tests/unit/test_mcp_server.py::test_knowledge_search_filters_types_tenants_and_flags_injection PASSED [ 54%]
+tests/unit/test_mcp_server.py::test_missing_scope_is_forbidden PASSED    [ 59%]
+tests/unit/test_mcp_server.py::test_timeout_dependency_error_and_rate_limit PASSED [ 63%]
+tests/unit/test_mcp_server.py::test_at_most_two_concurrent_calls PASSED  [ 68%]
+tests/unit/test_mcp_server.py::test_large_responses_drop_whole_items_and_keep_contract PASSED [ 72%]
+tests/unit/test_mcp_server.py::test_unknown_and_write_tools_are_protocol_errors[approve_resolution] PASSED [ 77%]
+tests/unit/test_mcp_server.py::test_unknown_and_write_tools_are_protocol_errors[execute_approved_action] PASSED [ 81%]
+tests/unit/test_mcp_server.py::test_unknown_and_write_tools_are_protocol_errors[sql] PASSED [ 86%]
+tests/unit/test_mcp_server.py::test_audit_records_identity_hash_and_outcome_without_arguments PASSED [ 90%]
+tests/unit/test_mcp_server.py::test_identity_comes_only_from_the_environment PASSED [ 95%]
+tests/unit/test_mcp_server.py::test_real_stdio_transport_with_subprocess PASSED [100%]
+
+============================= 22 passed in 2.52s ==============================

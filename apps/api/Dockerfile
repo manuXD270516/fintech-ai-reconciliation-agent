@@ -21,12 +21,14 @@ COPY apps/api/pyproject.toml apps/api/pyproject.toml
 COPY apps/worker/pyproject.toml apps/worker/pyproject.toml
 COPY packages/domain/pyproject.toml packages/domain/pyproject.toml
 COPY packages/knowledge/pyproject.toml packages/knowledge/pyproject.toml
+COPY apps/mcp-server/pyproject.toml apps/mcp-server/pyproject.toml
 COPY packages/store/pyproject.toml packages/store/pyproject.toml
 RUN uv sync --locked --no-dev --no-install-workspace
 COPY apps/api/src apps/api/src
 COPY apps/worker/src apps/worker/src
 COPY packages/domain/src packages/domain/src
 COPY packages/knowledge/src packages/knowledge/src
+COPY apps/mcp-server/src apps/mcp-server/src
 COPY packages/store/src packages/store/src
 RUN uv sync --locked --no-dev --no-editable
 
@@ -36,6 +38,7 @@ RUN groupadd --system --gid 10001 app \
 COPY --from=builder /app/.venv /app/.venv
 # Synthetic knowledge corpus for the one-shot knowledge-ingest job (read-only data).
 COPY datasets/synthetic/knowledge-v1 /app/datasets/synthetic/knowledge-v1
+COPY datasets/synthetic/provider-status-v1 /app/datasets/synthetic/provider-status-v1
 ENV PATH=/app/.venv/bin:$PATH
 USER 10001:10001
 EXPOSE 8000

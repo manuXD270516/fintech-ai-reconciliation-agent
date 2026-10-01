@@ -9,6 +9,7 @@ from decimal import Decimal
 from typing import Any
 
 from sqlalchemy import Connection, Engine, RowMapping, func, insert, select, update
+from sqlalchemy.dialects.postgresql import distinct_on
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.exc import IntegrityError
 
@@ -267,7 +268,7 @@ class ReconciliationService:
                 observations.c.source_record_id,
                 observations.c.revision.desc(),
             )
-            .distinct(observations.c.source, observations.c.source_record_id)
+            .ext(distinct_on(observations.c.source, observations.c.source_record_id))
         )
         snapshot = tuple(
             SnapshotItem(row["id"], from_row(row)) for row in conn.execute(latest).mappings()

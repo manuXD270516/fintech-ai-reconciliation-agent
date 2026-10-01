@@ -1,0 +1,24 @@
+[project]
+name = "recon-mcp"
+version = "0.1.0"
+description = "fintech-mcp-server: closed catalog of six read-only MCP tools over reconciliation and knowledge"
+requires-python = "==3.12.*"
+dependencies = [
+    "recon-domain",
+    "recon-store",
+    "recon-knowledge",
+    "mcp==2.2.0",
+    "jsonschema==4.26.0",
+]
+
+[tool.uv.sources]
+recon-domain = { workspace = true }
+recon-store = { workspace = true }
+recon-knowledge = { workspace = true }
+
+[build-system]
+requires = ["hatchling==1.32.4"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/recon_mcp"]

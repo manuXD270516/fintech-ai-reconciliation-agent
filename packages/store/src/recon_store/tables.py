@@ -8,6 +8,7 @@ from sqlalchemy import (
     Boolean,
     CheckConstraint,
     Column,
+    Computed,
     DateTime,
     ForeignKey,
     ForeignKeyConstraint,
@@ -31,6 +32,8 @@ from recon_store.vector import Vector
 
 SCHEMA = "recon"
 metadata = MetaData(schema=SCHEMA)
+# Python equivalent: recon_store.observations.transaction_uid().
+TRANSACTION_UID_SQL = "md5(tenant_id || '|' || source || '|' || source_record_id)::uuid"
 
 observations = Table(
     "transaction_observations",
@@ -58,6 +61,8 @@ observations = Table(
     Column("raw_hash", String(64), nullable=False),
     Column("normalization_version", String(64), nullable=False),
     Column("recorded_at", DateTime(timezone=True), nullable=False, server_default=text("now()")),
+    # M4: stable opaque ID of the canonical observation (same for every revision of a key).
+    Column("transaction_uid", Uuid, Computed(TRANSACTION_UID_SQL, persisted=True), nullable=False),
     UniqueConstraint(
         "tenant_id", "source", "source_record_id", "revision", name="uq_observation_revision"
     ),
@@ -79,6 +84,7 @@ Index(
     observations.c.merchant_account,
     observations.c.payment_ref,
 )
+Index("ix_observation_uid", observations.c.tenant_id, observations.c.transaction_uid)
 
 batches = Table(
     "reconciliation_batches",
@@ -306,3 +312,22 @@ knowledge_chunks = Table(
 )
 Index("ix_knowledge_chunks_tsv", knowledge_chunks.c.tsv, postgresql_using="gin")
 Index("ix_knowledge_chunks_codes", knowledge_chunks.c.error_codes, postgresql_using="gin")
+
+# --- M4 synthetic provider status snapshots (read by get_provider_status) -----------
+provider_status = Table(
+    "provider_status_snapshots",
+    metadata,
+    Column("id", BigInteger, Identity(always=True), primary_key=True),
+    Column("provider_id", String(128), nullable=False),
+    Column("status", String(32), nullable=False),
+    Column("valid_from", DateTime(timezone=True), nullable=False),
+    Column("valid_to", DateTime(timezone=True)),
+    Column("observed_at", DateTime(timezone=True), nullable=False),
+    Column("details", JSONB, nullable=False, server_default=text("'{}'::jsonb")),
+    Column("source_version", String(64), nullable=False),
+    UniqueConstraint("provider_id", "valid_from", name="uq_provider_status_validity"),
+    CheckConstraint(
+        "status IN ('operational', 'degraded', 'outage')", name="ck_provider_status_value"
+    ),
+    CheckConstraint("valid_to IS NULL OR valid_to > valid_from", name="ck_provider_status_window"),
+)

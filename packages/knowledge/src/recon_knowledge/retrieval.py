@@ -67,6 +67,7 @@ class Hit:
     rrf_score: float
     branches: tuple[str, ...]
     flagged_instructions: bool
+    document_type: str = ""
 
     @property
     def evidence_unit(self) -> str:

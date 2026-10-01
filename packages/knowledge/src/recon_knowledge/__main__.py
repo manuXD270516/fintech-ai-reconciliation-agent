@@ -33,6 +33,7 @@ from recon_knowledge.evaluation import (
     summarize,
     tune,
 )
+from recon_knowledge.provider_status import StatusError, publish_snapshots
 from recon_knowledge.repository import INDEX_VERSION, KnowledgeRepository
 from recon_knowledge.retrieval import BRANCH_K, RRF_K, TOP_K, Mode
 from recon_store.engine import runtime_engine, runtime_url
@@ -51,7 +52,7 @@ def _engine() -> Engine:
     )
 
 
-def ingest(corpus_dir: Path) -> dict[str, Any]:
+def ingest(corpus_dir: Path, status_file: Path | None = None) -> dict[str, Any]:
     docs = load_corpus(corpus_dir)
     engine = _engine()
     try:
@@ -60,14 +61,18 @@ def ingest(corpus_dir: Path) -> dict[str, Any]:
             d.key: repo.publish(d, actor="svc-knowledge-ingest", correlation_id="knowledge-ingest")
             for d in docs
         }
+        status = publish_snapshots(engine, status_file) if status_file else None
     finally:
         engine.dispose()
-    return {
+    result: dict[str, Any] = {
         "documents": len(docs),
         "published": sum(o == "published" for o in outcomes.values()),
         "unchanged": sum(o == "unchanged" for o in outcomes.values()),
         "index_version": INDEX_VERSION,
     }
+    if status is not None:
+        result["provider_status"] = status
+    return result
 
 
 def evaluate(corpus_dir: Path) -> dict[str, Any]:
@@ -133,10 +138,14 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=["ingest", "evaluate"])
     parser.add_argument("--corpus", type=Path, required=True)
+    parser.add_argument("--provider-status", type=Path, default=None)
     args = parser.parse_args(argv)
     try:
-        output = ingest(args.corpus) if args.command == "ingest" else evaluate(args.corpus)
-    except CorpusError as exc:
+        if args.command == "ingest":
+            output = ingest(args.corpus, args.provider_status)
+        else:
+            output = evaluate(args.corpus)
+    except (CorpusError, StatusError) as exc:
         print(json.dumps({"error": str(exc)}), file=sys.stderr)
         return 2
     print(json.dumps(output, ensure_ascii=False, sort_keys=True))

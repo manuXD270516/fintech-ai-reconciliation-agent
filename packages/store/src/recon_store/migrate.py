@@ -32,18 +32,22 @@ def database_url(env: dict[str, str], prefix: str) -> URL:
     )
 
 
-def alembic_config(url: URL, runtime_role: str) -> Config:
-    if not _ROLE.fullmatch(runtime_role):
-        raise ValueError("runtime role must be a lowercase SQL identifier")
+def alembic_config(url: URL, runtime_role: str, mcp_role: str = "recon_mcp") -> Config:
+    for role in (runtime_role, mcp_role):
+        if not _ROLE.fullmatch(role):
+            raise ValueError("roles must be lowercase SQL identifiers")
     cfg = Config()
     cfg.set_main_option("script_location", str(MIGRATIONS))
     cfg.attributes["url"] = url
     cfg.attributes["runtime_role"] = runtime_role
+    cfg.attributes["mcp_role"] = mcp_role
     return cfg
 
 
-def upgrade(url: URL, runtime_role: str, revision: str = "head") -> None:
-    command.upgrade(alembic_config(url, runtime_role), revision)
+def upgrade(
+    url: URL, runtime_role: str, revision: str = "head", mcp_role: str = "recon_mcp"
+) -> None:
+    command.upgrade(alembic_config(url, runtime_role, mcp_role), revision)
 
 
 def current_revision(url: URL) -> str | None:
@@ -62,10 +66,11 @@ def main() -> int:
     try:
         url = database_url(env, "MIGRATE_DB_")
         role = env["APP_DB_USER"]
+        mcp_role = env["MCP_DB_USER"]
     except KeyError as exc:
         print(f"migrate: missing environment variable {exc.args[0]}", file=sys.stderr)
         return 2
-    upgrade(url, role)
+    upgrade(url, role, mcp_role=mcp_role)
     print(f"migrate ok: revision {current_revision(url)}")
     return 0
 

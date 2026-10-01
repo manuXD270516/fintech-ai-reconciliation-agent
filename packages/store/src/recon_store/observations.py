@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import uuid
 from dataclasses import dataclass
 from datetime import datetime
@@ -22,6 +23,14 @@ from recon_domain.revisions import IngestOutcome, StoredRevision, decide
 from recon_store.tables import audit_entries, observations, outbox
 
 OBSERVATION_RECORDED = "ObservationRecorded"
+
+
+def transaction_uid(tenant_id: str, source: str, source_record_id: str) -> uuid.UUID:
+    """Python twin of the generated `transaction_uid` column (stable across revisions)."""
+    digest = hashlib.md5(  # noqa: S324 - opaque identifier, not a security control
+        f"{tenant_id}|{source}|{source_record_id}".encode()
+    ).hexdigest()
+    return uuid.UUID(digest)
 
 
 @dataclass(frozen=True, slots=True)
