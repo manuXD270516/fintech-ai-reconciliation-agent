@@ -1,22 +1,17 @@
 [project]
-name = "recon-api"
+name = "recon-worker"
 version = "0.1.0"
-description = "HTTP adapter for the reconciliation platform"
+description = "Background worker: outbox relay and reconciliation run consumer"
 requires-python = "==3.12.*"
 dependencies = [
+    "recon-api",
     "recon-domain",
     "recon-store",
-    "fastapi==0.141.1",
-    "uvicorn==0.54.0",
-    "pydantic==2.13.5",
-    "pydantic-settings==2.15.0",
-    "psycopg[binary]==3.3.6",
     "nats-py==2.16.0",
-    "pyjwt[crypto]==2.15.1",
-    "cryptography==50.0.1",
 ]
 
 [tool.uv.sources]
+recon-api = { workspace = true }
 recon-domain = { workspace = true }
 recon-store = { workspace = true }
 
@@ -25,4 +20,4 @@ requires = ["hatchling==1.32.4"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/recon_api"]
+packages = ["src/recon_worker"]

@@ -10,7 +10,9 @@ unless --down is given; volumes are never removed.
 from __future__ import annotations
 
 import argparse
+import csv
 import functools
+import io
 import json
 import platform
 import socket
@@ -27,7 +29,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from recon_domain.oracle import batches_for, to_csv
+
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:  # executed as `python scripts/smoke.py`
+    sys.path.insert(0, str(ROOT))
+
+from scripts import dev_auth  # noqa: E402
+
 EVIDENCE_DIR = ROOT / ".smoke"
 READY_DEADLINE = 3.0
 SECRET_KEYS = ("POSTGRES_ADMIN_PASSWORD", "APP_DB_PASSWORD", "NATS_APP_PASSWORD")
@@ -95,8 +104,22 @@ class Api:
     def __init__(self, port: int) -> None:
         self.base = f"http://127.0.0.1:{port}"
 
-    def get(self, path: str, request_id: str | None = None, timeout: float = 10) -> Http:
-        request = urllib.request.Request(self.base + path)  # noqa: S310 - fixed loopback URL
+    def get(
+        self,
+        path: str,
+        request_id: str | None = None,
+        timeout: float = 10,
+        *,
+        method: str = "GET",
+        body: object = None,
+        token: str | None = None,
+    ) -> Http:
+        data = None if body is None else json.dumps(body).encode()
+        request = urllib.request.Request(self.base + path, data=data, method=method)  # noqa: S310
+        if data is not None:
+            request.add_header("Content-Type", "application/json")
+        if token:
+            request.add_header("Authorization", f"Bearer {token}")
         if request_id:
             request.add_header("X-Request-ID", request_id)
         started = time.perf_counter()
@@ -108,10 +131,10 @@ class Api:
         elapsed = time.perf_counter() - started
         text = raw.decode("utf-8", errors="replace")
         try:
-            body = json.loads(text)
+            parsed: dict[str, Any] = json.loads(text)
         except json.JSONDecodeError:
-            body = {}
-        return Http(status, body, {k.lower(): v for k, v in headers.items()}, elapsed, text)
+            parsed = {}
+        return Http(status, parsed, {k.lower(): v for k, v in headers.items()}, elapsed, text)
 
     def wait_status(self, path: str, status: int, timeout: float = 120) -> float:
         started = time.perf_counter()
@@ -153,6 +176,7 @@ class Smoke:
     # --- checks -----------------------------------------------------------------
 
     def startup(self) -> dict[str, Any]:
+        dev_auth.init()
         compose("up", "-d", "--build", timeout=900)
         waited = self.api.wait_status("/health/ready", 200)
         return {"seconds_until_ready": round(waited, 2)}
@@ -215,6 +239,80 @@ class Smoke:
             outputs.append(proc.stdout.strip().splitlines()[-1:])
         expect(all(o == outputs[0] for o in outputs), outputs)
         return {"migrate": outputs}
+
+    def reconciliation_e2e(self) -> dict[str, Any]:
+        """HTTP -> outbox -> JetStream -> worker -> results, compared with the v2 oracle."""
+        integration = dev_auth.token("svc-smoke-ingest", ["integration"])
+        analyst = dev_auth.token("ana-smoke", ["analyst"])
+        auditor = dev_auth.token("aud-smoke", ["auditor"])
+        root = ROOT / "datasets" / "synthetic" / "transactions-v2"
+        files = {p.name: p.read_text(encoding="utf-8") for p in root.glob("*.csv")}
+        receipts = []
+        for name, source in (("internal_ledger.csv", "internal_ledger"),
+                             ("provider_report.csv", "provider_report")):  # fmt: skip
+            rows = list(csv.DictReader(io.StringIO(files[name])))
+            for provider in ("prov-alfa", "prov-beta"):
+                body = {
+                    "source": source,
+                    "provider_id": provider,
+                    "idempotency_key": f"smoke-v2-{name}-{provider}",
+                    "content": to_csv([r for r in rows if r["provider_id"] == provider]),
+                }
+                resp = self.api.get("/v1/artifacts", method="POST", body=body, token=integration)
+                expect(resp.status in (200, 201), resp.text)
+                receipts.append({k: resp.body[k] for k in ("accepted", "rejected", "replayed")})
+        denied = self.api.get("/v1/artifacts", method="POST", body={}, token=analyst)
+        expect(denied.status == 403, f"analyst must not ingest: {denied.status}")
+        anonymous = self.api.get("/v1/batches/none")
+        expect(anonymous.status == 401, f"anonymous read must be 401: {anonymous.status}")
+
+        labels = list(csv.DictReader(io.StringIO(files["labels.csv"])))
+        suffix = uuid.uuid4().hex[:8]
+        runs: list[str] = []
+        for batch in batches_for(labels):
+            batch_id = f"smoke-{suffix}-{batch.batch_id}"
+            body = {"batch_id": batch_id, "provider_id": batch.provider_id,
+                    "merchant_account": batch.merchant_account, "currency": batch.currency,
+                    "window_start": batch.window_start.isoformat(),
+                    "window_end": batch.window_end.isoformat(),
+                    "business_timezone": batch.business_timezone,
+                    "cutoff_at": batch.cutoff_at.isoformat()}  # fmt: skip
+            created = self.api.get("/v1/batches", method="POST", body=body, token=analyst)
+            expect(created.status == 201, created.text)
+            for source in ("internal_ledger", "provider_report"):
+                done = self.api.get(f"/v1/batches/{batch_id}/sources/{source}/complete",
+                                    method="POST", token=integration)  # fmt: skip
+                expect(done.status == 200, done.text)
+            run = self.api.get(f"/v1/batches/{batch_id}/runs", method="POST", token=analyst)
+            expect(run.status == 202, run.text)
+            runs.append(run.body["run_id"])
+
+        started = time.perf_counter()
+        got: dict[str, tuple[str, str]] = {}
+        for run_id in runs:
+            while True:
+                status = self.api.get(f"/v1/runs/{run_id}", token=auditor)
+                expect(status.status == 200, status.text)
+                if status.body["status"] == "completed":
+                    break
+                expect(status.body["status"] == "requested", status.text)
+                expect(time.perf_counter() - started < 90, "runs not completed within 90s")
+                time.sleep(0.5)
+            page = self.api.get(f"/v1/runs/{run_id}/results?limit=500", token=auditor)
+            for item in page.body["items"]:
+                got[item["payment_ref"]] = (item["match_status"],
+                                            ",".join(item["discrepancy_types"]))  # fmt: skip
+        want = {r["payment_ref"]: (r["expected_match"], r["expected_discrepancies"])
+                for r in labels}  # fmt: skip
+        wrong = {k: (got.get(k), v) for k, v in want.items() if got.get(k) != v}
+        expect(not wrong, f"oracle mismatches: {wrong}")
+        return {
+            "receipts": receipts,
+            "runs": len(runs),
+            "labelled_payments": len(want),
+            "matching_oracle": len(want) - len(wrong),
+            "seconds_until_all_runs_completed": round(time.perf_counter() - started, 2),
+        }
 
     def isolation(self) -> dict[str, Any]:
         proc = compose("ps", "--format", "json")
@@ -413,6 +511,10 @@ def main() -> int:
         smoke.check("T03", "vector + JetStream + role + readiness integration", smoke.infra_tests)
         smoke.check("T03", "db-init idempotent re-run", smoke.db_init_idempotent)
         smoke.check("M1-T08", "alembic migrate idempotent re-run", smoke.migrations_idempotent)
+        smoke.check(
+            "M2-T07", "HTTP ingest + runs via outbox/NATS/worker match oracle",
+            smoke.reconciliation_e2e,
+        )  # fmt: skip
         smoke.check("T08", "API loopback-only, dependencies private", smoke.isolation)
         smoke.check("T09", "request ID correlated in header and JSON log", smoke.correlation)
         for service in ("postgres", "nats"):

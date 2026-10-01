@@ -1,0 +1,62 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent\.venv\Scripts\python.exe
+hypothesis profile 'default'
+rootdir: D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent
+configfile: pyproject.toml
+plugins: anyio-4.15.1, hypothesis-6.168.3, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 51 items
+
+tests/unit/test_ingestion_and_rules.py::test_bad_rows_are_quarantined_without_blocking_good_rows[change0-invalid_precision] PASSED [  1%]
+tests/unit/test_ingestion_and_rules.py::test_bad_rows_are_quarantined_without_blocking_good_rows[change1-invalid_field] PASSED [  3%]
+tests/unit/test_ingestion_and_rules.py::test_bad_rows_are_quarantined_without_blocking_good_rows[change2-unknown_mapping] PASSED [  5%]
+tests/unit/test_ingestion_and_rules.py::test_bad_rows_are_quarantined_without_blocking_good_rows[change3-unknown_mapping] PASSED [  7%]
+tests/unit/test_ingestion_and_rules.py::test_bad_rows_are_quarantined_without_blocking_good_rows[change4-scope_violation] PASSED [  9%]
+tests/unit/test_ingestion_and_rules.py::test_bad_rows_are_quarantined_without_blocking_good_rows[change5-scope_violation] PASSED [ 11%]
+tests/unit/test_ingestion_and_rules.py::test_bad_rows_are_quarantined_without_blocking_good_rows[change6-missing_field] PASSED [ 13%]
+tests/unit/test_ingestion_and_rules.py::test_bad_rows_are_quarantined_without_blocking_good_rows[change7-invalid_field] PASSED [ 15%]
+tests/unit/test_ingestion_and_rules.py::test_bad_rows_are_quarantined_without_blocking_good_rows[change8-invalid_field] PASSED [ 17%]
+tests/unit/test_ingestion_and_rules.py::test_bad_rows_are_quarantined_without_blocking_good_rows[change9-invalid_field] PASSED [ 19%]
+tests/unit/test_ingestion_and_rules.py::test_valid_row_maps_vocabulary_and_keeps_raw_hash PASSED [ 21%]
+tests/unit/test_ingestion_and_rules.py::test_wrong_header_rejects_whole_artifact PASSED [ 23%]
+tests/unit/test_ingestion_and_rules.py::test_exact_requires_identical_money_and_status_zero_tolerance PASSED [ 25%]
+tests/unit/test_ingestion_and_rules.py::test_amount_and_time_alone_never_match PASSED [ 27%]
+tests/unit/test_ingestion_and_rules.py::test_equal_weak_candidates_keep_ambiguity PASSED [ 29%]
+tests/unit/test_ingestion_and_rules.py::test_missing_waits_until_cutoff_and_completeness PASSED [ 31%]
+tests/unit/test_ingestion_and_rules.py::test_scope_isolation_and_processing_errors PASSED [ 33%]
+tests/unit/test_ingestion_and_rules.py::test_result_is_independent_of_input_order PASSED [ 35%]
+tests/unit/test_reconciliation_catalog.py::test_rc06_cross_currency_is_never_matched PASSED [ 37%]
+tests/unit/test_reconciliation_catalog.py::test_rc11_offsets_resolve_to_the_same_economic_window PASSED [ 39%]
+tests/unit/test_reconciliation_catalog.py::test_rc12_partial_refund_and_net_settlement_are_not_forced PASSED [ 41%]
+tests/unit/test_reconciliation_catalog.py::test_benchmark_550_payments_match_oracle_with_no_false_exact[1] PASSED [ 43%]
+tests/unit/test_reconciliation_catalog.py::test_benchmark_550_payments_match_oracle_with_no_false_exact[7] PASSED [ 45%]
+tests/unit/test_reconciliation_catalog.py::test_benchmark_550_payments_match_oracle_with_no_false_exact[20260929] PASSED [ 47%]
+tests/unit/test_reconciliation_catalog.py::test_rc01_deterministic_path_has_no_model_or_http_client PASSED [ 49%]
+tests/unit/test_reconciliation_catalog.py::test_ingest_subject_carries_identity PASSED [ 50%]
+tests/unit/test_reconciliation_catalog.py::test_malformed_events_are_poison_before_touching_storage[envelope0] PASSED [ 52%]
+tests/unit/test_reconciliation_catalog.py::test_malformed_events_are_poison_before_touching_storage[envelope1] PASSED [ 54%]
+tests/unit/test_reconciliation_catalog.py::test_malformed_events_are_poison_before_touching_storage[envelope2] PASSED [ 56%]
+tests/unit/test_reconciliation_catalog.py::test_malformed_events_are_poison_before_touching_storage[envelope3] PASSED [ 58%]
+tests/unit/test_reconciliation_catalog.py::test_malformed_run_event_is_poison PASSED [ 60%]
+tests/unit/test_reconciliation_oracle.py::test_v2_oracle_is_reproduced_exactly PASSED [ 62%]
+tests/unit/test_reconciliation_oracle.py::test_pipeline_is_deterministic PASSED [ 64%]
+tests/unit/test_reconciliation_oracle.py::test_open_window_reports_waiting_instead_of_missing PASSED [ 66%]
+tests/unit/test_reconciliation_oracle.py::test_v1_labels_are_frozen_and_differ_only_on_linked_mismatches PASSED [ 68%]
+tests/unit/test_auth.py::test_valid_token_yields_principal PASSED        [ 70%]
+tests/unit/test_auth.py::test_invalid_tokens_are_rejected[overrides0] PASSED [ 72%]
+tests/unit/test_auth.py::test_invalid_tokens_are_rejected[overrides1] PASSED [ 74%]
+tests/unit/test_auth.py::test_invalid_tokens_are_rejected[overrides2] PASSED [ 76%]
+tests/unit/test_auth.py::test_invalid_tokens_are_rejected[overrides3] PASSED [ 78%]
+tests/unit/test_auth.py::test_invalid_tokens_are_rejected[overrides4] PASSED [ 80%]
+tests/unit/test_auth.py::test_invalid_tokens_are_rejected[overrides5] PASSED [ 82%]
+tests/unit/test_auth.py::test_foreign_key_and_alg_none_are_rejected PASSED [ 84%]
+tests/unit/test_auth.py::test_unknown_roles_are_dropped PASSED           [ 86%]
+tests/unit/test_auth.py::test_missing_or_invalid_token_is_401 PASSED     [ 88%]
+tests/unit/test_auth.py::test_wrong_role_is_403_before_touching_storage PASSED [ 90%]
+tests/unit/test_auth.py::test_no_verifier_fails_closed PASSED            [ 92%]
+tests/unit/test_scope.py::test_route_catalog_is_exactly_declared PASSED  [ 94%]
+tests/unit/test_scope.py::test_route_methods_match_catalog PASSED        [ 96%]
+tests/unit/test_scope.py::test_no_money_movement_or_agent_routes PASSED  [ 98%]
+tests/unit/test_scope.py::test_openapi_documents_only_catalog PASSED     [100%]
+
+============================= 51 passed in 0.98s ==============================

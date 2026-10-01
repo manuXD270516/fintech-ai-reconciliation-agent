@@ -38,3 +38,6 @@ volumes/
 *.swp
 .DS_Store
 Thumbs.db
+
+# Local development identity provider keys (scripts/dev_auth.py)
+.dev-keys/

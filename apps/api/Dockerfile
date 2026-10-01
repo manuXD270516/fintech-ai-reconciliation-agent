@@ -18,13 +18,15 @@ FROM base AS builder
 COPY --from=uv /uv /usr/local/bin/uv
 COPY pyproject.toml uv.lock .python-version ./
 COPY apps/api/pyproject.toml apps/api/pyproject.toml
+COPY apps/worker/pyproject.toml apps/worker/pyproject.toml
 COPY packages/domain/pyproject.toml packages/domain/pyproject.toml
 COPY packages/store/pyproject.toml packages/store/pyproject.toml
-RUN uv sync --locked --no-dev --no-install-workspace --package recon-api
+RUN uv sync --locked --no-dev --no-install-workspace
 COPY apps/api/src apps/api/src
+COPY apps/worker/src apps/worker/src
 COPY packages/domain/src packages/domain/src
 COPY packages/store/src packages/store/src
-RUN uv sync --locked --no-dev --no-editable --package recon-api
+RUN uv sync --locked --no-dev --no-editable
 
 FROM base AS runtime
 RUN groupadd --system --gid 10001 app \

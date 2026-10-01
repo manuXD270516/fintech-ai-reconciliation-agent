@@ -108,6 +108,9 @@ services:
       APP_HTTP_PORT: "8000"
     ports:
       - "127.0.0.1:${API_HOST_PORT:-18180}:8000"
+    volumes:
+      # Public JWKS only (scripts/dev_auth.py init); the private key never enters a container.
+      - ./.dev-keys/public:/run/auth:ro
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -123,6 +126,24 @@ services:
       interval: 5s
       timeout: 3s
       retries: 12
+
+  # Outbox relay to JetStream and reconciliation run consumer (inbox-deduplicated).
+  worker:
+    image: recon-m0-api:local
+    command: ["python", "-m", "recon_worker"]
+    environment:
+      <<: *app-env
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      nats:
+        condition: service_healthy
+    networks: [backend]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
 
   # --- smoke profile: test-only services, never started by a plain `docker compose up` ---
   nats-nojs:

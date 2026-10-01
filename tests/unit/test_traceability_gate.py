@@ -54,8 +54,12 @@ def test_missing_spec_fails(repo: Path) -> None:
 
 
 def test_unknown_references_fail(repo: Path) -> None:
-    edit(repo, "acceptance-criteria.md", r"\| RF-03 \| T05, T06 \| 3\.1, 3\.2 \|",
-         "| RF-09 | T99 | 9.9 |")  # fmt: skip
+    edit(
+        repo,
+        "acceptance-criteria.md",
+        r"\| RF-03 \| T05, T06 \| 3\.1, 3\.2 \|",
+        "| RF-09 | T99 | 9.9 |",
+    )
     errors = check_repo(repo)
     assert any("unknown requirement RF-09" in e for e in errors)
     assert any("unknown test T99" in e for e in errors)
