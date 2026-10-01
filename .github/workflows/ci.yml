@@ -36,6 +36,8 @@ jobs:
         run: |
           uv sync --locked
           npm ci --no-audit --no-fund
+          npm ci --prefix apps/web --no-audit --no-fund
+          npx --prefix apps/web playwright install --with-deps chromium
 
       - name: Prerequisites
         run: |
@@ -60,6 +62,8 @@ jobs:
         run: uv run python scripts/gate.py negative
       - name: Evaluation suites (offline; critical gates and regressions)
         run: uv run python scripts/gate.py evals
+      - name: Dashboard checks (types, Vitest, build)
+        run: uv run python scripts/gate.py web
       - name: Compose smoke (real PostgreSQL/pgvector and NATS JetStream)
         run: uv run python scripts/gate.py smoke
 

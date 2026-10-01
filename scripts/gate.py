@@ -53,13 +53,15 @@ STEPS: dict[str, list[list[str]]] = {
     "negative": [[PY, "scripts/gate_negative.py"]],
     # M7: offline evaluation suites; critical gates and regressions vs the baseline block.
     "evals": [[PY, "-m", "recon_evals", "gate"]],
+    # M8: dashboard checks (OpenAPI types in sync, tsc, Vitest, production build).
+    "web": [["{npm}", "--prefix", "apps/web", "run", "check"]],
     "smoke": [[PY, "scripts/smoke.py"]],
 }
 GROUPS = {
     "static": ["lock", "lint", "types", "test", "policy", "trace", "openspec", "negative",
-               "evals"],
+               "evals", "web"],
     "all": ["lock", "lint", "types", "test", "policy", "trace", "openspec", "negative", "evals",
-            "smoke"],
+            "web", "smoke"],
 }  # fmt: skip
 
 
@@ -69,8 +71,15 @@ def clean_env() -> tuple[dict[str, str], list[str]]:
     return env, removed
 
 
+def npm_bin() -> str:
+    exe = shutil.which("npm")
+    if exe is None:
+        raise SystemExit("gate: npm not found on PATH; see README prerequisites")
+    return exe
+
+
 def resolve(cmd: list[str]) -> list[str]:
-    subs = {"{uv}": uv_bin, "{openspec}": openspec_bin}
+    subs = {"{uv}": uv_bin, "{openspec}": openspec_bin, "{npm}": npm_bin}
     return [subs[part]() if part in subs else part for part in cmd]
 
 

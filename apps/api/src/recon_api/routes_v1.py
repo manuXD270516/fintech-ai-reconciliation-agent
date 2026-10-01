@@ -27,6 +27,9 @@ from recon_store.reconciliation import ConflictError, NotFoundError, Reconciliat
 MAX_ARTIFACT_CHARS = 2_000_000
 Ident = Annotated[str, Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")]
 SourceName = Literal["internal_ledger", "provider_report"]
+CaseStatusName = Literal[
+    "OPEN", "HUMAN_REVIEW", "APPROVED", "REJECTED", "NEEDS_INFORMATION", "CLOSED"
+]
 
 router = APIRouter(prefix="/v1")
 
@@ -487,16 +490,106 @@ def post_case(
     return CaseOpened(case_id=case_id, created=created)
 
 
-@router.get("/cases/{case_id}", tags=["cases"])
+class RecommendationOut(BaseModel):
+    id: uuid.UUID
+    case_version: int
+    proposer: str
+    action: str
+    rationale: str
+    investigation_id: uuid.UUID | None
+    review_result: str
+    evidence: dict[str, Any]
+    status: str
+    expires_at: datetime
+    created_at: datetime
+
+
+class DecisionRecordOut(BaseModel):
+    id: uuid.UUID
+    recommendation_id: uuid.UUID
+    approver: str
+    decision: str
+    reason: str
+    case_version: int
+    created_at: datetime
+
+
+class CaseSummary(BaseModel):
+    case_id: uuid.UUID
+    case_ref: str
+    run_id: uuid.UUID
+    ordinal: int
+    status: str
+    version: int
+    updated_at: datetime
+
+
+class CaseOut(CaseSummary):
+    opened_by: str
+    closed_reason: str | None
+    created_at: datetime
+    run_is_latest: bool
+    recommendations: list[RecommendationOut]
+    decisions: list[DecisionRecordOut]
+
+
+class AuditEntryOut(BaseModel):
+    id: int
+    occurred_at: datetime
+    actor: str
+    action: str
+    resource_type: str
+    resource_id: str
+    resource_version: int | None
+    outcome: str
+    details: dict[str, Any]
+
+
+class AuditTrailOut(BaseModel):
+    case: dict[str, Any]
+    rules: dict[str, Any]
+    recommendations: list[RecommendationOut]
+    decisions: list[DecisionRecordOut]
+    investigations: list[dict[str, Any]]
+    audit: list[AuditEntryOut]
+
+
+def _case_summary(row: Any) -> CaseSummary:
+    return CaseSummary(
+        case_id=row["id"], case_ref=row["case_ref"], run_id=row["run_id"], ordinal=row["ordinal"],
+        status=row["status"], version=row["version"], updated_at=row["updated_at"],
+    )  # fmt: skip
+
+
+@router.get("/cases", response_model=list[CaseSummary], tags=["cases"])
+def list_cases(
+    request: Request,
+    principal: Annotated[Principal, Depends(require(*READ_ROLES))],
+    status: CaseStatusName | None = None,
+) -> list[CaseSummary]:
+    rows = CaseService(_engine(request)).list_cases(principal.tenant_id, status)
+    return [_case_summary(r) for r in rows]
+
+
+@router.get("/cases/{case_id}", response_model=CaseOut, tags=["cases"])
 def get_case(
     case_id: uuid.UUID,
     request: Request,
     principal: Annotated[Principal, Depends(require(*READ_ROLES))],
-) -> dict[str, Any]:
+) -> CaseOut:
     try:
-        return CaseService(_engine(request)).get(principal.tenant_id, case_id)
+        case = CaseService(_engine(request)).get(principal.tenant_id, case_id)
     except CaseError as exc:
         raise _case_error(exc) from None
+    return CaseOut(
+        **_case_summary(case).model_dump(),
+        opened_by=case["opened_by"],
+        closed_reason=case["closed_reason"],
+        created_at=case["created_at"],
+        run_is_latest=case["run_is_latest"],
+        recommendations=[RecommendationOut(**r) for r in case["recommendations"]],
+        decisions=[DecisionRecordOut(**d) for d in case["decisions"]],
+    )
 
 
 @router.post(
@@ -579,15 +672,66 @@ def post_close(
     return {"case_id": str(case_id), "status": "CLOSED", "version": version}
 
 
-@router.get("/cases/{case_id}/audit", tags=["cases"])
+@router.get("/cases/{case_id}/audit", response_model=AuditTrailOut, tags=["cases"])
 def get_case_audit(
     case_id: uuid.UUID,
     request: Request,
     principal: Annotated[Principal, Depends(require(Role.AUDITOR, Role.SUPERVISOR))],
-) -> dict[str, Any]:
+) -> AuditTrailOut:
     try:
-        return CaseService(_engine(request)).audit_trail(
+        trail = CaseService(_engine(request)).audit_trail(
             principal.tenant_id, case_id, actor=principal.subject, correlation_id=_corr(request)
         )
     except CaseError as exc:
         raise _case_error(exc) from None
+    return AuditTrailOut(**trail)
+
+
+class BatchSummary(BaseModel):
+    batch_id: str
+    provider_id: str
+    merchant_account: str
+    currency: str
+    window_start: datetime
+    window_end: datetime
+    cutoff_at: datetime
+    left_complete: bool
+    right_complete: bool
+    version: int
+
+
+class RunSummary(BaseModel):
+    run_id: uuid.UUID
+    run_number: int
+    status: str
+    ruleset_version: str
+    snapshot_hash: str | None
+    observation_count: int | None
+    requested_at: datetime
+    completed_at: datetime | None
+
+
+@router.get("/batches", response_model=list[BatchSummary], tags=["reconciliation"])
+def list_batches(
+    request: Request,
+    principal: Annotated[Principal, Depends(require(*READ_ROLES))],
+    limit: Annotated[int, Query(ge=1, le=200)] = 100,
+) -> list[BatchSummary]:
+    rows = ReconciliationService(_engine(request)).list_batches(principal.tenant_id, limit)
+    return [BatchSummary(**{k: r[k] for k in BatchSummary.model_fields}) for r in rows]
+
+
+@router.get("/batches/{batch_id}/runs", response_model=list[RunSummary], tags=["reconciliation"])
+def list_runs(
+    batch_id: Ident,
+    request: Request,
+    principal: Annotated[Principal, Depends(require(*READ_ROLES))],
+) -> list[RunSummary]:
+    try:
+        rows = ReconciliationService(_engine(request)).list_runs(principal.tenant_id, batch_id)
+    except NotFoundError:
+        raise HTTPException(404, detail="batch not found") from None
+    return [
+        RunSummary(run_id=r["id"], **{k: r[k] for k in RunSummary.model_fields if k != "run_id"})
+        for r in rows
+    ]

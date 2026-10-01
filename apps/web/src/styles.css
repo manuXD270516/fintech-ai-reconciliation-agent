@@ -1,0 +1,227 @@
+/* Own CSS (D08): no framework. High-contrast focus rings for keyboard users. */
+:root {
+  --bg: #f7f7f5;
+  --fg: #1d1f21;
+  --muted: #5a5f66;
+  --panel: #ffffff;
+  --border: #d0d4d9;
+  --accent: #0b5cad;
+  --ok: #17663a;
+  --warn: #8a4b00;
+  --error: #a3161a;
+  --focus: #ffbf47;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--fg);
+  background: var(--bg);
+  line-height: 1.45;
+}
+
+body {
+  margin: 0;
+}
+
+header,
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+}
+
+h1 {
+  font-size: 1.4rem;
+  margin: 0.25rem 0;
+}
+
+h2 {
+  font-size: 1.15rem;
+  margin-top: 0;
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 0.5rem;
+  background: var(--panel);
+  padding: 0.5rem;
+  z-index: 10;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.session {
+  margin-left: auto;
+  color: var(--muted);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  padding: 0.35rem 0.5rem;
+  vertical-align: top;
+}
+
+label {
+  display: block;
+  margin-top: 0.75rem;
+  font-weight: 600;
+}
+
+label.radio,
+label.checkbox {
+  font-weight: 400;
+}
+
+textarea,
+select {
+  display: block;
+  width: 100%;
+  max-width: 40rem;
+  font: inherit;
+  padding: 0.4rem;
+  border: 1px solid var(--muted);
+  border-radius: 4px;
+}
+
+button {
+  font: inherit;
+  margin-top: 0.75rem;
+  margin-right: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+td button {
+  margin-top: 0;
+  background: var(--panel);
+  color: var(--accent);
+}
+
+fieldset:disabled button {
+  background: var(--muted);
+  border-color: var(--muted);
+  cursor: not-allowed;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 1px solid currentColor;
+}
+
+.badge-exact,
+.badge-drafted,
+.badge-supported,
+.badge-approved {
+  color: var(--ok);
+}
+
+.badge-unmatched,
+.badge-abstained,
+.badge-rejected,
+.badge-failed {
+  color: var(--error);
+}
+
+.badge-simulated,
+.badge-escalated,
+.badge-needs-more-evidence,
+.badge-pending,
+.badge-human-review {
+  color: var(--warn);
+}
+
+.banner {
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  border-left: 4px solid;
+}
+
+.banner-error {
+  border-color: var(--error);
+  background: #fdecec;
+}
+
+.banner-warning {
+  border-color: var(--warn);
+  background: #fff4e5;
+}
+
+.banner-ok {
+  border-color: var(--ok);
+  background: #eaf6ee;
+}
+
+.field-error {
+  color: var(--error);
+}
+
+.effect {
+  font-weight: 600;
+}
+
+.claims,
+.timeline,
+.runs {
+  padding-left: 1.2rem;
+}
+
+.claim {
+  margin-bottom: 0.75rem;
+}
+
+.refs {
+  font-size: 0.85rem;
+  color: var(--muted);
+}

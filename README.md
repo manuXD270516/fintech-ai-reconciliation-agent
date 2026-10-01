@@ -2,7 +2,7 @@
 
 Diseño de una plataforma de conciliación de pagos: reglas determinísticas primero, investigación con IA sólo cuando aporta contexto y aprobación humana para decisiones operativas.
 
-**Estado: M0 (bootstrap), M1 (dominio transaccional), M2 (conciliación determinística), M3 (knowledge base híbrida), M4 (servidor MCP de sólo lectura), M5 (investigación acotada), M6 (revisión y aprobación humana; cierre del MVP técnico) y M7 (framework de evaluación) implementados y verificados localmente.** Existen PostgreSQL + pgvector y NATS JetStream en Docker Compose, el dominio puro (`packages/domain`), su persistencia (`packages/store`), ingestion sintética por HTTP y eventos con cuarentena, el motor de reglas `rules/v1`, runs versionados, un worker con outbox/inbox y dead letters, una API `/v1` autenticada con JWT de desarrollo, una base de conocimiento sintética con retrieval híbrido (FTS + vector + RRF) y abstención (`packages/knowledge`), `fintech-mcp-server` (`apps/mcp-server`), un proceso MCP con seis tools de sólo lectura, y un agente de investigación acotado (`packages/agents`, proceso `investigator`) que produce borradores sin efecto operativo. Los tests y la demo usan un proveedor de modelo **scripted determinístico** (resultados etiquetados SIMULATED); Ollama local es opcional y está apagado por defecto; no se llama a ningún proveedor de IA externo. Un revisor independiente evalúa cada borrador y las decisiones operativas son comandos humanos versionados, idempotentes y auditados (aprobar sólo registra la decisión; nunca mueve dinero). Decisiones de implementación: [docs/11-implementation-decisions.md](docs/11-implementation-decisions.md). Remoto: [manuXD270516/fintech-ai-reconciliation-agent](https://github.com/manuXD270516/fintech-ai-reconciliation-agent) (privado). El workflow de CI está en el repo; GitHub no ha llegado a ejecutar jobs porque la cuenta tiene un bloqueo de facturación/límite de gasto.
+**Estado: M0 (bootstrap), M1 (dominio transaccional), M2 (conciliación determinística), M3 (knowledge base híbrida), M4 (servidor MCP de sólo lectura), M5 (investigación acotada), M6 (revisión y aprobación humana; cierre del MVP técnico), M7 (framework de evaluación) y M8 (dashboard de investigación) implementados y verificados localmente.** Existen PostgreSQL + pgvector y NATS JetStream en Docker Compose, el dominio puro (`packages/domain`), su persistencia (`packages/store`), ingestion sintética por HTTP y eventos con cuarentena, el motor de reglas `rules/v1`, runs versionados, un worker con outbox/inbox y dead letters, una API `/v1` autenticada con JWT de desarrollo, una base de conocimiento sintética con retrieval híbrido (FTS + vector + RRF) y abstención (`packages/knowledge`), `fintech-mcp-server` (`apps/mcp-server`), un proceso MCP con seis tools de sólo lectura, y un agente de investigación acotado (`packages/agents`, proceso `investigator`) que produce borradores sin efecto operativo. Los tests y la demo usan un proveedor de modelo **scripted determinístico** (resultados etiquetados SIMULATED); Ollama local es opcional y está apagado por defecto; no se llama a ningún proveedor de IA externo. Un revisor independiente evalúa cada borrador y las decisiones operativas son comandos humanos versionados, idempotentes y auditados (aprobar sólo registra la decisión; nunca mueve dinero). Decisiones de implementación: [docs/11-implementation-decisions.md](docs/11-implementation-decisions.md). Remoto: [manuXD270516/fintech-ai-reconciliation-agent](https://github.com/manuXD270516/fintech-ai-reconciliation-agent) (privado). El workflow de CI está en el repo; GitHub no ha llegado a ejecutar jobs porque la cuenta tiene un bloqueo de facturación/límite de gasto.
 
 ## Qué incluye M0
 
@@ -70,6 +70,24 @@ Antes de que una persona vea un borrador, un revisor aplica chequeos determinís
 
 El paso `evals` del gate (también en CI) corre las suites offline y falla si un gate crítico falla o si una métrica empeora frente a `evals/baselines/offline.json`; `retrieval` corre en el smoke. Evidencia: [evaluation-framework](openspec/changes/archive/2026-10-01-evaluation-framework/evidence/README.md).
 
+## Qué agrega M8
+
+| Ruta | Rol | Propósito |
+|---|---|---|
+| `GET /v1/batches` | lectura | Lotes recientes del tenant |
+| `GET /v1/batches/{id}/runs` | lectura | Runs de un lote (el más reciente primero) |
+| `GET /v1/cases?status=` | lectura | Cola de casos, filtrable por estado |
+
+`apps/web` es un dashboard (Vite + React + TypeScript, CSS propio) servido en `127.0.0.1:18181` con proxy de `/api` a la API, sin CORS. Su cliente se genera desde OpenAPI (`scripts/export_openapi.py` → `apps/web/openapi.json` → `openapi-typescript`), y un test falla ante drift. Recorre lotes, runs y resultados; muestra la investigación con timeline y un borrador que separa hechos, inferencias e hipótesis con citas, revisión, confianza `uncalibrated` y etiqueta SIMULATED; y abre casos donde el analista propone y el supervisor decide sobre la versión vigente con el efecto exacto a la vista (registrar la decisión, nunca mover dinero), sin aprobación masiva y con el formulario deshabilitado si el caso quedó obsoleto. Los errores de la API se traducen por código y la autorización es siempre de la API. La sesión es un JWT de desarrollo pegado en la pantalla de ingreso (`scripts/dev_auth.py token ...`), no apta para producción.
+
+```text
+npm ci --prefix apps/web
+npx --prefix apps/web playwright install chromium   # una vez, para el E2E
+npm --prefix apps/web run dev                         # http://127.0.0.1:18181 con el stack arriba
+```
+
+El paso `web` del gate verifica tipos generados, `tsc`, Vitest y build; el smoke (`M8-T07`) ejecuta un E2E Playwright analista → supervisor → auditor contra el stack real, con pasos por teclado y axe (WCAG 2 A/AA) sin violaciones serias ni críticas. Evidencia: [investigation-dashboard](openspec/changes/investigation-dashboard/evidence/README.md).
+
 No hay otras rutas; `tests/unit/test_scope.py` verifica el catálogo exacto. Readiness no escribe filas ni publica mensajes: hace `SELECT 1`, una distancia vectorial sobre literales y `account_info` de JetStream, en paralelo bajo un deadline global (`APP_READY_TIMEOUT_SECONDS`, por defecto 2.5, máximo 3). Las respuestas no incluyen hosts, URLs, SQL, trazas ni secretos. Cada respuesta lleva `X-Request-ID` (se acepta el del cliente si cumple `[A-Za-z0-9._-]{1,64}`; si no, se genera) y produce un log JSON con `request_id`, método, ruta sin query string, status y `duration_ms`.
 
 ## Prerrequisitos
@@ -78,7 +96,8 @@ No hay otras rutas; `tests/unit/test_scope.py` verifica el catálogo exacto. Rea
 |---|---|---|
 | Docker Engine o Docker Desktop (contenedores Linux; WSL2 en Windows) con Compose v2 | Compose ≥ 2.24 (probado con Docker 29.8.0 y Compose 5.5.1, linux/amd64) | Stack local y smoke |
 | [uv](https://docs.astral.sh/uv/) | exactamente 0.12.20 (`required-version` en `pyproject.toml`) | Instala CPython 3.12.14 y las dependencias bloqueadas; ejecuta el gate |
-| Node.js + npm | 22.23.1 (`.nvmrc`) | OpenSpec 1.11.0 fijado en `package-lock.json` |
+| Node.js + npm | 22.23.1 (`.nvmrc`) | OpenSpec 1.11.0 fijado en `package-lock.json`; dashboard `apps/web` (M8) |
+| Chromium de Playwright | el de Playwright 1.63.0 (`npx --prefix apps/web playwright install chromium`) | E2E del dashboard en el smoke |
 | git | cualquiera reciente | Clonar; el gate de política lista archivos con git |
 
 No se requieren cuentas financieras ni claves de IA. El Python del sistema no se usa: uv descarga 3.12.14 (`.python-version`). `uv run python scripts/doctor.py` diagnostica cada prerrequisito y, si falta alguno, indica la acción para corregirlo.
@@ -92,6 +111,8 @@ git clone https://github.com/manuXD270516/fintech-ai-reconciliation-agent.git
 cd fintech-ai-reconciliation-agent
 uv sync --locked                      # instala CPython 3.12.14 y las dependencias del lock
 npm ci                                # OpenSpec 1.11.0 local
+npm ci --prefix apps/web              # dashboard (M8)
+npx --prefix apps/web playwright install chromium
 Copy-Item .env.example .env           # valores sintéticos, sólo locales
 uv run python scripts/doctor.py       # prerrequisitos
 uv run python scripts/gate.py static  # lint, tipos, tests, política, trazabilidad, OpenSpec, gate negativo
@@ -134,6 +155,7 @@ Configuración: la API lee `APP_*`. Si un valor obligatorio falta o es inválido
 | `openspec` | `openspec validate --all --strict --no-interactive` |
 | `negative` | En copias temporales, cada defecto inyectado (spec, trazabilidad, contrato, ruta extra) debe romper su paso; el árbol real no cambia |
 | `evals` | Suites offline de `recon_evals`: gates críticos y regresiones frente al baseline (M7) |
+| `web` | Dashboard: tipos generados al día con `openapi.json`, `tsc`, Vitest y build de producción (M8) |
 | `smoke` | Compose real (ver [evidencia](openspec/changes/bootstrap-mvp-foundation/evidence/README.md)) |
 
 ## Versiones fijadas
@@ -149,6 +171,7 @@ Configuración: la API lee `APP_*`. Si un valor obligatorio falta o es inválido
 | Python (auth, M2) | pyjwt[crypto] 2.15.1, cryptography 50.0.1 |
 | Python (dev) | ruff 0.16.9, mypy 2.3.1, pytest 9.1.1, pytest-asyncio 1.4.0, httpx 0.28.1, hypothesis 6.168.3 |
 | OpenSpec | @fission-ai/openspec 1.11.0 |
+| Dashboard (M8) | vite 8.3.1, react 19.3.0, typescript 5.9.3, openapi-typescript 7.13.0, openapi-fetch 0.17.0, vitest 5.0.3, @playwright/test 1.63.0, @axe-core/playwright 4.13.0 (resto en `apps/web/package-lock.json`) |
 
 Son las versiones verificadas juntas en este repositorio; no se afirma que sean las últimas.
 
@@ -159,6 +182,7 @@ apps/api/          adaptador HTTP (FastAPI): salud y /v1 con JWT/RBAC; Dockerfil
 apps/worker/       relay de outbox, consumidores JetStream (runs, ingestion por eventos) y DLQ
 apps/mcp-server/   fintech-mcp-server: seis tools MCP de sólo lectura (M4)
 apps/investigator/ proceso de investigación: consume eventos y ejecuta el agente acotado (M5)
+apps/web/          dashboard de investigación y aprobación (Vite + React + TS), Vitest y Playwright (M8)
 packages/agents/   routing, plan, cliente MCP, fase de evidencia, proveedores scripted/Ollama (M5)
 packages/domain/   dominio puro: Money, observaciones, revisiones, lotes, ingestion, reglas rules/v1
 packages/store/    SQLAlchemy Core + migraciones Alembic; ingesta atómica, runs, outbox/inbox
@@ -192,7 +216,7 @@ docs/              diseño M0–M10 y decisiones de implementación
 | 12. Risk analysis | [Riesgos, seguridad y observabilidad](docs/08-risks.md) |
 | 13. Milestone roadmap | [M0–M10](docs/09-roadmap.md) |
 
-Todo objetivo de precisión, latencia o tokens de esos documentos es **EXPECTED**; nada se ha medido todavía. Los únicos datos **MEASURED** son los tiempos del smoke local de infraestructura de M0, con el alcance descrito en su evidencia; no son un benchmark.
+Todo objetivo de precisión, latencia o tokens de esos documentos es **EXPECTED**. Lo **MEASURED** se limita a los reportes de `recon_evals` y del smoke sobre datos sintéticos, con el alcance descrito en cada evidencia (por ejemplo, el retrieval híbrido de M3 no alcanza varios objetivos EXPECTED); no son benchmarks ni prueban generalización a datos reales. Las salidas del modelo en tests y demo son **SIMULATED** (proveedor scripted).
 
 ## Change OpenSpec
 
@@ -200,8 +224,10 @@ Todo objetivo de precisión, latencia o tokens de esos documentos es **EXPECTED*
 
 [deterministic-reconciliation](openspec/changes/archive/2026-10-01-deterministic-reconciliation/proposal.md) (M2) está archivado con AC01–AC11 en PASS; su spec vigente es [openspec/specs/deterministic-reconciliation](openspec/specs/deterministic-reconciliation/spec.md).
 
+M3–M8 siguen el mismo patrón (change archivado con sus AC en PASS y evidencia, spec vigente en `openspec/specs/`): `hybrid-knowledge-retrieval`, `read-only-mcp`, `bounded-investigation`, `review-and-human-approval`, `evaluation-framework` e `investigation-dashboard`; los enlaces a cada evidencia están en las secciones "Qué agrega" de arriba.
+
 [transaction-domain](openspec/changes/archive/2026-09-29-transaction-domain/proposal.md) (M1) está archivado con AC01–AC09 en PASS ([evidencia](openspec/changes/archive/2026-09-29-transaction-domain/evidence/README.md)); su spec vigente es [openspec/specs/transaction-domain](openspec/specs/transaction-domain/spec.md).
 
 ## Límites de la demostración
 
-Datos y proveedores sintéticos. Sin PAN, CVV, credenciales reales, dinero real ni ejecución de reembolsos o ajustes contables. El sistema conserva observaciones y evidencia; no sustituye al ledger ni al procesador de pagos. Toda decisión operativa exige una identidad humana autorizada, incluso si la IA expresa alta confianza. M0 no tiene autenticación de usuarios: sólo es apto para uso local en loopback, nunca para despliegue público.
+Datos y proveedores sintéticos. Sin PAN, CVV, credenciales reales, dinero real ni ejecución de reembolsos o ajustes contables. El sistema conserva observaciones y evidencia; no sustituye al ledger ni al procesador de pagos. Toda decisión operativa exige una identidad humana autorizada, incluso si la IA expresa alta confianza. La autenticación usa JWT firmados con claves locales de desarrollo, sin IdP real: sólo es apto para uso local en loopback, nunca para despliegue público.

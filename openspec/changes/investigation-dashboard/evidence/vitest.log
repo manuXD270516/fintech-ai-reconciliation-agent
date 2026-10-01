@@ -1,0 +1,13 @@
+
+> recon-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 D:/projects/repos-ia-exp/fintech-ai-reconciliation-agent/apps/web
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  17:40:53
+   Duration  22.45s (environment 72%, setup 15%, tests 6%, import 5%, transform 1%)
+
