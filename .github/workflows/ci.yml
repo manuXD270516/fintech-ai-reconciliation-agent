@@ -58,6 +58,8 @@ jobs:
         run: uv run python scripts/gate.py openspec
       - name: Negative gate
         run: uv run python scripts/gate.py negative
+      - name: Evaluation suites (offline; critical gates and regressions)
+        run: uv run python scripts/gate.py evals
       - name: Compose smoke (real PostgreSQL/pgvector and NATS JetStream)
         run: uv run python scripts/gate.py smoke
 

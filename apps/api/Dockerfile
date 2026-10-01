@@ -25,6 +25,7 @@ COPY packages/knowledge/pyproject.toml packages/knowledge/pyproject.toml
 COPY apps/mcp-server/pyproject.toml apps/mcp-server/pyproject.toml
 COPY packages/agents/pyproject.toml packages/agents/pyproject.toml
 COPY packages/store/pyproject.toml packages/store/pyproject.toml
+COPY evals/pyproject.toml evals/pyproject.toml
 RUN uv sync --locked --no-dev --no-install-workspace
 COPY apps/api/src apps/api/src
 COPY apps/worker/src apps/worker/src
@@ -34,6 +35,7 @@ COPY packages/knowledge/src packages/knowledge/src
 COPY apps/mcp-server/src apps/mcp-server/src
 COPY packages/agents/src packages/agents/src
 COPY packages/store/src packages/store/src
+COPY evals/src evals/src
 RUN uv sync --locked --no-dev --no-editable
 
 FROM base AS runtime

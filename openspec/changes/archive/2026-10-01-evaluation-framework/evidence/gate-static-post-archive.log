@@ -1,0 +1,93 @@
+gate: removed AI credential variables from environment: ANTHROPIC_BASE_URL
+
+=== gate: lock ===
+Resolved 71 packages in 3ms
+
+=== gate: lint ===
+All checks passed!
+215 files already formatted
+
+=== gate: types ===
+Success: no issues found in 122 source files
+
+=== gate: test ===
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent
+configfile: pyproject.toml
+testpaths: tests/unit
+plugins: anyio-4.15.1, hypothesis-6.168.3, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 244 items
+
+tests\unit\test_agents.py ....................                           [  8%]
+tests\unit\test_approval_policy.py .............                         [ 13%]
+tests\unit\test_auth.py ............                                     [ 18%]
+tests\unit\test_ci_parity.py ....                                        [ 20%]
+tests\unit\test_config.py ..........                                     [ 24%]
+tests\unit\test_doctor_and_policy.py ...........                         [ 28%]
+tests\unit\test_evals.py .........                                       [ 32%]
+tests\unit\test_health_contract.py ...........                           [ 36%]
+tests\unit\test_ingestion_and_rules.py ..................                [ 44%]
+tests\unit\test_knowledge.py ...............                             [ 50%]
+tests\unit\test_mcp_server.py ......................                     [ 59%]
+tests\unit\test_money.py ..................                              [ 66%]
+tests\unit\test_observation.py ................                          [ 73%]
+tests\unit\test_reconciliation_catalog.py .............                  [ 78%]
+tests\unit\test_reconciliation_oracle.py ....                            [ 80%]
+tests\unit\test_request_logging.py ........                              [ 83%]
+tests\unit\test_reviewer.py ......                                       [ 86%]
+tests\unit\test_revisions_batches_mappings.py ............               [ 90%]
+tests\unit\test_scope.py ....                                            [ 92%]
+tests\unit\test_synthetic_dataset.py ....                                [ 94%]
+tests\unit\test_traceability_gate.py ..............                      [100%]
+
+============================ 244 passed in 19.13s =============================
+
+=== gate: policy ===
+policy: OK
+
+=== gate: trace ===
+traceability: OK
+
+=== gate: openspec ===
+✓ change/bootstrap-mvp-foundation
+✓ spec/bounded-investigation
+✓ spec/deterministic-reconciliation
+✓ spec/evaluation-framework
+✓ spec/hybrid-knowledge-retrieval
+✓ spec/read-only-mcp
+✓ spec/review-and-human-approval
+✓ spec/transaction-domain
+Totals: 8 passed, 0 failed (8 items)
+
+=== gate: negative ===
+[OK] control: openspec: step=openspec expected=pass exit=0 :: Totals: 8 passed, 0 failed (8 items)
+[OK] control: traceability: step=trace expected=pass exit=0 :: traceability: OK
+[OK] control: contract tests: step=contract expected=pass exit=0 :: 15 passed in 7.52s
+[OK] requirement RF-03 without scenarios: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] requirement RF-03 without SHALL/MUST: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] test-strategy.md removed: step=trace expected=fail exit=1 :: traceability: 1 problem(s)
+[OK] criterion references unknown requirement: step=trace expected=fail exit=1 :: traceability: 2 problem(s)
+[OK] readiness returns 200 when a dependency fails: step=contract expected=fail exit=1 :: 10 failed, 5 passed in 7.64s
+[OK] non-health route added: step=contract expected=fail exit=1 :: 3 failed, 12 passed in 7.67s
+[OK] real working tree unchanged
+negative gate: OK
+
+=== gate: evals ===
+PASS    reconciliation  MEASURED  critical 5/5
+PASS    tools           MEASURED  critical 5/5
+PASS    investigation   SIMULATED critical 4/4
+PASS    approval        MEASURED  critical 3/3
+overall: PASS (report: evals\reports\gate\report.md)
+
+=== gate summary ===
+PASS  lock      exit=0 (0.0s)
+PASS  lint      exit=0 (0.8s)
+PASS  types     exit=0 (0.9s)
+PASS  test      exit=0 (21.4s)
+PASS  policy    exit=0 (0.4s)
+PASS  trace     exit=0 (0.1s)
+PASS  openspec  exit=0 (1.0s)
+PASS  negative  exit=0 (38.1s)
+PASS  evals     exit=0 (3.7s)

@@ -41,3 +41,6 @@ Thumbs.db
 
 # Local development identity provider keys (scripts/dev_auth.py)
 .dev-keys/
+
+# Generated evaluation reports (baselines live in evals/baselines/)
+evals/reports/

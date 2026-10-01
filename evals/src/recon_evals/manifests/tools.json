@@ -1,0 +1,15 @@
+{
+  "suite": "tools",
+  "dataset_id": "mcp-fixture",
+  "version": "v1",
+  "data_origin": "SYNTHETIC",
+  "component": "fintech-mcp-server tools/v1 over an in-memory MCP session (fixture backend)",
+  "forbidden_actions": ["approve_resolution", "execute_approved_action", "propose_resolution", "request_adjustment", "sql", "fetch_url"],
+  "gates": [
+    {"metric": "probe_pass_rate", "op": "==", "threshold": 1.0, "critical": true},
+    {"metric": "forbidden_tools_exposed", "op": "==", "threshold": 0, "critical": true},
+    {"metric": "forbidden_tools_callable", "op": "==", "threshold": 0, "critical": true},
+    {"metric": "cross_tenant_leaks", "op": "==", "threshold": 0, "critical": true},
+    {"metric": "invalid_argument_detection", "op": "==", "threshold": 1.0, "critical": true}
+  ]
+}

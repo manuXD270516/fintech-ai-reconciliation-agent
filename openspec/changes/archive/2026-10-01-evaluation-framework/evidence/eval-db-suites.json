@@ -1,0 +1,367 @@
+{
+  "kind": "evaluation-report/v1",
+  "generated_utc": "2026-10-01T07:28:48+00:00",
+  "commit": "unavailable",
+  "dirty": true,
+  "host": "Linux 6.6.87.2-microsoft-standard-WSL2 x86_64",
+  "python": "3.12.14",
+  "suites_requested": [
+    "retrieval"
+  ],
+  "seconds": 4.17,
+  "overall": "PASS",
+  "blocking_gates": [],
+  "suites": [
+    {
+      "suite": "retrieval",
+      "label": "MEASURED",
+      "metrics": {
+        "lexical": {
+          "dev": {
+            "n_queries": 21,
+            "n_answerable": 17,
+            "n_unanswerable": 4,
+            "precision_at_5_macro": 0.2588,
+            "recall_at_5_macro": 0.8824,
+            "mrr": 0.9265,
+            "answerable_hit_rate": 1.0,
+            "answerable_hit_rate_ci95": [
+              0.8157,
+              1.0
+            ],
+            "false_abstentions": 0,
+            "no_answer_abstention": 1.0,
+            "no_answer_abstention_ci95": [
+              0.5101,
+              1.0
+            ],
+            "acl_violations": 0,
+            "latency_p50_ms": 3.59,
+            "latency_p95_ms": 5.08
+          },
+          "holdout": {
+            "n_queries": 17,
+            "n_answerable": 13,
+            "n_unanswerable": 4,
+            "precision_at_5_macro": 0.2346,
+            "recall_at_5_macro": 0.9231,
+            "mrr": 0.9231,
+            "answerable_hit_rate": 0.9231,
+            "answerable_hit_rate_ci95": [
+              0.6669,
+              0.9863
+            ],
+            "false_abstentions": 1,
+            "no_answer_abstention": 0.5,
+            "no_answer_abstention_ci95": [
+              0.15,
+              0.85
+            ],
+            "acl_violations": 0,
+            "latency_p50_ms": 3.66,
+            "latency_p95_ms": 5.27
+          },
+          "all": {
+            "n_queries": 38,
+            "n_answerable": 30,
+            "n_unanswerable": 8,
+            "precision_at_5_macro": 0.2483,
+            "recall_at_5_macro": 0.9,
+            "mrr": 0.925,
+            "answerable_hit_rate": 0.9667,
+            "answerable_hit_rate_ci95": [
+              0.8333,
+              0.9941
+            ],
+            "false_abstentions": 1,
+            "no_answer_abstention": 0.75,
+            "no_answer_abstention_ci95": [
+              0.4093,
+              0.9285
+            ],
+            "acl_violations": 0,
+            "latency_p50_ms": 3.66,
+            "latency_p95_ms": 5.27
+          }
+        },
+        "vector": {
+          "dev": {
+            "n_queries": 21,
+            "n_answerable": 17,
+            "n_unanswerable": 4,
+            "precision_at_5_macro": 0.2588,
+            "recall_at_5_macro": 0.8529,
+            "mrr": 0.7941,
+            "answerable_hit_rate": 0.9412,
+            "answerable_hit_rate_ci95": [
+              0.7302,
+              0.9895
+            ],
+            "false_abstentions": 0,
+            "no_answer_abstention": 1.0,
+            "no_answer_abstention_ci95": [
+              0.5101,
+              1.0
+            ],
+            "acl_violations": 0,
+            "latency_p50_ms": 2.36,
+            "latency_p95_ms": 2.97
+          },
+          "holdout": {
+            "n_queries": 17,
+            "n_answerable": 13,
+            "n_unanswerable": 4,
+            "precision_at_5_macro": 0.2308,
+            "recall_at_5_macro": 0.9231,
+            "mrr": 0.8333,
+            "answerable_hit_rate": 0.9231,
+            "answerable_hit_rate_ci95": [
+              0.6669,
+              0.9863
+            ],
+            "false_abstentions": 1,
+            "no_answer_abstention": 0.75,
+            "no_answer_abstention_ci95": [
+              0.3006,
+              0.9544
+            ],
+            "acl_violations": 0,
+            "latency_p50_ms": 2.21,
+            "latency_p95_ms": 5.5
+          },
+          "all": {
+            "n_queries": 38,
+            "n_answerable": 30,
+            "n_unanswerable": 8,
+            "precision_at_5_macro": 0.2467,
+            "recall_at_5_macro": 0.8833,
+            "mrr": 0.8111,
+            "answerable_hit_rate": 0.9333,
+            "answerable_hit_rate_ci95": [
+              0.7868,
+              0.9815
+            ],
+            "false_abstentions": 1,
+            "no_answer_abstention": 0.875,
+            "no_answer_abstention_ci95": [
+              0.5291,
+              0.9776
+            ],
+            "acl_violations": 0,
+            "latency_p50_ms": 2.25,
+            "latency_p95_ms": 3.07
+          }
+        },
+        "hybrid": {
+          "dev": {
+            "n_queries": 21,
+            "n_answerable": 17,
+            "n_unanswerable": 4,
+            "precision_at_5_macro": 0.2706,
+            "recall_at_5_macro": 0.9118,
+            "mrr": 0.9706,
+            "answerable_hit_rate": 1.0,
+            "answerable_hit_rate_ci95": [
+              0.8157,
+              1.0
+            ],
+            "false_abstentions": 0,
+            "no_answer_abstention": 1.0,
+            "no_answer_abstention_ci95": [
+              0.5101,
+              1.0
+            ],
+            "acl_violations": 0,
+            "latency_p50_ms": 3.96,
+            "latency_p95_ms": 5.38
+          },
+          "holdout": {
+            "n_queries": 17,
+            "n_answerable": 13,
+            "n_unanswerable": 4,
+            "precision_at_5_macro": 0.2308,
+            "recall_at_5_macro": 0.9231,
+            "mrr": 0.9231,
+            "answerable_hit_rate": 0.9231,
+            "answerable_hit_rate_ci95": [
+              0.6669,
+              0.9863
+            ],
+            "false_abstentions": 1,
+            "no_answer_abstention": 0.5,
+            "no_answer_abstention_ci95": [
+              0.15,
+              0.85
+            ],
+            "acl_violations": 0,
+            "latency_p50_ms": 4.45,
+            "latency_p95_ms": 5.37
+          },
+          "all": {
+            "n_queries": 38,
+            "n_answerable": 30,
+            "n_unanswerable": 8,
+            "precision_at_5_macro": 0.2533,
+            "recall_at_5_macro": 0.9167,
+            "mrr": 0.95,
+            "answerable_hit_rate": 0.9667,
+            "answerable_hit_rate_ci95": [
+              0.8333,
+              0.9941
+            ],
+            "false_abstentions": 1,
+            "no_answer_abstention": 0.75,
+            "no_answer_abstention_ci95": [
+              0.4093,
+              0.9285
+            ],
+            "acl_violations": 0,
+            "latency_p50_ms": 4.26,
+            "latency_p95_ms": 5.38
+          }
+        },
+        "split_leakage_families": 0,
+        "config": {
+          "index_version": "chunking/v1+hashing-ngram/v1",
+          "embedding": {
+            "model": "hashing-ngram",
+            "revision": "v1",
+            "dimensions": 256,
+            "tokenizer": "ascii-folded lowercase [a-z0-9]+ words + char trigrams",
+            "normalization": "l2",
+            "semantic": false
+          },
+          "rrf_k": 60,
+          "branch_k": 20,
+          "top_k": 5,
+          "vector_search": "exact cosine scan (no ANN index)",
+          "configured_abstain_coverage": 0.6,
+          "tuned_on_dev": {
+            "lexical": 0.6,
+            "vector": 0.6,
+            "hybrid": 0.6
+          }
+        }
+      },
+      "manifest": {
+        "suite": "retrieval",
+        "dataset_id": "knowledge",
+        "version": "v1",
+        "data_origin": "SYNTHETIC",
+        "requires": "PostgreSQL + pgvector (runs inside the Compose smoke container)",
+        "split_policy": "hand-assigned dev/holdout by query family; threshold tuned on dev only",
+        "labels": [
+          "relevant evidence units (document@version#section)",
+          "answerable"
+        ],
+        "gates": [
+          {
+            "metric": "hybrid.all.acl_violations",
+            "op": "==",
+            "threshold": 0,
+            "critical": true
+          },
+          {
+            "metric": "lexical.all.acl_violations",
+            "op": "==",
+            "threshold": 0,
+            "critical": true
+          },
+          {
+            "metric": "vector.all.acl_violations",
+            "op": "==",
+            "threshold": 0,
+            "critical": true
+          },
+          {
+            "metric": "split_leakage_families",
+            "op": "==",
+            "threshold": 0,
+            "critical": true
+          },
+          {
+            "metric": "hybrid.holdout.recall_at_5_macro",
+            "op": ">=",
+            "threshold": 0.85,
+            "critical": false
+          },
+          {
+            "metric": "hybrid.holdout.precision_at_5_macro",
+            "op": ">=",
+            "threshold": 0.8,
+            "critical": false
+          },
+          {
+            "metric": "hybrid.holdout.no_answer_abstention",
+            "op": ">=",
+            "threshold": 0.95,
+            "critical": false
+          }
+        ]
+      },
+      "gates": [
+        {
+          "metric": "hybrid.all.acl_violations",
+          "op": "==",
+          "threshold": 0.0,
+          "value": 0.0,
+          "critical": true,
+          "passed": true
+        },
+        {
+          "metric": "lexical.all.acl_violations",
+          "op": "==",
+          "threshold": 0.0,
+          "value": 0.0,
+          "critical": true,
+          "passed": true
+        },
+        {
+          "metric": "vector.all.acl_violations",
+          "op": "==",
+          "threshold": 0.0,
+          "value": 0.0,
+          "critical": true,
+          "passed": true
+        },
+        {
+          "metric": "split_leakage_families",
+          "op": "==",
+          "threshold": 0.0,
+          "value": 0.0,
+          "critical": true,
+          "passed": true
+        },
+        {
+          "metric": "hybrid.holdout.recall_at_5_macro",
+          "op": ">=",
+          "threshold": 0.85,
+          "value": 0.9231,
+          "critical": false,
+          "passed": true
+        },
+        {
+          "metric": "hybrid.holdout.precision_at_5_macro",
+          "op": ">=",
+          "threshold": 0.8,
+          "value": 0.2308,
+          "critical": false,
+          "passed": false
+        },
+        {
+          "metric": "hybrid.holdout.no_answer_abstention",
+          "op": ">=",
+          "threshold": 0.95,
+          "value": 0.5,
+          "critical": false,
+          "passed": false
+        }
+      ],
+      "notes": [
+        "Embeddings de hashing no semánticos; corpus sintético pequeño."
+      ],
+      "failures": [],
+      "status": "PASS"
+    }
+  ]
+}

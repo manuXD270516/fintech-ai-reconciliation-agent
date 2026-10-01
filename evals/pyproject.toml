@@ -1,0 +1,19 @@
+[project]
+name = "recon-evals"
+version = "0.1.0"
+description = "Evaluation framework: manifests, suites, labelled reports, critical gates and regressions"
+requires-python = "==3.12.*"
+dependencies = ["recon-domain", "recon-knowledge", "recon-mcp", "recon-agents"]
+
+[tool.uv.sources]
+recon-domain = { workspace = true }
+recon-knowledge = { workspace = true }
+recon-mcp = { workspace = true }
+recon-agents = { workspace = true }
+
+[build-system]
+requires = ["hatchling==1.32.4"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/recon_evals"]

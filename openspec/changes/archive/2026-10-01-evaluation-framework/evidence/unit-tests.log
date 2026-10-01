@@ -1,0 +1,20 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent\.venv\Scripts\python.exe
+hypothesis profile 'default'
+rootdir: D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent
+configfile: pyproject.toml
+plugins: anyio-4.15.1, hypothesis-6.168.3, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 9 items
+
+tests/unit/test_evals.py::test_family_split_is_deterministic_and_roughly_60_20_20 PASSED [ 11%]
+tests/unit/test_evals.py::test_statistics_report_na_instead_of_success_on_empty_denominators PASSED [ 22%]
+tests/unit/test_evals.py::test_critical_gate_failure_blocks_and_non_critical_does_not PASSED [ 33%]
+tests/unit/test_evals.py::test_regressions_follow_gate_direction_and_tolerance PASSED [ 44%]
+tests/unit/test_evals.py::test_gate_command_fails_when_a_critical_gate_fails PASSED [ 55%]
+tests/unit/test_evals.py::test_reconciliation_suite_has_no_split_leakage_and_independent_labels PASSED [ 66%]
+tests/unit/test_evals.py::test_db_suite_is_skipped_not_faked_without_postgres PASSED [ 77%]
+tests/unit/test_evals.py::test_approval_matrix_and_manifests_are_consistent PASSED [ 88%]
+tests/unit/test_evals.py::test_committed_baseline_is_a_passing_offline_report PASSED [100%]
+
+============================== 9 passed in 1.18s ==============================

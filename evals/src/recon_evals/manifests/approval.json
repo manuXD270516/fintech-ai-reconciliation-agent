@@ -1,0 +1,13 @@
+{
+  "suite": "approval",
+  "dataset_id": "approval-attempt-matrix",
+  "version": "v1",
+  "data_origin": "SYNTHETIC",
+  "component": "recon_domain.approval.check_decision (pure policy applied by the case service)",
+  "oracle": "independent restatement: valid iff supervisor, not proposer/requester, reason >= 10 chars, current version, case in review, recommendation pending, latest run, not expired",
+  "gates": [
+    {"metric": "invalid_attempts_blocked", "op": "==", "threshold": 1.0, "critical": true},
+    {"metric": "valid_attempts_allowed", "op": "==", "threshold": 1.0, "critical": true},
+    {"metric": "self_approvals_allowed", "op": "==", "threshold": 0, "critical": true}
+  ]
+}

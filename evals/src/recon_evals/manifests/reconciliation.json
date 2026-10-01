@@ -1,0 +1,23 @@
+{
+  "suite": "reconciliation",
+  "dataset_id": "transactions",
+  "version": "v2",
+  "schema_version": "raw-observation-csv/v1",
+  "generator": "recon_domain.synthetic.generate (labels v2)",
+  "seed": 20261001,
+  "per_scenario": 110,
+  "data_origin": "SYNTHETIC",
+  "split_policy": "family = scenario + block of 10 payments; sha256(family) mod 100 -> 60 dev / 20 calibration / 20 holdout",
+  "labels": ["expected_match", "expected_discrepancies"],
+  "oracle": "labels written by the generator independently of rules/v1",
+  "gold_isolation": "labels.csv is only used to score results and to derive batch scopes (tenant/provider/account), never outcomes",
+  "gates": [
+    {"metric": "all.false_exact_matches", "op": "==", "threshold": 0, "critical": true},
+    {"metric": "all.exact_precision", "op": "==", "threshold": 1.0, "critical": true},
+    {"metric": "all.accuracy", "op": ">=", "threshold": 0.99, "critical": true},
+    {"metric": "all.exact_recall", "op": ">=", "threshold": 0.99, "critical": true},
+    {"metric": "holdout.accuracy", "op": ">=", "threshold": 0.99, "critical": false},
+    {"metric": "all.discrepancy_micro_f1", "op": ">=", "threshold": 0.99, "critical": false},
+    {"metric": "split_leakage_families", "op": "==", "threshold": 0, "critical": true}
+  ]
+}
