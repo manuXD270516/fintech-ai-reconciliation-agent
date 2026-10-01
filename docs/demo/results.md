@@ -19,7 +19,7 @@ Resultados sanitizados de lo que el repositorio demuestra al 2026-10-01. Todo se
 | Aprobación humana: 576 intentos contra un oráculo independiente; 574 inválidos bloqueados y 0 autoaprobaciones | [review-and-human-approval](../../openspec/changes/archive/2026-10-01-review-and-human-approval/evidence/README.md) | MEASURED |
 | Dashboard: E2E analista → supervisora → auditor, con decisión por teclado y 0 violaciones axe serias o críticas | [investigation-dashboard](../../openspec/changes/archive/2026-10-01-investigation-dashboard/evidence/README.md) | MEASURED (navegador headless) |
 | Observabilidad: una traza que cruza 4 servicios; alertas disparadas por fallas inyectadas; recuperación exacta; replay idempotente; restore con digest del audit trail | [observability-security](../../openspec/changes/archive/2026-10-01-observability-security/evidence/README.md) | MEASURED |
-| Demo: sesiones aisladas por tenant; con el kill switch de IA apagado, el flujo humano completo sigue funcionando | [public-demo](../../openspec/changes/public-demo/evidence/README.md) | MEASURED |
+| Demo: sesiones aisladas por tenant; con el kill switch de IA apagado, el flujo humano completo sigue funcionando | [public-demo](../../openspec/changes/archive/2026-10-01-public-demo/evidence/README.md) | MEASURED |
 
 ## Costos y recursos
 
@@ -37,7 +37,7 @@ Resultados sanitizados de lo que el repositorio demuestra al 2026-10-01. Todo se
 
 ## Decisiones pendientes del propietario (antes de publicar)
 
-1. **Licencia del repositorio.** No hay `LICENSE`. El inventario de 314 dependencias no encontró licencias GPL/AGPL ni desconocidas; sí hay 19 con copyleft débil (LGPL/MPL), usadas sin modificar ([license-inventory.json](../../openspec/changes/public-demo/evidence/license-inventory.json)).
+1. **Licencia del repositorio.** No hay `LICENSE`. El inventario de 314 dependencias no encontró licencias GPL/AGPL ni desconocidas; sí hay 19 con copyleft débil (LGPL/MPL), usadas sin modificar ([license-inventory.json](../../openspec/changes/archive/2026-10-01-public-demo/evidence/license-inventory.json)).
 2. **Historia git.** Los logs de evidencia de M0/M1 contenían la ruta del perfil de usuario local. Se redactaron en el árbol actual, pero siguen en commits anteriores. Publicar el repositorio tal cual las expondría; reescribir la historia es una decisión del propietario y no se hizo.
 3. **Escaneo de secretos.** El de este repo es heurístico (0 hallazgos en todos los commits). Se recomienda ejecutar gitleaks o trufflehog antes de hacerlo público.
 4. **Push, PRs y CI.** Los hitos M2–M10 están integrados en `main` sólo de forma local. El CI remoto nunca se ejecutó por el bloqueo de facturación.
