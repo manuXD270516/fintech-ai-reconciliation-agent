@@ -1,13 +1,13 @@
 schema: spec-driven
 
 context: |
-  Project: fintech-ai-reconciliation-agent. Current phase: implementing M0 (bootstrap-mvp-foundation) only;
-  no payment, reconciliation, AI or M1 code.
+  Project: fintech-ai-reconciliation-agent. M0-M9 implemented and verified locally (one OpenSpec
+  change per milestone; M2-M9 archived); next: M10 public-demo preparation without publishing.
   FastAPI modular monolith, PostgreSQL + pgvector, NATS JetStream, read-only MCP.
   Synthetic data only. Deterministic reconciliation first; AI only for ambiguity.
   Operational decisions require human approval; no financial execution in M0-M10.
   Every substantial change requires proposal, requirements, acceptance criteria, design, tasks and test strategy.
-  Metrics distinguish MEASURED, SIMULATED and EXPECTED. First change covers M0 only.
+  Metrics distinguish MEASURED, SIMULATED and EXPECTED. AI runs on scripted/local providers only.
   Language: Spanish
   All artifacts must be written in Spanish.
   Keep OpenSpec structural headings and SHALL/MUST keywords in English.
