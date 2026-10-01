@@ -32,6 +32,9 @@ volumes/
 # Test evidence scratch (sanitized evidence is committed under docs/evidence)
 .smoke/
 
+# Local backups (scripts/ops.py backup); synthetic data, still never committed
+.backups/
+
 # Editors / OS
 .idea/
 .vscode/

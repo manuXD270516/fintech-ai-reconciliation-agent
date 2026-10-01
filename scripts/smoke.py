@@ -466,6 +466,27 @@ class Smoke:
 
         return run_e2e(self.env)
 
+    def metrics_and_alerts(self) -> dict[str, Any]:
+        """M9: /metrics on the live stack, low-cardinality labels, no critical alert."""
+        from scripts import ops_drills  # noqa: PLC0415 - imports this module
+
+        return ops_drills.metrics_and_alerts(self.api, self.secrets)
+
+    def outage_drill(self) -> dict[str, Any]:
+        from scripts import ops_drills  # noqa: PLC0415
+
+        return ops_drills.broker_and_worker_outage(self.api)
+
+    def dead_letter_drill(self) -> dict[str, Any]:
+        from scripts import ops_drills  # noqa: PLC0415
+
+        return ops_drills.dead_letter_triage(self.api)
+
+    def backup_restore(self) -> dict[str, Any]:
+        from scripts import ops_drills  # noqa: PLC0415
+
+        return ops_drills.backup_restore(ROOT / ".backups")
+
     def knowledge_ingest_idempotent(self) -> dict[str, Any]:
         outputs = []
         for _ in range(2):
@@ -714,6 +735,14 @@ def main() -> int:
         smoke.check(
             "M3-T07", "retrieval evaluation (MEASURED, synthetic)", smoke.retrieval_evaluation
         )
+        smoke.check("M9-T04", "/metrics and alert rules on the healthy stack",
+                    smoke.metrics_and_alerts)  # fmt: skip
+        smoke.check("M9-T05", "fault injection: broker+worker outage, alerts, exact recovery",
+                    smoke.outage_drill)  # fmt: skip
+        smoke.check("M9-T05", "fault injection: dead letters, audited triage, idempotent replay",
+                    smoke.dead_letter_drill)  # fmt: skip
+        smoke.check("M9-T06", "backup + restore check (counts and audit digest)",
+                    smoke.backup_restore)  # fmt: skip
         smoke.check("T08", "API loopback-only, dependencies private", smoke.isolation)
         smoke.check("T09", "request ID correlated in header and JSON log", smoke.correlation)
         for service in ("postgres", "nats"):

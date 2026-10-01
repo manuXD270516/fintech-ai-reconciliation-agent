@@ -28,6 +28,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import ARRAY, JSONB, TSVECTOR
 
+from recon_store.telemetry import current_traceparent
 from recon_store.vector import Vector
 
 SCHEMA = "recon"
@@ -143,6 +144,8 @@ outbox = Table(
     Column("published_at", DateTime(timezone=True)),
     Column("attempts", Integer, nullable=False, server_default=text("0")),
     Column("last_error", Text),
+    # M9: W3C traceparent of the transaction that wrote the event (None when tracing is off).
+    Column("trace_context", String(128), default=current_traceparent),
 )
 Index(
     "ix_outbox_unpublished",
@@ -422,4 +425,13 @@ decisions = Table(
     Column("created_at", DateTime(timezone=True), nullable=False, server_default=text("now()")),
     UniqueConstraint("tenant_id", "idempotency_key", name="uq_decision_idempotency"),
     UniqueConstraint("recommendation_id", name="uq_decision_per_recommendation"),
+)
+
+# --- M9 observability -------------------------------------------------------------
+service_heartbeats = Table(
+    "service_heartbeats",
+    metadata,
+    Column("service", String(64), primary_key=True),
+    Column("instance", String(128), nullable=False),
+    Column("beat_at", DateTime(timezone=True), nullable=False),
 )

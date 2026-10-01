@@ -1,0 +1,31 @@
+# OpenTelemetry Collector for the optional `observability` profile (M9, D09).
+# Receives OTLP/HTTP from api, worker, investigator and fintech-mcp-server and forwards
+# to Jaeger. Attribute filtering is defensive: services never emit tenant or subject
+# attributes, and the processor drops them anyway if a future change adds them.
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  attributes/redact:
+    actions:
+      - key: tenant_id
+        action: delete
+      - key: enduser.id
+        action: delete
+      - key: http.request.header.authorization
+        action: delete
+  batch: {}
+
+exporters:
+  otlp_http/jaeger:
+    endpoint: http://jaeger:4318
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [attributes/redact, batch]
+      exporters: [otlp_http/jaeger]

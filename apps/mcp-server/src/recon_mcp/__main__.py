@@ -22,6 +22,7 @@ from recon_mcp.backend import MemoryBackend, ReadBackend
 from recon_mcp.identity import IdentityError, ServiceIdentity
 from recon_mcp.server import build_server
 from recon_mcp.tools import Limits, ToolService
+from recon_store import telemetry
 
 
 def _backend(kind: str) -> ReadBackend:
@@ -49,7 +50,13 @@ def main(argv: list[str]) -> int:
         print(json.dumps({"error": f"invalid MCP configuration: {exc}"}), file=sys.stderr)
         return 2
     key = os.environ.get("MCP_CURSOR_KEY", "").encode() or None
-    anyio.run(_serve, ToolService(backend, identity, Limits(), key))
+    # Optional tracing: the SDK continues the caller's trace from `_meta.traceparent`.
+    traced = telemetry.configure("fintech-mcp-server")
+    try:
+        anyio.run(_serve, ToolService(backend, identity, Limits(), key))
+    finally:
+        if traced:
+            telemetry.shutdown()
     return 0
 
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from collections.abc import Iterator
 from dataclasses import replace
 from datetime import UTC, datetime
@@ -11,11 +12,12 @@ import psycopg
 import pytest
 from sqlalchemy import func, select
 
-from recon_knowledge.corpus import load_corpus, parse_document
+from recon_knowledge import __main__ as knowledge_cli
+from recon_knowledge.corpus import CorpusError, load_corpus, parse_document
 from recon_knowledge.repository import KnowledgeConflictError, KnowledgeRepository
 from recon_knowledge.retrieval import Mode, SearchContext
 from recon_store.engine import runtime_engine, runtime_url
-from recon_store.tables import knowledge_chunks, knowledge_documents
+from recon_store.tables import audit_entries, knowledge_chunks, knowledge_documents
 
 from .support import app_connect, new_run_id, settings
 
@@ -172,6 +174,33 @@ def test_revocation_removes_from_every_branch(repo: KnowledgeRepository) -> None
         assert not any(u.startswith(doc_id) for u in _units(repo, query, ctx, mode))
     assert repo.get_chunk(chunk_id, ctx) is None
     assert not repo.revoke(doc_id, 1, actor="curator-it", correlation_id="it", reason="again")
+
+
+def test_revoke_command_of_the_runbook_is_audited(
+    repo: KnowledgeRepository, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """M9 runbook evidence-withdrawn: `python -m recon_knowledge revoke` end to end."""
+    run = new_run_id()
+    doc_id = f"it-runbook-revoke-{run}"
+    query = f"procedimiento molibdeno R7 lote{run}"
+    repo.publish(parse_document(_doc(doc_id, query)), actor="it", correlation_id="it")
+    args = ["revoke", "--document-id", doc_id, "--version", "1", "--actor", "ops-it",
+            "--reason", "documento retirado por el runbook"]  # fmt: skip
+    assert knowledge_cli.main(args) == 0
+    assert json.loads(capsys.readouterr().out)["revoked"] is True
+    assert knowledge_cli.main(args) == 0
+    assert json.loads(capsys.readouterr().out)["revoked"] is False
+    assert not any(u.startswith(doc_id) for u in _units(repo, query, _scoped(doc_id), Mode.HYBRID))
+    with repo.engine.connect() as conn:
+        actors = conn.execute(
+            select(audit_entries.c.actor).where(
+                audit_entries.c.resource_id.like(f"{doc_id}%"),
+                audit_entries.c.action.like("%revoke%"),
+            )
+        ).all()
+    assert [a[0] for a in actors] == ["ops-it"]
+    with pytest.raises(CorpusError, match="non-empty --reason"):
+        knowledge_cli.revoke(doc_id, 1, actor="ops-it", reason=" ")
 
 
 def test_untrusted_instructions_are_returned_as_flagged_data(repo: KnowledgeRepository) -> None:

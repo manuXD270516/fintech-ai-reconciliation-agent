@@ -55,13 +55,15 @@ STEPS: dict[str, list[list[str]]] = {
     "evals": [[PY, "-m", "recon_evals", "gate"]],
     # M8: dashboard checks (OpenAPI types in sync, tsc, Vitest, production build).
     "web": [["{npm}", "--prefix", "apps/web", "run", "check"]],
+    # M9: heuristic secret scan of every commit reachable from any ref (needs full history).
+    "secrets": [[PY, "scripts/secret_scan.py"]],
     "smoke": [[PY, "scripts/smoke.py"]],
 }
 GROUPS = {
     "static": ["lock", "lint", "types", "test", "policy", "trace", "openspec", "negative",
-               "evals", "web"],
+               "evals", "web", "secrets"],
     "all": ["lock", "lint", "types", "test", "policy", "trace", "openspec", "negative", "evals",
-            "web", "smoke"],
+            "web", "secrets", "smoke"],
 }  # fmt: skip
 
 

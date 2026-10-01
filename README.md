@@ -2,7 +2,7 @@
 
 Diseño de una plataforma de conciliación de pagos: reglas determinísticas primero, investigación con IA sólo cuando aporta contexto y aprobación humana para decisiones operativas.
 
-**Estado: M0 (bootstrap), M1 (dominio transaccional), M2 (conciliación determinística), M3 (knowledge base híbrida), M4 (servidor MCP de sólo lectura), M5 (investigación acotada), M6 (revisión y aprobación humana; cierre del MVP técnico), M7 (framework de evaluación) y M8 (dashboard de investigación) implementados y verificados localmente.** Existen PostgreSQL + pgvector y NATS JetStream en Docker Compose, el dominio puro (`packages/domain`), su persistencia (`packages/store`), ingestion sintética por HTTP y eventos con cuarentena, el motor de reglas `rules/v1`, runs versionados, un worker con outbox/inbox y dead letters, una API `/v1` autenticada con JWT de desarrollo, una base de conocimiento sintética con retrieval híbrido (FTS + vector + RRF) y abstención (`packages/knowledge`), `fintech-mcp-server` (`apps/mcp-server`), un proceso MCP con seis tools de sólo lectura, y un agente de investigación acotado (`packages/agents`, proceso `investigator`) que produce borradores sin efecto operativo. Los tests y la demo usan un proveedor de modelo **scripted determinístico** (resultados etiquetados SIMULATED); Ollama local es opcional y está apagado por defecto; no se llama a ningún proveedor de IA externo. Un revisor independiente evalúa cada borrador y las decisiones operativas son comandos humanos versionados, idempotentes y auditados (aprobar sólo registra la decisión; nunca mueve dinero). Decisiones de implementación: [docs/11-implementation-decisions.md](docs/11-implementation-decisions.md). Remoto: [manuXD270516/fintech-ai-reconciliation-agent](https://github.com/manuXD270516/fintech-ai-reconciliation-agent) (privado). El workflow de CI está en el repo; GitHub no ha llegado a ejecutar jobs porque la cuenta tiene un bloqueo de facturación/límite de gasto.
+**Estado: M0 (bootstrap), M1 (dominio transaccional), M2 (conciliación determinística), M3 (knowledge base híbrida), M4 (servidor MCP de sólo lectura), M5 (investigación acotada), M6 (revisión y aprobación humana; cierre del MVP técnico), M7 (framework de evaluación), M8 (dashboard de investigación) y M9 (observabilidad y seguridad) implementados y verificados localmente.** Existen PostgreSQL + pgvector y NATS JetStream en Docker Compose, el dominio puro (`packages/domain`), su persistencia (`packages/store`), ingestion sintética por HTTP y eventos con cuarentena, el motor de reglas `rules/v1`, runs versionados, un worker con outbox/inbox y dead letters, una API `/v1` autenticada con JWT de desarrollo, una base de conocimiento sintética con retrieval híbrido (FTS + vector + RRF) y abstención (`packages/knowledge`), `fintech-mcp-server` (`apps/mcp-server`), un proceso MCP con seis tools de sólo lectura, y un agente de investigación acotado (`packages/agents`, proceso `investigator`) que produce borradores sin efecto operativo. Los tests y la demo usan un proveedor de modelo **scripted determinístico** (resultados etiquetados SIMULATED); Ollama local es opcional y está apagado por defecto; no se llama a ningún proveedor de IA externo. Un revisor independiente evalúa cada borrador y las decisiones operativas son comandos humanos versionados, idempotentes y auditados (aprobar sólo registra la decisión; nunca mueve dinero). Decisiones de implementación: [docs/11-implementation-decisions.md](docs/11-implementation-decisions.md). Remoto: [manuXD270516/fintech-ai-reconciliation-agent](https://github.com/manuXD270516/fintech-ai-reconciliation-agent) (privado). El workflow de CI está en el repo; GitHub no ha llegado a ejecutar jobs porque la cuenta tiene un bloqueo de facturación/límite de gasto.
 
 ## Qué incluye M0
 
@@ -88,7 +88,35 @@ npm --prefix apps/web run dev                         # http://127.0.0.1:18181 c
 
 El paso `web` del gate verifica tipos generados, `tsc`, Vitest y build; el smoke (`M8-T07`) ejecuta un E2E Playwright analista → supervisor → auditor contra el stack real, con pasos por teclado y axe (WCAG 2 A/AA) sin violaciones serias ni críticas. Evidencia: [investigation-dashboard](openspec/changes/archive/2026-10-01-investigation-dashboard/evidence/README.md).
 
-No hay otras rutas; `tests/unit/test_scope.py` verifica el catálogo exacto. Readiness no escribe filas ni publica mensajes: hace `SELECT 1`, una distancia vectorial sobre literales y `account_info` de JetStream, en paralelo bajo un deadline global (`APP_READY_TIMEOUT_SECONDS`, por defecto 2.5, máximo 3). Las respuestas no incluyen hosts, URLs, SQL, trazas ni secretos. Cada respuesta lleva `X-Request-ID` (se acepta el del cliente si cumple `[A-Za-z0-9._-]{1,64}`; si no, se genera) y produce un log JSON con `request_id`, método, ruta sin query string, status y `duration_ms`.
+## Qué agrega M9
+
+- **Trazas OpenTelemetry opcionales.** Se apagan por defecto. Con `OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318 docker compose --profile observability up -d`, una investigación produce una sola traza: API → outbox → NATS → worker → investigador → `fintech-mcp-server`. Se ve en Jaeger (`http://127.0.0.1:18186`). `uv run python scripts/observability_demo.py` lo verifica y vuelve a apagarlo. Los spans no llevan tenant, sujeto ni montos.
+- **`GET /metrics`** (Prometheus, sin autenticación, sólo loopback). Expone:
+  - contadores e histogramas HTTP por plantilla de ruta;
+  - outbox pendiente y su antigüedad;
+  - latidos de worker e investigador;
+  - runs, resultados, investigaciones (presupuesto y tokens), revisiones y cola humana;
+  - rechazos de decisión y llamadas MCP en la última hora;
+  - dead letters sin triar.
+
+  Sólo agregados de baja cardinalidad, sin IDs ni tenants.
+- **Alertas EXPECTED** en `infra/observability/alerts.toml`, evaluadas con `uv run python scripts/ops.py alerts`. Cada una enlaza un runbook de [docs/runbooks](docs/runbooks/README.md).
+- **Operación auditada:**
+  - triage de dead letters (`docker compose exec worker python -m recon_worker.dlq list|triage`);
+  - revocación de documentos (`python -m recon_knowledge revoke`);
+  - backup y chequeo de restore sobre una base temporal (`scripts/ops.py backup|restore-check`).
+- **Drills en el smoke:**
+  - `M9-T04`: métricas sanas.
+  - `M9-T05`: caída de NATS y worker, con alertas que disparan y se limpian, y el run completado una sola vez; dead letters con replay idempotente.
+  - `M9-T06`: backup y restore con conteos y digest del audit trail.
+- **Seguridad:**
+  - matriz ruta × rol verificada por test;
+  - paso de gate `secrets` (escaneo heurístico de toda la historia git);
+  - [revisión de seguridad](docs/security-review.md) con hallazgos abiertos (por ejemplo, `/metrics` sin autenticación, no apto para publicarse).
+
+Evidencia: [observability-security](openspec/changes/archive/2026-10-01-observability-security/evidence/README.md).
+
+No hay otras rutas (además de `/metrics`, M9); `tests/unit/test_scope.py` verifica el catálogo exacto y `tests/unit/test_access_matrix.py` los roles de cada ruta. Readiness no escribe filas ni publica mensajes: hace `SELECT 1`, una distancia vectorial sobre literales y `account_info` de JetStream, en paralelo bajo un deadline global (`APP_READY_TIMEOUT_SECONDS`, por defecto 2.5, máximo 3). Las respuestas no incluyen hosts, URLs, SQL, trazas ni secretos. Cada respuesta lleva `X-Request-ID` (se acepta el del cliente si cumple `[A-Za-z0-9._-]{1,64}`; si no, se genera) y produce un log JSON con `request_id`, método, ruta sin query string, status y `duration_ms`.
 
 ## Prerrequisitos
 
@@ -156,6 +184,7 @@ Configuración: la API lee `APP_*`. Si un valor obligatorio falta o es inválido
 | `negative` | En copias temporales, cada defecto inyectado (spec, trazabilidad, contrato, ruta extra) debe romper su paso; el árbol real no cambia |
 | `evals` | Suites offline de `recon_evals`: gates críticos y regresiones frente al baseline (M7) |
 | `web` | Dashboard: tipos generados al día con `openapi.json`, `tsc`, Vitest y build de producción (M8) |
+| `secrets` | Escaneo heurístico de secretos, PAN (Luhn) y rutas prohibidas en toda la historia git (M9; no reemplaza a gitleaks) |
 | `smoke` | Compose real (ver [evidencia](openspec/changes/bootstrap-mvp-foundation/evidence/README.md)) |
 
 ## Versiones fijadas
@@ -171,6 +200,7 @@ Configuración: la API lee `APP_*`. Si un valor obligatorio falta o es inválido
 | Python (auth, M2) | pyjwt[crypto] 2.15.1, cryptography 50.0.1 |
 | Python (dev) | ruff 0.16.9, mypy 2.3.1, pytest 9.1.1, pytest-asyncio 1.4.0, httpx 0.28.1, hypothesis 6.168.3 |
 | OpenSpec | @fission-ai/openspec 1.11.0 |
+| Observabilidad (M9, opcional) | opentelemetry-sdk y opentelemetry-exporter-otlp-proto-http 1.45.0; `otel/opentelemetry-collector:0.162.0@sha256:310a800a…`, `jaegertracing/jaeger:2.21.0@sha256:3d0ac795…` (digests completos en `compose.yaml`) |
 | Dashboard (M8) | vite 8.3.1, react 19.3.0, typescript 5.9.3, openapi-typescript 7.13.0, openapi-fetch 0.17.0, vitest 5.0.3, @playwright/test 1.63.0, @axe-core/playwright 4.13.0 (resto en `apps/web/package-lock.json`) |
 
 Son las versiones verificadas juntas en este repositorio; no se afirma que sean las últimas.
@@ -188,12 +218,12 @@ packages/domain/   dominio puro: Money, observaciones, revisiones, lotes, ingest
 packages/store/    SQLAlchemy Core + migraciones Alembic; ingesta atómica, runs, outbox/inbox
 packages/knowledge/ corpus, chunking, embeddings locales, retrieval híbrido y evaluación (M3)
 datasets/          datasets sintéticos versionados con manifest (scripts/generate_synthetic.py)
-infra/             init idempotente de PostgreSQL y configuración de NATS
+infra/             init idempotente de PostgreSQL, configuración de NATS, Collector y alertas (M9)
 scripts/           doctor, gate, smoke, trazabilidad, política, gate negativo
 tests/unit         contratos y propiedades sin infraestructura
 tests/integration  ejecutados dentro de la red Compose contra servicios reales
 openspec/          specs vigentes, changes activos y archivados (+ evidence/)
-docs/              diseño M0–M10 y decisiones de implementación
+docs/              diseño M0–M10, decisiones de implementación, runbooks y revisión de seguridad
 ```
 
 `packages/domain` no importa HTTP, bus, base de datos ni LLM (un test AST lo verifica); `packages/store` depende del dominio, nunca al revés.
@@ -224,7 +254,7 @@ Todo objetivo de precisión, latencia o tokens de esos documentos es **EXPECTED*
 
 [deterministic-reconciliation](openspec/changes/archive/2026-10-01-deterministic-reconciliation/proposal.md) (M2) está archivado con AC01–AC11 en PASS; su spec vigente es [openspec/specs/deterministic-reconciliation](openspec/specs/deterministic-reconciliation/spec.md).
 
-M3–M8 siguen el mismo patrón (change archivado con sus AC en PASS y evidencia, spec vigente en `openspec/specs/`): `hybrid-knowledge-retrieval`, `read-only-mcp`, `bounded-investigation`, `review-and-human-approval`, `evaluation-framework` e `investigation-dashboard`; los enlaces a cada evidencia están en las secciones "Qué agrega" de arriba.
+M3–M9 siguen el mismo patrón (change archivado con sus AC en PASS y evidencia, spec vigente en `openspec/specs/`): `hybrid-knowledge-retrieval`, `read-only-mcp`, `bounded-investigation`, `review-and-human-approval`, `evaluation-framework`, `investigation-dashboard` y `observability-security`; los enlaces a cada evidencia están en las secciones "Qué agrega" de arriba.
 
 [transaction-domain](openspec/changes/archive/2026-09-29-transaction-domain/proposal.md) (M1) está archivado con AC01–AC09 en PASS ([evidencia](openspec/changes/archive/2026-09-29-transaction-domain/evidence/README.md)); su spec vigente es [openspec/specs/transaction-domain](openspec/specs/transaction-domain/spec.md).
 

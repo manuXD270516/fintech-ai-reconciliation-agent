@@ -30,6 +30,30 @@ WEB = ROOT / "apps" / "web"
 BATCH = "b-prov-alfa-merchant-03-USD"
 
 
+def new_batch(api: Api, analyst: str, integration: str, prefix: str) -> str:
+    """Fresh batch over the synthetic prov-alfa window with both sources complete."""
+    text = (ROOT / "datasets" / "synthetic" / "transactions-v2" / "labels.csv").read_text("utf-8")
+    labels = list(csv.DictReader(io.StringIO(text)))
+    batch = next(b for b in batches_for(labels) if b.batch_id == BATCH)
+    batch_id = f"{prefix}-{uuid.uuid4().hex[:8]}-{BATCH}"
+    body = {
+        "batch_id": batch_id,
+        "provider_id": batch.provider_id,
+        "merchant_account": batch.merchant_account,
+        "currency": batch.currency,
+        "window_start": batch.window_start.isoformat(),
+        "window_end": batch.window_end.isoformat(),
+        "business_timezone": batch.business_timezone,
+        "cutoff_at": batch.cutoff_at.isoformat(),
+    }
+    expect(api.get("/v1/batches", method="POST", body=body, token=analyst).status == 201)
+    for source in ("internal_ledger", "provider_report"):
+        done = api.get(f"/v1/batches/{batch_id}/sources/{source}/complete", method="POST",
+                       token=integration)  # fmt: skip
+        expect(done.status == 200, done.text)
+    return batch_id
+
+
 def prepare(api: Api) -> dict[str, Any]:
     tokens = {
         "analyst": dev_auth.token("ana-web", ["analyst"]),
@@ -52,24 +76,7 @@ def prepare(api: Api) -> dict[str, Any]:
         }
         resp = api.get("/v1/artifacts", method="POST", body=body, token=integration)
         expect(resp.status in (200, 201), resp.text)
-    labels = list(csv.DictReader(io.StringIO(files["labels.csv"])))
-    batch = next(b for b in batches_for(labels) if b.batch_id == BATCH)
-    batch_id = f"web-{uuid.uuid4().hex[:8]}-{BATCH}"
-    body = {
-        "batch_id": batch_id,
-        "provider_id": batch.provider_id,
-        "merchant_account": batch.merchant_account,
-        "currency": batch.currency,
-        "window_start": batch.window_start.isoformat(),
-        "window_end": batch.window_end.isoformat(),
-        "business_timezone": batch.business_timezone,
-        "cutoff_at": batch.cutoff_at.isoformat(),
-    }
-    expect(api.get("/v1/batches", method="POST", body=body, token=tokens["analyst"]).status == 201)
-    for source in ("internal_ledger", "provider_report"):
-        done = api.get(f"/v1/batches/{batch_id}/sources/{source}/complete", method="POST",
-                       token=integration)  # fmt: skip
-        expect(done.status == 200, done.text)
+    batch_id = new_batch(api, tokens["analyst"], integration, "web")
     run = api.get(f"/v1/batches/{batch_id}/runs", method="POST", token=tokens["analyst"])
     expect(run.status == 202, run.text)
     run_id = run.body["run_id"]

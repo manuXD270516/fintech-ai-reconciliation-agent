@@ -44,7 +44,11 @@ M8_READ_MODELS = {
     ("/v1/batches/{batch_id}/runs", "GET"),
     ("/v1/cases", "GET"),
 }
-CATALOG = HEALTH | M2_RECONCILIATION | M5_INVESTIGATION | M6_CASES | M8_READ_MODELS
+# M9: aggregated Prometheus metrics; unauthenticated like health, loopback-only publication.
+M9_OBSERVABILITY = {("/metrics", "GET")}
+CATALOG = (
+    HEALTH | M2_RECONCILIATION | M5_INVESTIGATION | M6_CASES | M8_READ_MODELS | M9_OBSERVABILITY
+)
 DOCS = {"/openapi.json", "/docs", "/docs/oauth2-redirect"}
 FORBIDDEN_WORDS = ("payment", "refund", "transfer", "payout", "execute", "agent", "approve")
 

@@ -17,6 +17,7 @@ class PendingEvent:
     event_id: uuid.UUID
     event_type: str
     envelope: dict[str, Any]
+    trace_context: str | None = None
 
 
 def pending(engine: Engine, limit: int = 100) -> list[PendingEvent]:
@@ -43,6 +44,7 @@ def pending(engine: Engine, limit: int = 100) -> list[PendingEvent]:
                     "causation_id": r["causation_id"],
                     "payload": r["payload"],
                 },
+                r["trace_context"],
             )
             for r in rows
         ]

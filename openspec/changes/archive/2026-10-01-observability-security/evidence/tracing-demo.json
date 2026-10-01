@@ -1,0 +1,49 @@
+{
+  "kind": "MEASURED",
+  "scope": "local Compose, synthetic data",
+  "driven": {
+    "run_id": "9e838e50-1e0a-4bcc-8785-4d0d1775efdf",
+    "investigation_id": "47a7c3c0-5eee-466b-95ff-12de219f46b7",
+    "state": "DRAFTED"
+  },
+  "trace": {
+    "trace_id": "898e79a4334fc46301c27f41236a0c42",
+    "span_count": 22,
+    "services": [
+      "fintech-mcp-server",
+      "recon-api",
+      "recon-investigator",
+      "recon-worker"
+    ],
+    "operations": {
+      "fintech-mcp-server": [
+        "initialize",
+        "tools/call get_provider_status",
+        "tools/call get_transaction",
+        "tools/call search_incidents",
+        "tools/call search_provider_docs",
+        "tools/list"
+      ],
+      "recon-api": [
+        "POST /v1/runs/{run_id}/results/{ordinal}/investigations"
+      ],
+      "recon-investigator": [
+        "MCP send initialize",
+        "MCP send tools/call get_provider_status",
+        "MCP send tools/call get_transaction",
+        "MCP send tools/call search_incidents",
+        "MCP send tools/call search_provider_docs",
+        "MCP send tools/list",
+        "model.generate draft",
+        "model.generate plan",
+        "model.generate review",
+        "process investigation-runner"
+      ],
+      "recon-worker": [
+        "publish InvestigationRequested"
+      ]
+    },
+    "spans_checked_for_forbidden_attributes": 88,
+    "forbidden_attribute_keys": []
+  }
+}

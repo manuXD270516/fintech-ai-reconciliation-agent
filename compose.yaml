@@ -17,6 +17,8 @@ x-app-env: &app-env
   APP_NATS_PASSWORD: ${NATS_APP_PASSWORD:?set NATS_APP_PASSWORD in .env (copy .env.example)}
   APP_LOG_LEVEL: ${APP_LOG_LEVEL:-INFO}
   APP_READY_TIMEOUT_SECONDS: ${APP_READY_TIMEOUT_SECONDS:-2.5}
+  # M9 tracing is off unless set (profile `observability`: http://otel-collector:4318).
+  OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
 
 x-mcp-db-env: &mcp-db-env
   MCP_DB_HOST: postgres
@@ -204,6 +206,29 @@ services:
     networks: [backend]
     volumes:
       - ollamadata:/root/.ollama
+    restart: "no"
+
+  # --- observability profile (M9, D09): optional, never started by default or by a gate ---
+  # OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318 docker compose --profile observability up -d
+  # Jaeger UI: http://127.0.0.1:18186 (loopback only). Traces live in memory.
+  otel-collector:
+    profiles: [observability]
+    image: otel/opentelemetry-collector:0.162.0@sha256:310a800ad69ee430e7c541796852a242c9c7db97aaad4daa5ccf843c525fbdb2
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./infra/observability/otel-collector.yaml:/etc/otelcol/config.yaml:ro
+    depends_on:
+      jaeger:
+        condition: service_started
+    networks: [backend]
+    restart: "no"
+
+  jaeger:
+    profiles: [observability]
+    image: jaegertracing/jaeger:2.21.0@sha256:3d0ac795ff98aa04d1be04311d2dac6c25b4bfc8322dc02e53bc5b170c5018c3
+    ports:
+      - "127.0.0.1:${JAEGER_HOST_PORT:-18186}:16686"
+    networks: [backend, edge]
     restart: "no"
 
   # --- smoke profile: test-only services, never started by a plain `docker compose up` ---
