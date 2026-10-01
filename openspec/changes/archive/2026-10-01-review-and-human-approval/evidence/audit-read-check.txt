@@ -1,0 +1,3 @@
+case.audit_read entries (actor, resource_type, outcome, count):
+('auditor-1', 'case', 'read', 3)
+('aud-smoke', 'case', 'read', 2)

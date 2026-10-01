@@ -122,7 +122,9 @@ async def test_faithful_investigation_separates_facts_inferences_and_hypotheses(
     assert draft["confidence_assessment"]["calibration"] == "uncalibrated"
     assert draft["recommended_next_step"] == "REQUEST_PROVIDER_INFO"
     usage = record["budget"]
-    assert usage["tool_calls"] <= 6 and usage["generative_calls"] == 2
+    assert usage["tool_calls"] <= 6 and usage["generative_calls"] == 3  # plan, draft, review
+    assert draft["review_result"]["result"] == "SUPPORTED"
+    assert draft["review_result"]["is_human_approval"] is False
     assert usage["tokens"] <= usage["max_tokens"] and usage["tokens_estimated"] is True
     assert {s["origin"] for s in record["plan"]} == {"template", "model"}
     assert [s for _, s in store.history] == ["REQUESTED", "PLANNED", "EXECUTED", "DRAFTED"]

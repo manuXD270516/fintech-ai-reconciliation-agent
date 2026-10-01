@@ -1,0 +1,105 @@
+gate: removed AI credential variables from environment: ANTHROPIC_BASE_URL
+
+=== gate: lock ===
+Resolved 70 packages in 2ms
+
+=== gate: lint ===
+All checks passed!
+199 files already formatted
+
+=== gate: types ===
+Success: no issues found in 116 source files
+
+=== gate: test ===
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent
+configfile: pyproject.toml
+testpaths: tests/unit
+plugins: anyio-4.15.1, hypothesis-6.168.3, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 235 items
+
+tests\unit\test_agents.py ....................                           [  8%]
+tests\unit\test_approval_policy.py .............                         [ 14%]
+tests\unit\test_auth.py ............                                     [ 19%]
+tests\unit\test_ci_parity.py ....                                        [ 20%]
+tests\unit\test_config.py ..........                                     [ 25%]
+tests\unit\test_doctor_and_policy.py ...........                         [ 29%]
+tests\unit\test_health_contract.py ...........                           [ 34%]
+tests\unit\test_ingestion_and_rules.py ..................                [ 42%]
+tests\unit\test_knowledge.py ...............                             [ 48%]
+tests\unit\test_mcp_server.py ......................                     [ 57%]
+tests\unit\test_money.py ..................                              [ 65%]
+tests\unit\test_observation.py ................                          [ 72%]
+tests\unit\test_reconciliation_catalog.py .............                  [ 77%]
+tests\unit\test_reconciliation_oracle.py ....                            [ 79%]
+tests\unit\test_request_logging.py ........                              [ 82%]
+tests\unit\test_reviewer.py ......                                       [ 85%]
+tests\unit\test_revisions_batches_mappings.py ............               [ 90%]
+tests\unit\test_scope.py ....                                            [ 92%]
+tests\unit\test_synthetic_dataset.py ....                                [ 94%]
+tests\unit\test_traceability_gate.py ..............                      [100%]
+
+============================ 235 passed in 17.68s =============================
+
+=== gate: policy ===
+policy: OK
+
+=== gate: trace ===
+traceability: OK
+
+=== gate: openspec ===
+✓ change/bootstrap-mvp-foundation
+✓ spec/bounded-investigation
+✓ spec/deterministic-reconciliation
+✓ spec/hybrid-knowledge-retrieval
+✓ spec/read-only-mcp
+✓ change/review-and-human-approval
+✓ spec/transaction-domain
+Totals: 7 passed, 0 failed (7 items)
+
+=== gate: negative ===
+[OK] control: openspec: step=openspec expected=pass exit=0 :: Totals: 7 passed, 0 failed (7 items)
+[OK] control: traceability: step=trace expected=pass exit=0 :: traceability: OK
+[OK] control: contract tests: step=contract expected=pass exit=0 :: 15 passed in 7.47s
+[OK] requirement RF-03 without scenarios: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] requirement RF-03 without SHALL/MUST: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] test-strategy.md removed: step=trace expected=fail exit=1 :: traceability: 1 problem(s)
+[OK] criterion references unknown requirement: step=trace expected=fail exit=1 :: traceability: 2 problem(s)
+[OK] readiness returns 200 when a dependency fails: step=contract expected=fail exit=1 :: 10 failed, 5 passed in 7.52s
+[OK] non-health route added: step=contract expected=fail exit=1 :: 3 failed, 12 passed in 7.64s
+[OK] real working tree unchanged
+negative gate: OK
+
+=== gate: smoke ===
+[PASS] T03 startup: compose up, API ready (28.3s)
+[PASS] T05 healthy live/ready contract from host (0.02s)
+[PASS] T03 vector + JetStream + role + readiness integration (42.24s)
+[PASS] T03 db-init idempotent re-run (3.18s)
+[PASS] M1-T08 alembic migrate idempotent re-run (7.37s)
+[PASS] M2-T07 HTTP ingest + runs via outbox/NATS/worker match oracle (1.87s)
+[PASS] M3-T04 knowledge-ingest idempotent re-run (8.95s)
+[PASS] M5-T09 HTTP investigation via outbox/NATS/investigator/MCP (3.28s)
+[PASS] M6-T08 HTTP case, reviewed recommendation and human decision (0.29s)
+[PASS] M3-T07 retrieval evaluation (MEASURED, synthetic) (4.34s)
+[PASS] T08 API loopback-only, dependencies private (2.56s)
+[PASS] T09 request ID correlated in header and JSON log (1.47s)
+[PASS] T06 postgres stop: ready 503 <= 3s, live 200, recovery (9.53s)
+[PASS] T06 postgres pause: ready 503 <= 3s, live 200, recovery (8.02s)
+[PASS] T06 nats stop: ready 503 <= 3s, live 200, recovery (8.38s)
+[PASS] T06 nats pause: ready 503 <= 3s, live 200, recovery (7.98s)
+[PASS] T04 marker and pending message survive stop/start (14.2s)
+evidence: .smoke\smoke-20261001T071118Z.json
+smoke: 17 passed, 0 failed
+
+=== gate summary ===
+PASS  lock      exit=0 (0.0s)
+PASS  lint      exit=0 (0.2s)
+PASS  types     exit=0 (0.5s)
+PASS  test      exit=0 (20.3s)
+PASS  policy    exit=0 (1.1s)
+PASS  trace     exit=0 (0.1s)
+PASS  openspec  exit=0 (5.9s)
+PASS  negative  exit=0 (36.4s)
+PASS  smoke     exit=0 (153.5s)

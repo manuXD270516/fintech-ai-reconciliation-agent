@@ -358,3 +358,68 @@ investigations = Table(
         name="ck_investigation_state",
     ),
 )
+
+# --- M6 case management and human approval -----------------------------------------
+cases = Table(
+    "cases",
+    metadata,
+    Column("id", Uuid, primary_key=True),
+    Column("tenant_id", String(128), nullable=False),
+    Column("case_ref", String(128), nullable=False),
+    Column("run_id", Uuid, ForeignKey("recon.reconciliation_runs.id"), nullable=False),
+    Column("ordinal", Integer, nullable=False),
+    Column("status", String(24), nullable=False),
+    Column("version", Integer, nullable=False),
+    Column("opened_by", String(128), nullable=False),
+    Column("closed_reason", String(500)),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=text("now()")),
+    Column("updated_at", DateTime(timezone=True), nullable=False, server_default=text("now()")),
+    UniqueConstraint("tenant_id", "case_ref", name="uq_case_ref"),
+    CheckConstraint("version >= 1", name="ck_case_version"),
+    CheckConstraint(
+        "status IN ('OPEN', 'HUMAN_REVIEW', 'APPROVED', 'REJECTED', 'NEEDS_INFORMATION', 'CLOSED')",
+        name="ck_case_status",
+    ),
+)
+
+recommendations = Table(
+    "recommendations",
+    metadata,
+    Column("id", Uuid, primary_key=True),
+    Column("case_id", Uuid, ForeignKey("recon.cases.id"), nullable=False),
+    Column("tenant_id", String(128), nullable=False),
+    Column("case_version", Integer, nullable=False),
+    Column("proposer", String(128), nullable=False),
+    Column("action", String(32), nullable=False),
+    Column("rationale", String(2000), nullable=False),
+    Column("investigation_id", Uuid, ForeignKey("recon.investigations.id")),
+    Column("investigation_requester", String(128)),
+    Column("review_result", String(24), nullable=False),
+    Column("evidence", JSONB, nullable=False),
+    Column("status", String(16), nullable=False),
+    Column("expires_at", DateTime(timezone=True), nullable=False),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=text("now()")),
+    CheckConstraint(
+        "status IN ('PENDING', 'APPROVED', 'REJECTED', 'NEEDS_INFORMATION', 'SUPERSEDED', "
+        "'OBSOLETE')",
+        name="ck_recommendation_status",
+    ),
+)
+
+decisions = Table(
+    "decisions",
+    metadata,
+    Column("id", Uuid, primary_key=True),
+    Column("case_id", Uuid, ForeignKey("recon.cases.id"), nullable=False),
+    Column("recommendation_id", Uuid, ForeignKey("recon.recommendations.id"), nullable=False),
+    Column("tenant_id", String(128), nullable=False),
+    Column("approver", String(128), nullable=False),
+    Column("role", String(32), nullable=False),
+    Column("decision", String(24), nullable=False),
+    Column("reason", String(2000), nullable=False),
+    Column("case_version", Integer, nullable=False),
+    Column("idempotency_key", String(128), nullable=False),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=text("now()")),
+    UniqueConstraint("tenant_id", "idempotency_key", name="uq_decision_idempotency"),
+    UniqueConstraint("recommendation_id", name="uq_decision_per_recommendation"),
+)

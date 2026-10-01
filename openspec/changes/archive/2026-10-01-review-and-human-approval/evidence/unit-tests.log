@@ -1,0 +1,30 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent\.venv\Scripts\python.exe
+hypothesis profile 'default'
+rootdir: D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent
+configfile: pyproject.toml
+plugins: anyio-4.15.1, hypothesis-6.168.3, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 19 items
+
+tests/unit/test_reviewer.py::test_one_reflection_after_actionable_objection_when_budget_allows PASSED [  5%]
+tests/unit/test_reviewer.py::test_no_reflection_beyond_the_default_budget_escalates PASSED [ 10%]
+tests/unit/test_reviewer.py::test_rejecting_reviewer_forces_abstention PASSED [ 15%]
+tests/unit/test_reviewer.py::test_model_reviewer_input_is_isolated PASSED [ 21%]
+tests/unit/test_reviewer.py::test_deterministic_review_requires_elements_and_rejects_contradictions PASSED [ 26%]
+tests/unit/test_reviewer.py::test_combination_is_the_most_conservative PASSED [ 31%]
+tests/unit/test_approval_policy.py::test_valid_decision_passes PASSED    [ 36%]
+tests/unit/test_approval_policy.py::test_refusals[case0-rec0-attempt0-role_not_allowed] PASSED [ 42%]
+tests/unit/test_approval_policy.py::test_refusals[case1-rec1-attempt1-segregation_of_duties] PASSED [ 47%]
+tests/unit/test_approval_policy.py::test_refusals[case2-rec2-attempt2-segregation_of_duties] PASSED [ 52%]
+tests/unit/test_approval_policy.py::test_refusals[case3-rec3-attempt3-reason_required] PASSED [ 57%]
+tests/unit/test_approval_policy.py::test_refusals[case4-rec4-attempt4-version_conflict] PASSED [ 63%]
+tests/unit/test_approval_policy.py::test_refusals[case5-rec5-attempt5-version_conflict] PASSED [ 68%]
+tests/unit/test_approval_policy.py::test_refusals[case6-rec6-attempt6-case_status_not_allowed] PASSED [ 73%]
+tests/unit/test_approval_policy.py::test_refusals[case7-rec7-attempt7-recommendation_not_pending] PASSED [ 78%]
+tests/unit/test_approval_policy.py::test_refusals[case8-rec8-attempt8-recommendation_obsolete] PASSED [ 84%]
+tests/unit/test_approval_policy.py::test_refusals[case9-rec9-attempt9-recommendation_expired] PASSED [ 89%]
+tests/unit/test_approval_policy.py::test_nobody_approves_their_own_proposal PASSED [ 94%]
+tests/unit/test_approval_policy.py::test_proposal_and_close_rules PASSED [100%]
+
+============================= 19 passed in 1.28s ==============================
