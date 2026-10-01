@@ -432,6 +432,34 @@ class Smoke:
         expect(forbidden.status == 403, f"analyst audit read must be 403: {forbidden.status}")
         return {"case_id": case, "decision": ok.body, "audit_actions": actions}
 
+    def eval_db_suites(self) -> dict[str, Any]:
+        """M7: suites that need PostgreSQL run through the same runner inside the network."""
+        script = (
+            "python -m recon_evals run --suite retrieval --out /tmp/evals > /dev/null; "
+            "cat /tmp/evals/report.json"
+        )
+        proc = compose("--profile", "smoke", "run", "--rm", "smoke", "sh", "-c", script,
+                       check=False, timeout=600)  # fmt: skip
+        try:
+            report: dict[str, Any] = json.loads(proc.stdout[proc.stdout.index("{") :])
+        except ValueError:
+            raise SmokeFailure(f"no evaluation report: {proc.stderr[-800:]}") from None
+        [suite] = report["suites"]
+        expect(suite["label"] == "MEASURED", suite["label"])
+        expect(suite["status"] == "PASS", report["blocking_gates"])
+        EVIDENCE_DIR.mkdir(exist_ok=True)
+        stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+        (EVIDENCE_DIR / f"eval-db-suites-{stamp}.json").write_text(
+            json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+        return {
+            "overall": report["overall"],
+            "gates": [
+                {k: g[k] for k in ("metric", "value", "critical", "passed")} for g in suite["gates"]
+            ],
+            "report_file": f".smoke/eval-db-suites-{stamp}.json",
+        }
+
     def knowledge_ingest_idempotent(self) -> dict[str, Any]:
         outputs = []
         for _ in range(2):
@@ -673,6 +701,8 @@ def main() -> int:
         )
         smoke.check("M6-T08", "HTTP case, reviewed recommendation and human decision",
                     smoke.approval_e2e)  # fmt: skip
+        smoke.check("M7-T06", "DB evaluation suites via recon_evals (retrieval)",
+                    smoke.eval_db_suites)  # fmt: skip
         smoke.check(
             "M3-T07", "retrieval evaluation (MEASURED, synthetic)", smoke.retrieval_evaluation
         )

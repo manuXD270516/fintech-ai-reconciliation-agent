@@ -8,6 +8,7 @@ members = [
     "recon-agents",
     "recon-api",
     "recon-domain",
+    "recon-evals",
     "recon-investigator",
     "recon-knowledge",
     "recon-mcp",
@@ -224,6 +225,7 @@ dependencies = [
     { name = "recon-agents" },
     { name = "recon-api" },
     { name = "recon-domain" },
+    { name = "recon-evals" },
     { name = "recon-investigator" },
     { name = "recon-knowledge" },
     { name = "recon-mcp" },
@@ -247,6 +249,7 @@ requires-dist = [
     { name = "recon-agents", editable = "packages/agents" },
     { name = "recon-api", editable = "apps/api" },
     { name = "recon-domain", editable = "packages/domain" },
+    { name = "recon-evals", editable = "evals" },
     { name = "recon-investigator", editable = "apps/investigator" },
     { name = "recon-knowledge", editable = "packages/knowledge" },
     { name = "recon-mcp", editable = "apps/mcp-server" },
@@ -855,6 +858,25 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "tzdata", specifier = "==2026.4" }]
+
+[[package]]
+name = "recon-evals"
+version = "0.1.0"
+source = { editable = "evals" }
+dependencies = [
+    { name = "recon-agents" },
+    { name = "recon-domain" },
+    { name = "recon-knowledge" },
+    { name = "recon-mcp" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "recon-agents", editable = "packages/agents" },
+    { name = "recon-domain", editable = "packages/domain" },
+    { name = "recon-knowledge", editable = "packages/knowledge" },
+    { name = "recon-mcp", editable = "apps/mcp-server" },
+]
 
 [[package]]
 name = "recon-investigator"

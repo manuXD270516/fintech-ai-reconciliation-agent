@@ -51,12 +51,16 @@ STEPS: dict[str, list[list[str]]] = {
     "trace": [[PY, "scripts/check_traceability.py"]],
     "openspec": [["{openspec}", "validate", "--all", "--strict", "--no-interactive"]],
     "negative": [[PY, "scripts/gate_negative.py"]],
+    # M7: offline evaluation suites; critical gates and regressions vs the baseline block.
+    "evals": [[PY, "-m", "recon_evals", "gate"]],
     "smoke": [[PY, "scripts/smoke.py"]],
 }
 GROUPS = {
-    "static": ["lock", "lint", "types", "test", "policy", "trace", "openspec", "negative"],
-    "all": ["lock", "lint", "types", "test", "policy", "trace", "openspec", "negative", "smoke"],
-}
+    "static": ["lock", "lint", "types", "test", "policy", "trace", "openspec", "negative",
+               "evals"],
+    "all": ["lock", "lint", "types", "test", "policy", "trace", "openspec", "negative", "evals",
+            "smoke"],
+}  # fmt: skip
 
 
 def clean_env() -> tuple[dict[str, str], list[str]]:

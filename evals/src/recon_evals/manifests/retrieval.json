@@ -1,0 +1,18 @@
+{
+  "suite": "retrieval",
+  "dataset_id": "knowledge",
+  "version": "v1",
+  "data_origin": "SYNTHETIC",
+  "requires": "PostgreSQL + pgvector (runs inside the Compose smoke container)",
+  "split_policy": "hand-assigned dev/holdout by query family; threshold tuned on dev only",
+  "labels": ["relevant evidence units (document@version#section)", "answerable"],
+  "gates": [
+    {"metric": "hybrid.all.acl_violations", "op": "==", "threshold": 0, "critical": true},
+    {"metric": "lexical.all.acl_violations", "op": "==", "threshold": 0, "critical": true},
+    {"metric": "vector.all.acl_violations", "op": "==", "threshold": 0, "critical": true},
+    {"metric": "split_leakage_families", "op": "==", "threshold": 0, "critical": true},
+    {"metric": "hybrid.holdout.recall_at_5_macro", "op": ">=", "threshold": 0.85, "critical": false},
+    {"metric": "hybrid.holdout.precision_at_5_macro", "op": ">=", "threshold": 0.80, "critical": false},
+    {"metric": "hybrid.holdout.no_answer_abstention", "op": ">=", "threshold": 0.95, "critical": false}
+  ]
+}
