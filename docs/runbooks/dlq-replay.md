@@ -10,7 +10,7 @@
 docker compose exec worker python -m recon_worker.dlq list
 ```
 
-Lista cada dead letter sin triar con su secuencia, sujeto original, motivo y si es re-publicable (sólo `recon.events.*` y `recon.ingest.*`).
+Lista cada dead letter sin triar con su secuencia, sujeto original, motivo y si es re-publicable. Sólo se re-publican los `exhausted:` de `recon.events.*` y `recon.ingest.*`: un mensaje veneno nunca va a funcionar y sólo se puede descartar.
 
 ## Decisión
 

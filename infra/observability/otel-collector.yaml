@@ -20,7 +20,7 @@ processors:
   batch: {}
 
 exporters:
-  otlphttp/jaeger:
+  otlp_http/jaeger:
     endpoint: http://jaeger:4318
 
 service:
@@ -28,4 +28,4 @@ service:
     traces:
       receivers: [otlp]
       processors: [attributes/redact, batch]
-      exporters: [otlphttp/jaeger]
+      exporters: [otlp_http/jaeger]

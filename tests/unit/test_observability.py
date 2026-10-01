@@ -188,14 +188,15 @@ def test_dead_letter_parsing_and_tenant_attribution() -> None:
         "data": "{}",
     }
     ingest = DeadLetter.parse(7, json.dumps(raw_ingest).encode())
-    assert ingest.tenant() == "t-1" and ingest.summary()["replayable"] is True
+    assert ingest.tenant() == "t-1"
+    assert ingest.summary()["replayable"] is False  # poison never succeeds on replay
     raw_event = {
         "subject": "recon.events.ReconciliationRequested",
-        "reason": "exhausted",
+        "reason": "exhausted: OperationalError",
         "data": json.dumps({"tenant_id": "t-2"}),
     }
     event = DeadLetter.parse(8, json.dumps(raw_event).encode())
-    assert event.tenant() == "t-2"
+    assert event.tenant() == "t-2" and event.replayable is True
     junk = DeadLetter.parse(9, b"not json")
     assert junk.tenant() == "_system" and junk.summary()["replayable"] is False
     assert all(prefix.startswith("recon.") for prefix in REPLAYABLE)

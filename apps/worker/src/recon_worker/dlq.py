@@ -69,12 +69,17 @@ class DeadLetter:
         value = envelope.get("tenant_id") if isinstance(envelope, dict) else None
         return str(value)[:128] if value else SYSTEM_TENANT
 
+    @property
+    def replayable(self) -> bool:
+        """Only exhausted deliveries can succeed later; poison never will."""
+        return self.subject.startswith(REPLAYABLE) and self.reason.startswith("exhausted:")
+
     def summary(self) -> dict[str, Any]:
         return {
             "stream_seq": self.stream_seq,
             "subject": self.subject,
             "reason": self.reason[:200],
-            "replayable": self.subject.startswith(REPLAYABLE),
+            "replayable": self.replayable,
         }
 
 
@@ -125,14 +130,16 @@ async def triage(
     results: list[dict[str, Any]] = []
     while len(results) < limit:
         try:
-            msgs: list[Msg] = await sub.fetch(batch=min(10, limit - len(results)), timeout=1)
+            # One at a time: a fetched-but-unhandled letter would stay ack-pending (hidden)
+            # until ack_wait expires.
+            msgs: list[Msg] = await sub.fetch(batch=1, timeout=2)
         except TimeoutError:
             break
         for msg in msgs:
             letter = DeadLetter.parse(msg.metadata.sequence.stream, msg.data)
             outcome = "discarded"
             if action == "replay":
-                if not letter.subject.startswith(REPLAYABLE):
+                if not letter.replayable:
                     # Stop at the first letter that cannot be replayed: it needs a discard
                     # decision first (messages are triaged in order).
                     await msg.nak()
