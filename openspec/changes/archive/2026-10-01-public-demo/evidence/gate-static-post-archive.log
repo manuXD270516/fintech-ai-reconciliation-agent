@@ -1,0 +1,148 @@
+gate: removed AI credential variables from environment: ANTHROPIC_BASE_URL
+
+=== gate: lock ===
+Resolved 81 packages in 2ms
+
+=== gate: lint ===
+All checks passed!
+273 files already formatted
+
+=== gate: types ===
+Success: no issues found in 143 source files
+
+=== gate: test ===
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent
+configfile: pyproject.toml
+testpaths: tests/unit
+plugins: anyio-4.15.1, hypothesis-6.168.3, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 305 items
+
+tests\unit\test_access_matrix.py ....................                    [  6%]
+tests\unit\test_agents.py ....................                           [ 13%]
+tests\unit\test_approval_policy.py .............                         [ 17%]
+tests\unit\test_auth.py ............                                     [ 21%]
+tests\unit\test_ci_parity.py ....                                        [ 22%]
+tests\unit\test_config.py ..........                                     [ 25%]
+tests\unit\test_doctor_and_policy.py ...........                         [ 29%]
+tests\unit\test_evals.py .........                                       [ 32%]
+tests\unit\test_health_contract.py ...........                           [ 36%]
+tests\unit\test_ingestion_and_rules.py ..................                [ 41%]
+tests\unit\test_kill_switch.py ...                                       [ 42%]
+tests\unit\test_knowledge.py ...............                             [ 47%]
+tests\unit\test_mcp_server.py ......................                     [ 55%]
+tests\unit\test_money.py ..................                              [ 60%]
+tests\unit\test_observability.py ................                        [ 66%]
+tests\unit\test_observation.py ................                          [ 71%]
+tests\unit\test_openapi_contract.py ..                                   [ 72%]
+tests\unit\test_reconciliation_catalog.py .............                  [ 76%]
+tests\unit\test_reconciliation_oracle.py ....                            [ 77%]
+tests\unit\test_request_logging.py ........                              [ 80%]
+tests\unit\test_reviewer.py ......                                       [ 82%]
+tests\unit\test_revisions_batches_mappings.py ............               [ 86%]
+tests\unit\test_scope.py ....                                            [ 87%]
+tests\unit\test_secret_scan.py ....................                      [ 94%]
+tests\unit\test_synthetic_dataset.py ....                                [ 95%]
+tests\unit\test_traceability_gate.py ..............                      [100%]
+
+============================ 305 passed in 22.70s =============================
+
+=== gate: policy ===
+policy: OK
+
+=== gate: trace ===
+traceability: OK
+
+=== gate: openspec ===
+✓ change/bootstrap-mvp-foundation
+✓ spec/bounded-investigation
+✓ spec/deterministic-reconciliation
+✓ spec/evaluation-framework
+✓ spec/hybrid-knowledge-retrieval
+✓ spec/investigation-dashboard
+✓ spec/observability-security
+✓ spec/public-demo
+✓ spec/read-only-mcp
+✓ spec/review-and-human-approval
+✓ spec/transaction-domain
+Totals: 11 passed, 0 failed (11 items)
+
+=== gate: negative ===
+[OK] control: openspec: step=openspec expected=pass exit=0 :: Totals: 11 passed, 0 failed (11 items)
+[OK] control: traceability: step=trace expected=pass exit=0 :: traceability: OK
+[OK] control: contract tests: step=contract expected=pass exit=0 :: 15 passed in 7.48s
+[OK] requirement RF-03 without scenarios: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] requirement RF-03 without SHALL/MUST: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] test-strategy.md removed: step=trace expected=fail exit=1 :: traceability: 1 problem(s)
+[OK] criterion references unknown requirement: step=trace expected=fail exit=1 :: traceability: 2 problem(s)
+[OK] readiness returns 200 when a dependency fails: step=contract expected=fail exit=1 :: 10 failed, 5 passed in 7.49s
+[OK] non-health route added: step=contract expected=fail exit=1 :: 3 failed, 12 passed in 7.54s
+[OK] real working tree unchanged
+negative gate: OK
+
+=== gate: evals ===
+PASS    reconciliation  MEASURED  critical 5/5
+PASS    tools           MEASURED  critical 5/5
+PASS    investigation   SIMULATED critical 4/4
+PASS    approval        MEASURED  critical 3/3
+overall: PASS (report: evals\reports\gate\report.md)
+
+=== gate: web ===
+
+> recon-web@0.1.0 check
+> npm run check:api && npm run typecheck && npm run test && npm run build
+
+
+> recon-web@0.1.0 check:api
+> openapi-typescript openapi.json -o src/api/schema.d.ts --check
+
+✨ openapi-typescript 7.13.0
+
+> recon-web@0.1.0 typecheck
+> tsc --noEmit
+
+
+> recon-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 D:/projects/repos-ia-exp/fintech-ai-reconciliation-agent/apps/web
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  18:49:15
+   Duration  2.76s (tests 51%, environment 34%, setup 8%, import 4%, transform 3%)
+
+
+> recon-web@0.1.0 build
+> vite build
+
+vite v8.3.1 building client environment for production...
+transforming...
+✓ 21 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.51 kB │ gzip:  0.31 kB
+dist/assets/index-6mfRwZGl.css    2.48 kB │ gzip:  1.03 kB
+dist/assets/index-lPysUy2B.js   247.61 kB │ gzip: 77.34 kB
+
+✓ built in 131ms
+
+=== gate: secrets ===
+secret scan: 39 commits, 0 finding(s)
+
+=== gate summary ===
+PASS  lock      exit=0 (0.0s)
+PASS  lint      exit=0 (0.7s)
+PASS  types     exit=0 (0.8s)
+PASS  test      exit=0 (25.1s)
+PASS  policy    exit=0 (0.4s)
+PASS  trace     exit=0 (0.1s)
+PASS  openspec  exit=0 (0.9s)
+PASS  negative  exit=0 (36.8s)
+PASS  evals     exit=0 (3.0s)
+PASS  web       exit=0 (7.1s)
+PASS  secrets   exit=0 (0.7s)

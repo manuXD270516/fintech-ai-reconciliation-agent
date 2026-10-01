@@ -30,3 +30,5 @@ Ejecución local en Windows 11 con Docker Desktop, el 2026-10-01, sobre la rama 
 - Las rutas locales redactadas siguen en commits anteriores: no se reescribió la historia.
 - El inventario de licencias no es asesoramiento legal.
 - Los recursos son una muestra puntual.
+
+El archivo del change se verificó con el gate estático posterior a `openspec archive` ([gate-static-post-archive.log](gate-static-post-archive.log): todos PASS, incluida la regla de trazabilidad para changes archivados).

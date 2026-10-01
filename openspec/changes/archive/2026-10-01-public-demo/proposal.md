@@ -29,7 +29,7 @@ Ninguna en specs vigentes. La API agrega la configuración `APP_AI_ENABLED`, enc
 
 ## Impact
 
-`apps/api` (configuración y ruta de investigación), `apps/web` (mensaje del switch), `compose.yaml`, `scripts/` (demo, inventario de licencias, política), `docs/demo/` y `datasets/README.md`. Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md) (D10).
+`apps/api` (configuración y ruta de investigación), `apps/web` (mensaje del switch), `compose.yaml`, `scripts/` (demo, inventario de licencias, política), `docs/demo/` y `datasets/README.md`. Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md) (D10).
 
 ## Non-goals
 

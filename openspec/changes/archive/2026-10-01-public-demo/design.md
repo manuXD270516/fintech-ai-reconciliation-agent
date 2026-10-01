@@ -1,6 +1,6 @@
 ## Context
 
-Implementa M10 de [docs/09-roadmap.md](../../../docs/09-roadmap.md) con D10 de [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md). [docs/08-risks.md](../../../docs/08-risks.md) exige revisar secretos, licencias y datos, aislar las sesiones de demo, tener un kill switch de IA y mantener disponible la ruta determinística.
+Implementa M10 de [docs/09-roadmap.md](../../../../docs/09-roadmap.md) con D10 de [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md). [docs/08-risks.md](../../../../docs/08-risks.md) exige revisar secretos, licencias y datos, aislar las sesiones de demo, tener un kill switch de IA y mantener disponible la ruta determinística.
 
 ## Decisions
 
