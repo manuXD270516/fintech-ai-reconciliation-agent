@@ -34,3 +34,5 @@ Ejecución local en Windows 11 con Docker Desktop, el 2026-10-01, sobre la rama 
 - El escáner de secretos es heurístico; no se ejecutó gitleaks.
 - No se ejecutó un escaneo de vulnerabilidades de dependencias.
 - `/metrics` y la UI de Jaeger no tienen autenticación (sólo loopback).
+
+El archivo del change se verificó con el gate estático posterior a `openspec archive` ([gate-static-post-archive.log](gate-static-post-archive.log): todos PASS, incluida la regla de trazabilidad para changes archivados).

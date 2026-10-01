@@ -34,7 +34,7 @@ Ninguna en specs vigentes. La API agrega la ruta pública `/metrics`, y el outbo
 
 ## Impact
 
-`packages/store` (telemetría, `ops`, migración 0007), API (middleware, `/metrics`), worker, investigador, servidor MCP, `compose.yaml` (perfil `observability`), `infra/observability/`, `scripts/` (ops, drills, demo de trazas, secret scan), gate y CI. Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md) (D09).
+`packages/store` (telemetría, `ops`, migración 0007), API (middleware, `/metrics`), worker, investigador, servidor MCP, `compose.yaml` (perfil `observability`), `infra/observability/`, `scripts/` (ops, drills, demo de trazas, secret scan), gate y CI. Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md) (D09).
 
 ## Non-goals
 

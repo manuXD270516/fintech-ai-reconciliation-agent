@@ -1,6 +1,6 @@
 ## Context
 
-Implementa M9 de [docs/09-roadmap.md](../../../docs/09-roadmap.md) con D09 de [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md) y la sección de observabilidad de [docs/08-risks.md](../../../docs/08-risks.md).
+Implementa M9 de [docs/09-roadmap.md](../../../../docs/09-roadmap.md) con D09 de [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md) y la sección de observabilidad de [docs/08-risks.md](../../../../docs/08-risks.md).
 
 ## Goals / Non-Goals
 
