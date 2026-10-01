@@ -26,7 +26,7 @@ Ninguna en la spec vigente `transaction-domain`: el modelo y sus invariantes no 
 
 Paquetes `recon_domain` (`ingestion`, `reconciliation`, `oracle`), `recon_store` (`artifacts`, `reconciliation`, `outbox`, migración `0002`), nueva app `apps/worker`, rutas `/v1/*` en la API, servicio Compose `worker`, montaje de sólo lectura del JWKS público, `scripts/dev_auth.py` y dependencias `pyjwt[crypto]`/`cryptography` fijadas.
 
-Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md) (D06, D07, D12).
+Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md) (D06, D07, D12).
 
 ## Non-goals
 

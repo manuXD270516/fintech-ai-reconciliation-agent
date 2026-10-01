@@ -1,10 +1,10 @@
 ## Context
 
-M1 entregó `recon_domain` (dinero, observaciones, revisiones, lotes, mappings) y `recon_store` (ingesta atómica con auditoría y outbox). M2 implementa el pipeline determinístico de [docs/01-domain.md](../../../docs/01-domain.md#pipeline-determinístico-propuesto), el patrón outbox/inbox de ADR-004 en [docs/02-architecture.md](../../../docs/02-architecture.md) y la autenticación de D07 en [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md).
+M1 entregó `recon_domain` (dinero, observaciones, revisiones, lotes, mappings) y `recon_store` (ingesta atómica con auditoría y outbox). M2 implementa el pipeline determinístico de [docs/01-domain.md](../../../../docs/01-domain.md#pipeline-determinístico-propuesto), el patrón outbox/inbox de ADR-004 en [docs/02-architecture.md](../../../../docs/02-architecture.md) y la autenticación de D07 en [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md).
 
 ## Goals / Non-Goals
 
-**Goals:** casos RC01–RC13 de [docs/07-evals.md](../../../docs/07-evals.md) resueltos determinísticamente; reproducibilidad por snapshot; at-least-once sin efectos duplicados; API autenticada mínima.
+**Goals:** casos RC01–RC13 de [docs/07-evals.md](../../../../docs/07-evals.md) resueltos determinísticamente; reproducibilidad por snapshot; at-least-once sin efectos duplicados; API autenticada mínima.
 
 **Non-Goals:** 1:N, fees/FX, UI, investigación con IA.
 

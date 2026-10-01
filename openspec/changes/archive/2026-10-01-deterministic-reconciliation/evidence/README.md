@@ -43,3 +43,5 @@ Paso smoke `M2-T07` en [smoke.json](smoke.json): desde el host, 4 artefactos por
 ## T09
 
 `test_rc01_deterministic_path_has_no_model_or_http_client`: AST de `recon_domain`, `recon_store` y `recon_worker` sin imports de `httpx`, `openai`, `anthropic`, `ollama`, `requests`, `urllib` ni paquetes de agentes. Gate completo en [gate-all.log](gate-all.log).
+
+El archivo del change se verificó con el gate estático posterior a `openspec archive` ([gate-static-post-archive.log](gate-static-post-archive.log): todos PASS, incluida la regla de trazabilidad para changes archivados).
