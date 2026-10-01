@@ -2,7 +2,7 @@
 
 Diseño de una plataforma de conciliación de pagos: reglas determinísticas primero, investigación con IA sólo cuando aporta contexto y aprobación humana para decisiones operativas.
 
-**Estado: M0 (bootstrap técnico) y M1 (modelo de dominio transaccional) implementados localmente.** Existen una API con endpoints de salud, PostgreSQL + pgvector y NATS JetStream en Docker Compose, gates de calidad, el dominio puro (`packages/domain`), su persistencia con SQLAlchemy Core + Alembic (`packages/store`) y un dataset sintético versionado. **No hay** ingestion, conciliación, RAG, MCP, agentes, aprobación ni dashboard: siguen siendo diseño (M2–M10). Decisiones de implementación: [docs/11-implementation-decisions.md](docs/11-implementation-decisions.md). Remoto: [manuXD270516/fintech-ai-reconciliation-agent](https://github.com/manuXD270516/fintech-ai-reconciliation-agent) (privado). El workflow de CI está en el repo; GitHub no ha llegado a ejecutar jobs porque la cuenta tiene un bloqueo de facturación/límite de gasto.
+**Estado: M0 (bootstrap), M1 (dominio transaccional) y M2 (conciliación determinística) implementados y verificados localmente.** Existen PostgreSQL + pgvector y NATS JetStream en Docker Compose, el dominio puro (`packages/domain`), su persistencia (`packages/store`), ingestion sintética por HTTP y eventos con cuarentena, el motor de reglas `rules/v1`, runs versionados, un worker con outbox/inbox y dead letters, y una API `/v1` autenticada con JWT de desarrollo. **No hay** RAG, MCP, agentes, aprobación ni dashboard: siguen siendo diseño (M3–M10). Decisiones de implementación: [docs/11-implementation-decisions.md](docs/11-implementation-decisions.md). Remoto: [manuXD270516/fintech-ai-reconciliation-agent](https://github.com/manuXD270516/fintech-ai-reconciliation-agent) (privado). El workflow de CI está en el repo; GitHub no ha llegado a ejecutar jobs porque la cuenta tiene un bloqueo de facturación/límite de gasto.
 
 ## Qué incluye M0
 
@@ -12,7 +12,21 @@ Diseño de una plataforma de conciliación de pagos: reglas determinísticas pri
 | `GET /health/ready` | `200` si `database`, `vector` y `messaging` están `ok`; si no, `503` con cada estado (`ok`/`fail`/`timeout`) en ≤ 3 s |
 | `GET /docs`, `GET /openapi.json` | Documentación técnica de la API |
 
-No hay otras rutas; `tests/unit/test_scope.py` lo verifica. Readiness no escribe filas ni publica mensajes: hace `SELECT 1`, una distancia vectorial sobre literales y `account_info` de JetStream, en paralelo bajo un deadline global (`APP_READY_TIMEOUT_SECONDS`, por defecto 2.5, máximo 3). Las respuestas no incluyen hosts, URLs, SQL, trazas ni secretos. Cada respuesta lleva `X-Request-ID` (se acepta el del cliente si cumple `[A-Za-z0-9._-]{1,64}`; si no, se genera) y produce un log JSON con `request_id`, método, ruta sin query string, status y `duration_ms`.
+## Qué agrega M2
+
+| Ruta (todas exigen `Authorization: Bearer <JWT>`) | Rol | Propósito |
+|---|---|---|
+| `POST /v1/artifacts` | `integration` | CSV sintético con clave de idempotencia → recibo con aceptadas, duplicadas, conflictos y cuarentena por fila |
+| `POST /v1/batches`, `GET /v1/batches/{id}` | `analyst` / lectura | Lote con ventana `[inicio, fin)`, zona horaria, par de fuentes y cutoff |
+| `POST /v1/batches/{id}/sources/{source}/complete` | `integration` | Marca explícita de completitud de una fuente |
+| `POST /v1/batches/{id}/runs` | `analyst` | Solicita un run (202); el worker lo ejecuta vía outbox → JetStream |
+| `GET /v1/runs/{id}`, `GET /v1/runs/{id}/results` | `analyst`/`supervisor`/`auditor` | Estado, snapshot hash, conteos y resultados paginados |
+
+El tenant sale siempre del token. Las fuentes también pueden llegar como eventos JetStream en `recon.ingest.<tenant>.<source>.<provider>` (un evento = un artefacto de una fila, idempotente por `event_id`); los mensajes malformados van a `recon.dlq.<consumer>`. Tokens locales: `uv run python scripts/dev_auth.py init` y `uv run python scripts/dev_auth.py token --sub ana --role analyst` (claves en `.dev-keys/`, ignorado por git; sólo el JWKS público entra al contenedor).
+
+El motor `rules/v1` es puro y no importa clientes de modelos ni HTTP: EXACT exige referencia fuerte única, dinero idéntico y estado igual; diferencias con referencia compartida quedan `UNMATCHED` con discrepancias enlazadas; los candidatos débiles reciben un score de ranking (no una probabilidad) y los empates se conservan; los faltantes son `WAITING_SOURCE` hasta el cutoff y la completitud. Evidencia: [deterministic-reconciliation](openspec/changes/archive/2026-10-01-deterministic-reconciliation/evidence/README.md).
+
+No hay otras rutas; `tests/unit/test_scope.py` verifica el catálogo exacto. Readiness no escribe filas ni publica mensajes: hace `SELECT 1`, una distancia vectorial sobre literales y `account_info` de JetStream, en paralelo bajo un deadline global (`APP_READY_TIMEOUT_SECONDS`, por defecto 2.5, máximo 3). Las respuestas no incluyen hosts, URLs, SQL, trazas ni secretos. Cada respuesta lleva `X-Request-ID` (se acepta el del cliente si cumple `[A-Za-z0-9._-]{1,64}`; si no, se genera) y produce un log JSON con `request_id`, método, ruta sin query string, status y `duration_ms`.
 
 ## Prerrequisitos
 
@@ -47,7 +61,8 @@ La API se publica en `127.0.0.1:18180` por defecto (no usa 8000 ni 5432, habitua
 ## Ciclo de vida local
 
 ```text
-docker compose up -d --build     # postgres, db-init y migrate (one-shot), nats, api
+uv run python scripts/dev_auth.py init   # una vez: claves RS256 locales (la API no arranca sin JWKS)
+docker compose up -d --build     # postgres, db-init y migrate (one-shot), nats, api, worker
 curl http://127.0.0.1:18180/health/ready
 docker compose stop              # detiene; conserva datos
 docker compose start             # reanuda con los mismos volúmenes
@@ -86,6 +101,7 @@ Configuración: la API lee `APP_*`. Si un valor obligatorio falta o es inválido
 | uv en la imagen | `ghcr.io/astral-sh/uv:0.12.20@sha256:100047e74f30778ab704942321a09750d6158739573ff58bf3924085cc6cd2d8` |
 | Python (runtime) | fastapi 0.141.1, uvicorn 0.54.0, pydantic 2.13.5, pydantic-settings 2.15.0, psycopg[binary] 3.3.6, nats-py 2.16.0 (resto en `uv.lock`) |
 | Python (persistencia, M1) | sqlalchemy 2.1.1, alembic 1.20.0, tzdata 2026.4 |
+| Python (auth, M2) | pyjwt[crypto] 2.15.1, cryptography 50.0.1 |
 | Python (dev) | ruff 0.16.9, mypy 2.3.1, pytest 9.1.1, pytest-asyncio 1.4.0, httpx 0.28.1, hypothesis 6.168.3 |
 | OpenSpec | @fission-ai/openspec 1.11.0 |
 
@@ -94,9 +110,10 @@ Son las versiones verificadas juntas en este repositorio; no se afirma que sean 
 ## Estructura
 
 ```text
-apps/api/          adaptador HTTP (FastAPI): sólo salud; Dockerfile (runtime + smoke)
-packages/domain/   dominio puro: Money, observaciones, revisiones, lotes, mappings, fixtures
-packages/store/    SQLAlchemy Core + migraciones Alembic; ingesta atómica con auditoría y outbox
+apps/api/          adaptador HTTP (FastAPI): salud y /v1 con JWT/RBAC; Dockerfile (runtime + smoke)
+apps/worker/       relay de outbox, consumidores JetStream (runs, ingestion por eventos) y DLQ
+packages/domain/   dominio puro: Money, observaciones, revisiones, lotes, ingestion, reglas rules/v1
+packages/store/    SQLAlchemy Core + migraciones Alembic; ingesta atómica, runs, outbox/inbox
 datasets/          datasets sintéticos versionados con manifest (scripts/generate_synthetic.py)
 infra/             init idempotente de PostgreSQL y configuración de NATS
 scripts/           doctor, gate, smoke, trazabilidad, política, gate negativo
@@ -131,6 +148,8 @@ Todo objetivo de precisión, latencia o tokens de esos documentos es **EXPECTED*
 ## Change OpenSpec
 
 [bootstrap-mvp-foundation](openspec/changes/bootstrap-mvp-foundation/proposal.md) especifica M0: [requirements](openspec/changes/bootstrap-mvp-foundation/specs/repository-foundation/spec.md), [acceptance criteria](openspec/changes/bootstrap-mvp-foundation/acceptance-criteria.md) (estado y evidencia de cada AC), [design](openspec/changes/bootstrap-mvp-foundation/design.md), [tasks](openspec/changes/bootstrap-mvp-foundation/tasks.md) y [test strategy](openspec/changes/bootstrap-mvp-foundation/test-strategy.md). El archivo está confirmado; se pospone mientras AC06 siga PENDING.
+
+[deterministic-reconciliation](openspec/changes/archive/2026-10-01-deterministic-reconciliation/proposal.md) (M2) está archivado con AC01–AC11 en PASS; su spec vigente es [openspec/specs/deterministic-reconciliation](openspec/specs/deterministic-reconciliation/spec.md).
 
 [transaction-domain](openspec/changes/archive/2026-09-29-transaction-domain/proposal.md) (M1) está archivado con AC01–AC09 en PASS ([evidencia](openspec/changes/archive/2026-09-29-transaction-domain/evidence/README.md)); su spec vigente es [openspec/specs/transaction-domain](openspec/specs/transaction-domain/spec.md).
 

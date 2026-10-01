@@ -15,6 +15,10 @@ EXIT_INVALID_CONFIG = 2
 def main() -> int:
     try:
         settings = load_settings()
+        if not settings.auth_jwks_file.is_file():
+            raise ConfigurationError(
+                [("APP_AUTH_JWKS_FILE", "JWKS file not found; run scripts/dev_auth.py init")]
+            )
     except ConfigurationError as exc:
         error = {
             "level": "ERROR",

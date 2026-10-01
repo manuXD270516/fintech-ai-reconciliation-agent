@@ -152,6 +152,14 @@ def test_concurrent_ingest_of_same_key_creates_one_row(engine: Engine, tenant: s
         "UPDATE recon.audit_entries SET outcome = 'x' WHERE false",
         "UPDATE recon.outbox SET payload = '{}' WHERE false",
         "CREATE TABLE recon.intruder (id int)",
+        # M2 (0002): artifacts, quarantine, results and inbox are append-only for runtime.
+        "UPDATE recon.source_artifacts SET accepted = 0 WHERE false",
+        "DELETE FROM recon.ingestion_rejections WHERE false",
+        "UPDATE recon.match_results SET match_status = 'EXACT' WHERE false",
+        "DELETE FROM recon.match_results WHERE false",
+        "UPDATE recon.reconciliation_runs SET ruleset_version = 'x' WHERE false",
+        "DELETE FROM recon.reconciliation_runs WHERE false",
+        "DELETE FROM recon.inbox WHERE false",
     ],
 )
 def test_runtime_role_cannot_rewrite_history(statement: str) -> None:

@@ -3,7 +3,7 @@ name = "fintech-ai-reconciliation-agent"
 version = "0.0.0"
 description = "Workspace root for development tooling"
 requires-python = "==3.12.*"
-dependencies = ["recon-api", "recon-domain", "recon-store"]
+dependencies = ["recon-api", "recon-domain", "recon-store", "recon-worker"]
 
 [dependency-groups]
 dev = [
@@ -20,24 +20,26 @@ package = false
 required-version = "==0.12.20"
 
 [tool.uv.workspace]
-members = ["apps/api", "packages/domain", "packages/store"]
+members = ["apps/api", "apps/worker", "packages/domain", "packages/store"]
 
 [tool.uv.sources]
 recon-api = { workspace = true }
 recon-domain = { workspace = true }
 recon-store = { workspace = true }
+recon-worker = { workspace = true }
 
 [tool.ruff]
 target-version = "py312"
 line-length = 100
-src = ["apps/api/src", "packages/domain/src", "packages/store/src", "scripts", "tests"]
+src = ["apps/api/src", "apps/worker/src", "packages/domain/src", "packages/store/src", "scripts", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "S", "ASYNC", "RUF", "PL"]
-ignore = ["PLR2004"]
+# Keyword-only service signatures legitimately take many arguments.
+ignore = ["PLR2004", "PLR0913", "PLR0917"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101", "S105", "S106", "S603", "S607", "PLR0913"]
+"tests/**" = ["S101", "S105", "S106", "S311", "S603", "S607", "PLR0913"]
 # Identifiers are built from generated hex run IDs, never from external input.
 "tests/integration/**" = ["S608"]
 "scripts/**" = ["S603", "S607", "PLR0911", "PLR0912", "PLR0915", "T201"]
@@ -47,12 +49,12 @@ ignore = ["PLR2004"]
 [tool.mypy]
 python_version = "3.12"
 strict = true
-mypy_path = ["apps/api/src", "packages/domain/src", "packages/store/src"]
-files = ["apps/api/src", "packages/domain/src", "packages/store/src", "scripts", "tests"]
+mypy_path = ["apps/api/src", "apps/worker/src", "packages/domain/src", "packages/store/src"]
+files = ["apps/api/src", "apps/worker/src", "packages/domain/src", "packages/store/src", "scripts", "tests"]
 explicit_package_bases = true
 
 [tool.pytest.ini_options]
-pythonpath = ["apps/api/src", "packages/domain/src", "packages/store/src", "."]
+pythonpath = ["apps/api/src", "apps/worker/src", "packages/domain/src", "packages/store/src", "."]
 testpaths = ["tests/unit"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"

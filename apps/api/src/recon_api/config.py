@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from pathlib import Path
 from typing import Literal
 
 from pydantic import Field, SecretStr, ValidationError, field_validator
@@ -35,6 +36,10 @@ class Settings(BaseSettings):
     nats_password: SecretStr = Field(min_length=8)
 
     ready_timeout_seconds: float = Field(default=2.5, gt=0, le=MAX_READY_DEADLINE_SECONDS)
+
+    auth_jwks_file: Path = Path("/run/auth/jwks.json")
+    auth_issuer: str = Field(default="recon-dev-idp", min_length=1)
+    auth_audience: str = Field(default="recon-api", min_length=1)
 
     @field_validator("nats_url")
     @classmethod

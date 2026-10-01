@@ -14,7 +14,7 @@ import random
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 
-GENERATOR_VERSION = "synthetic-transactions/v1"
+LABEL_VERSIONS = ("v1", "v2")
 SCHEMA_VERSION = "raw-observation-csv/v1"
 DATASET_ID = "transactions"
 COLUMNS = (
@@ -55,7 +55,7 @@ SCENARIOS = (
     "unknown_status",
     "weak_reference",
 )
-EXPECTED = {
+EXPECTED_V1 = {
     "exact": ("EXACT", ""),
     "amount_mismatch": ("EXACT", "AMOUNT_MISMATCH"),
     "status_mismatch": ("EXACT", "STATUS_MISMATCH"),
@@ -68,6 +68,14 @@ EXPECTED = {
     "unknown_status": ("NOT_EVALUATED", "PROCESSING_ERROR"),
     "weak_reference": ("PROBABLE", ""),
 }
+# v2 corrects v1: a reference-linked pair with differences is not an exact match
+# (invariant 4); it stays UNMATCHED with the discrepancy linking both sides.
+EXPECTED_V2 = {
+    **EXPECTED_V1,
+    "amount_mismatch": ("UNMATCHED", "AMOUNT_MISMATCH"),
+    "status_mismatch": ("UNMATCHED", "STATUS_MISMATCH"),
+}
+EXPECTED_BY_VERSION = {"v1": EXPECTED_V1, "v2": EXPECTED_V2}
 
 _LEDGER_STATUS = {"ok": "POSTED", "pending": "PENDING", "failed": "FAILED"}
 _PROVIDER = {
@@ -86,6 +94,7 @@ _LA_PAZ = timezone(timedelta(hours=-4))
 @dataclass
 class Dataset:
     seed: int
+    version: str = "v1"
     internal: list[dict[str, str]] = field(default_factory=list)
     provider: list[dict[str, str]] = field(default_factory=list)
     labels: list[dict[str, str]] = field(default_factory=list)
@@ -105,9 +114,9 @@ class Dataset:
         ).hexdigest()
         return {
             "dataset_id": DATASET_ID,
-            "version": "v1",
+            "version": self.version,
             "schema_version": SCHEMA_VERSION,
-            "generator": GENERATOR_VERSION,
+            "generator": f"synthetic-transactions/{self.version}",
             "seed": self.seed,
             "data_origin": "SYNTHETIC",
             "files": digests,
@@ -132,9 +141,10 @@ def _amount(minor: int) -> str:
     return f"{minor // 100}.{minor % 100:02d}"
 
 
-def generate(seed: int = 20260929, per_scenario: int = 4) -> Dataset:
+def generate(seed: int = 20260929, per_scenario: int = 4, version: str = "v1") -> Dataset:
+    expected = EXPECTED_BY_VERSION[version]
     rng = random.Random(seed)  # noqa: S311 - deterministic fixtures, not cryptography
-    ds = Dataset(seed=seed)
+    ds = Dataset(seed=seed, version=version)
     tenant = "tenant-demo"
     base = datetime(2026, 9, 1, 8, 0, tzinfo=_LA_PAZ)
     counters = {"led": 0, "alf": 0, "bet": 0}
@@ -214,7 +224,7 @@ def generate(seed: int = 20260929, per_scenario: int = 4) -> Dataset:
 
             ds.internal += internal_rows
             ds.provider += provider_rows
-            match, discrepancies = EXPECTED[scenario]
+            match, discrepancies = expected[scenario]
             ds.labels.append(
                 {
                     "tenant_id": tenant,
