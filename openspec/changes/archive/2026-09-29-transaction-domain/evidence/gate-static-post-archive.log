@@ -1,8 +1,8 @@
-﻿gate: removed AI credential variables from environment: ANTHROPIC_BASE_URL
+gate: removed AI credential variables from environment: ANTHROPIC_BASE_URL
 
 === gate: lock ===
 uv : Resolved 45 packages in 1ms
-At C:\Users\Manuel Saavedra\AppData\Local\Temp\ps-script-0a119028-d3ad-4bf1-b7aa-591d0d499560.ps1:94 char:62
+At C:\Users\<user>\AppData\Local\Temp\ps-script-0a119028-d3ad-4bf1-b7aa-591d0d499560.ps1:94 char:62
 + ... conciliation-agent; uv run python scripts/gate.py static 2>&1 | Out-F ...
 +                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : NotSpecified: (Resolved 45 packages in 1ms:String) [], RemoteException

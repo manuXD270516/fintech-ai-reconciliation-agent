@@ -33,6 +33,7 @@ class HttpMetrics:
     """Thread-safe request counters; one instance per app."""
 
     def __init__(self) -> None:
+        self.ai_enabled = True  # M10 kill switch state, exported as recon_ai_enabled
         self._lock = threading.Lock()
         self._requests: dict[tuple[str, str, str], int] = defaultdict(int)
         self._latency: dict[str, _Histogram] = defaultdict(_Histogram)
@@ -50,6 +51,9 @@ class HttpMetrics:
 
     def lines(self) -> list[str]:
         out = [
+            "# HELP recon_ai_enabled 1 while AI investigations are enabled (kill switch).",
+            "# TYPE recon_ai_enabled gauge",
+            f"recon_ai_enabled {int(self.ai_enabled)}",
             "# HELP recon_http_requests_total HTTP requests by method, route and status class.",
             "# TYPE recon_http_requests_total counter",
         ]

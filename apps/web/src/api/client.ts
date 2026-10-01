@@ -45,6 +45,8 @@ const CODE_MESSAGES: Record<string, string> = {
   idempotency_conflict: "La clave de idempotencia ya se usó con otro contenido.",
   reason_required: "El motivo es obligatorio (mínimo 10 caracteres).",
   not_found: "No encontrado.",
+  ai_disabled:
+    "La investigación con IA está desactivada (kill switch). La conciliación determinística, los casos y las decisiones siguen disponibles.",
 };
 
 /** Human message for an API failure; never shows raw server internals. */

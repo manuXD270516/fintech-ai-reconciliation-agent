@@ -368,6 +368,10 @@ def post_investigation(
     principal: Annotated[Principal, Depends(require(Role.ANALYST))],
 ) -> InvestigationAccepted:
     """Request a read-only investigation; repeating it without new evidence is idempotent."""
+    if not getattr(request.app.state, "ai_enabled", True):
+        # Kill switch (APP_AI_ENABLED=false): no new AI work; reconciliation, cases and human
+        # decisions keep working on the deterministic path.
+        raise HTTPException(503, detail={"code": "ai_disabled"})
     repo = InvestigationRepository(_engine(request))
     try:
         investigation_id, created = repo.request(

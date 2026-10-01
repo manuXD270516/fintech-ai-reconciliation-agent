@@ -85,6 +85,7 @@ def create_app(
     *,
     verifier: JwtVerifier | None = None,
     engine: Engine | None = None,
+    ai_enabled: bool | None = None,
 ) -> FastAPI:
     if checker is None:
         if settings is None:
@@ -120,6 +121,10 @@ def create_app(
     app.state.verifier = verifier
     app.state.engine = engine
     app.state.http_metrics = http_metrics
+    if ai_enabled is None:
+        ai_enabled = settings.ai_enabled if settings is not None else True
+    app.state.ai_enabled = ai_enabled
+    http_metrics.ai_enabled = ai_enabled
     app.include_router(v1_router)
     readiness = checker
     snapshot_source = _snapshot_source(engine) if engine is not None else None

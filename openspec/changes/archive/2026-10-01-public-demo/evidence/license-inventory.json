@@ -1,0 +1,2290 @@
+{
+  "kind": "MEASURED",
+  "scope": "installed Python distributions locked in uv.lock + package-lock.json entries",
+  "packages": 314,
+  "by_license": {
+    "MIT": 224,
+    "Apache-2.0": 23,
+    "MPL-2.0": 15,
+    "BSD-3-Clause": 14,
+    "ISC": 12,
+    "MIT License": 4,
+    "MIT-0": 3,
+    "BSD-2-Clause": 3,
+    "Mozilla Public License 2.0 (MPL 2.0)": 2,
+    "BSD License": 2,
+    "LGPL-3.0-only": 2,
+    "Apache-2.0 OR BSD-3-Clause": 1,
+    "Apache-2.0 OR BSD-2-Clause": 1,
+    "3-Clause BSD License": 1,
+    "Python Software Foundation License": 1,
+    "Apache Software License": 1,
+    "PSF-2.0": 1,
+    "Python-2.0": 1,
+    "BlueOak-1.0.0": 1,
+    "CC0-1.0": 1,
+    "(MIT OR CC0-1.0)": 1
+  },
+  "needs_review": [],
+  "weak_copyleft": [
+    {
+      "ecosystem": "python",
+      "name": "certifi",
+      "version": "2026.7.22",
+      "license": "Mozilla Public License 2.0 (MPL 2.0)"
+    },
+    {
+      "ecosystem": "python",
+      "name": "hypothesis",
+      "version": "6.168.3",
+      "license": "MPL-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pathspec",
+      "version": "1.1.1",
+      "license": "Mozilla Public License 2.0 (MPL 2.0)"
+    },
+    {
+      "ecosystem": "python",
+      "name": "psycopg",
+      "version": "3.3.6",
+      "license": "LGPL-3.0-only"
+    },
+    {
+      "ecosystem": "python",
+      "name": "psycopg-binary",
+      "version": "3.3.6",
+      "license": "LGPL-3.0-only"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@axe-core/playwright",
+      "version": "4.13.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "axe-core",
+      "version": "4.13.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-android-arm64",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-darwin-arm64",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-darwin-x64",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-freebsd-x64",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-linux-arm-gnueabihf",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-linux-arm64-gnu",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-linux-arm64-musl",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-linux-x64-gnu",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-linux-x64-musl",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-win32-arm64-msvc",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-win32-x64-msvc",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    }
+  ],
+  "repository_license": "none (decision pending for the owner)",
+  "inventory": [
+    {
+      "ecosystem": "python",
+      "name": "alembic",
+      "version": "1.20.0",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "annotated-doc",
+      "version": "0.0.5",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "annotated-types",
+      "version": "0.8.0",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "anyio",
+      "version": "4.15.1",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "ast-serialize",
+      "version": "0.11.2",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "attrs",
+      "version": "26.1.0",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "certifi",
+      "version": "2026.7.22",
+      "license": "Mozilla Public License 2.0 (MPL 2.0)"
+    },
+    {
+      "ecosystem": "python",
+      "name": "cffi",
+      "version": "2.1.1",
+      "license": "MIT-0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "click",
+      "version": "8.5.0",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "ecosystem": "python",
+      "name": "colorama",
+      "version": "0.4.6",
+      "license": "BSD License"
+    },
+    {
+      "ecosystem": "python",
+      "name": "cryptography",
+      "version": "50.0.1",
+      "license": "Apache-2.0 OR BSD-3-Clause"
+    },
+    {
+      "ecosystem": "python",
+      "name": "fastapi",
+      "version": "0.141.1",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "googleapis-common-protos",
+      "version": "1.75.5",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "h11",
+      "version": "0.16.0",
+      "license": "MIT License"
+    },
+    {
+      "ecosystem": "python",
+      "name": "httpcore",
+      "version": "1.0.9",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "ecosystem": "python",
+      "name": "httpcore2",
+      "version": "2.13.1",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "ecosystem": "python",
+      "name": "httpx",
+      "version": "0.28.1",
+      "license": "BSD License"
+    },
+    {
+      "ecosystem": "python",
+      "name": "httpx2",
+      "version": "2.13.1",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "ecosystem": "python",
+      "name": "hypothesis",
+      "version": "6.168.3",
+      "license": "MPL-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "idna",
+      "version": "3.20",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "ecosystem": "python",
+      "name": "iniconfig",
+      "version": "2.3.0",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "jsonschema",
+      "version": "4.26.0",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "jsonschema-specifications",
+      "version": "2025.9.1",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "librt",
+      "version": "0.16.0",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "mako",
+      "version": "1.4.3",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "markupsafe",
+      "version": "3.0.3",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "ecosystem": "python",
+      "name": "mcp",
+      "version": "2.2.0",
+      "license": "MIT License"
+    },
+    {
+      "ecosystem": "python",
+      "name": "mcp-types",
+      "version": "2.2.0",
+      "license": "MIT License"
+    },
+    {
+      "ecosystem": "python",
+      "name": "mypy",
+      "version": "2.3.1",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "mypy-extensions",
+      "version": "1.1.0",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "nats-py",
+      "version": "2.16.0",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "opentelemetry-api",
+      "version": "1.45.0",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "opentelemetry-exporter-http-transport",
+      "version": "0.66b0",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "opentelemetry-exporter-otlp-common",
+      "version": "0.66b0",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "opentelemetry-exporter-otlp-proto-common",
+      "version": "1.45.0",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "opentelemetry-exporter-otlp-proto-http",
+      "version": "1.45.0",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "opentelemetry-proto",
+      "version": "1.45.0",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "opentelemetry-sdk",
+      "version": "1.45.0",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "opentelemetry-semantic-conventions",
+      "version": "0.66b0",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "packaging",
+      "version": "26.3",
+      "license": "Apache-2.0 OR BSD-2-Clause"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pathspec",
+      "version": "1.1.1",
+      "license": "Mozilla Public License 2.0 (MPL 2.0)"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pluggy",
+      "version": "1.6.0",
+      "license": "MIT License"
+    },
+    {
+      "ecosystem": "python",
+      "name": "protobuf",
+      "version": "7.36.2",
+      "license": "3-Clause BSD License"
+    },
+    {
+      "ecosystem": "python",
+      "name": "psycopg",
+      "version": "3.3.6",
+      "license": "LGPL-3.0-only"
+    },
+    {
+      "ecosystem": "python",
+      "name": "psycopg-binary",
+      "version": "3.3.6",
+      "license": "LGPL-3.0-only"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pycparser",
+      "version": "3.0",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pydantic",
+      "version": "2.13.5",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pydantic-core",
+      "version": "2.46.5",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pydantic-settings",
+      "version": "2.15.0",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pygments",
+      "version": "2.21.0",
+      "license": "BSD-2-Clause"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pyjwt",
+      "version": "2.15.1",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pytest",
+      "version": "9.1.1",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pytest-asyncio",
+      "version": "1.4.0",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "python-dotenv",
+      "version": "1.2.3",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "ecosystem": "python",
+      "name": "python-multipart",
+      "version": "0.0.32",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pywin32",
+      "version": "312",
+      "license": "Python Software Foundation License"
+    },
+    {
+      "ecosystem": "python",
+      "name": "referencing",
+      "version": "0.37.0",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "rpds-py",
+      "version": "2026.6.3",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "ruff",
+      "version": "0.16.9",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "sortedcontainers",
+      "version": "2.4.0",
+      "license": "Apache Software License"
+    },
+    {
+      "ecosystem": "python",
+      "name": "sqlalchemy",
+      "version": "2.1.1",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "sse-starlette",
+      "version": "3.5.0",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "ecosystem": "python",
+      "name": "starlette",
+      "version": "1.7.0",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "ecosystem": "python",
+      "name": "truststore",
+      "version": "0.10.4",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "types-jsonschema",
+      "version": "4.26.0.20260518",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "typing-extensions",
+      "version": "4.16.0",
+      "license": "PSF-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "typing-inspection",
+      "version": "0.4.4",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "tzdata",
+      "version": "2026.4",
+      "license": "Apache-2.0"
+    },
+    {
+      "ecosystem": "python",
+      "name": "urllib3",
+      "version": "2.8.0",
+      "license": "MIT"
+    },
+    {
+      "ecosystem": "python",
+      "name": "uvicorn",
+      "version": "0.54.0",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@fission-ai/openspec",
+      "version": "1.11.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/ansi",
+      "version": "2.0.8",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/checkbox",
+      "version": "5.2.5",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/confirm",
+      "version": "6.3.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/core",
+      "version": "12.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/core",
+      "version": "12.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/core",
+      "version": "11.2.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/core",
+      "version": "12.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/core",
+      "version": "12.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/core",
+      "version": "12.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/core",
+      "version": "12.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/core",
+      "version": "12.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/core",
+      "version": "12.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/core",
+      "version": "12.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/core",
+      "version": "12.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/editor",
+      "version": "5.3.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/expand",
+      "version": "5.1.5",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/external-editor",
+      "version": "3.0.5",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/figures",
+      "version": "2.0.9",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/input",
+      "version": "5.1.6",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/number",
+      "version": "4.2.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/password",
+      "version": "5.2.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/prompts",
+      "version": "8.7.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/rawlist",
+      "version": "5.3.5",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/search",
+      "version": "4.3.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/select",
+      "version": "5.2.5",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@inquirer/type",
+      "version": "4.1.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@nodelib/fs.scandir",
+      "version": "2.1.5",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@nodelib/fs.stat",
+      "version": "2.0.5",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "@nodelib/fs.walk",
+      "version": "1.2.8",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "ansi-regex",
+      "version": "6.4.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "braces",
+      "version": "3.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "chalk",
+      "version": "5.6.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "chardet",
+      "version": "2.2.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "cli-cursor",
+      "version": "5.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "cli-spinners",
+      "version": "3.4.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "cli-width",
+      "version": "4.1.0",
+      "license": "ISC",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "commander",
+      "version": "14.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "cross-spawn",
+      "version": "7.0.6",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "diff",
+      "version": "9.0.0",
+      "license": "BSD-3-Clause",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "fast-glob",
+      "version": "3.3.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "fast-string-truncated-width",
+      "version": "3.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "fast-string-width",
+      "version": "3.0.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "fast-wrap-ansi",
+      "version": "0.2.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "fastq",
+      "version": "1.20.3",
+      "license": "ISC",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "fill-range",
+      "version": "7.1.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "get-east-asian-width",
+      "version": "1.7.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "glob-parent",
+      "version": "5.1.2",
+      "license": "ISC",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "iconv-lite",
+      "version": "0.7.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "is-extglob",
+      "version": "2.1.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "is-glob",
+      "version": "4.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "is-interactive",
+      "version": "2.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "is-number",
+      "version": "7.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "is-unicode-supported",
+      "version": "2.1.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "isexe",
+      "version": "2.0.0",
+      "license": "ISC",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "log-symbols",
+      "version": "7.0.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "merge2",
+      "version": "1.4.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "micromatch",
+      "version": "4.0.8",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "mimic-function",
+      "version": "5.0.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "mute-stream",
+      "version": "3.0.0",
+      "license": "ISC",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "onetime",
+      "version": "7.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "ora",
+      "version": "9.4.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "path-key",
+      "version": "3.1.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "picomatch",
+      "version": "2.3.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "queue-microtask",
+      "version": "1.2.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "restore-cursor",
+      "version": "5.1.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "reusify",
+      "version": "1.1.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "run-parallel",
+      "version": "1.2.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "safer-buffer",
+      "version": "2.1.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "shebang-command",
+      "version": "2.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "shebang-regex",
+      "version": "3.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "signal-exit",
+      "version": "4.1.0",
+      "license": "ISC",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "stdin-discarder",
+      "version": "0.3.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "string-width",
+      "version": "8.3.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "strip-ansi",
+      "version": "7.2.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "to-regex-range",
+      "version": "5.0.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "which",
+      "version": "2.0.2",
+      "license": "ISC",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "yaml",
+      "version": "2.9.1",
+      "license": "ISC",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "yoctocolors",
+      "version": "2.2.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:tooling",
+      "name": "zod",
+      "version": "4.6.5",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@adobe/css-tools",
+      "version": "4.5.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@asamuzakjp/css-color",
+      "version": "7.1.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@asamuzakjp/dom-selector",
+      "version": "9.2.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@axe-core/playwright",
+      "version": "4.13.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@babel/code-frame",
+      "version": "7.29.7",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@babel/helper-validator-identifier",
+      "version": "7.29.7",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@babel/runtime",
+      "version": "7.29.7",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@bramus/specificity",
+      "version": "2.4.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@csstools/color-helpers",
+      "version": "6.1.2",
+      "license": "MIT-0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@csstools/css-calc",
+      "version": "3.4.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@csstools/css-color-parser",
+      "version": "4.2.5",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@csstools/css-parser-algorithms",
+      "version": "4.0.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@csstools/css-syntax-patches-for-csstree",
+      "version": "1.1.15",
+      "license": "MIT-0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@csstools/css-tokenizer",
+      "version": "4.0.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@exodus/bytes",
+      "version": "1.16.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@jridgewell/resolve-uri",
+      "version": "3.1.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@jridgewell/sourcemap-codec",
+      "version": "1.6.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@jridgewell/trace-mapping",
+      "version": "0.3.31",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@oxc-project/types",
+      "version": "0.152.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@playwright/test",
+      "version": "1.63.0",
+      "license": "Apache-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@redocly/ajv",
+      "version": "8.11.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@redocly/config",
+      "version": "0.22.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@redocly/openapi-core",
+      "version": "1.34.20",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-android-arm-eabi",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-android-arm64",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-darwin-arm64",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-darwin-x64",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-freebsd-x64",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-linux-arm-gnueabihf",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-linux-arm64-gnu",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-linux-arm64-musl",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-linux-ppc64-gnu",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-linux-s390x-gnu",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-linux-x64-gnu",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-linux-x64-musl",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-openharmony-arm64",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-win32-arm64-msvc",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/binding-win32-x64-msvc",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@rolldown/pluginutils",
+      "version": "1.0.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@testing-library/dom",
+      "version": "10.4.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@testing-library/jest-dom",
+      "version": "7.0.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@testing-library/react",
+      "version": "16.3.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@testing-library/user-event",
+      "version": "14.6.7",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@types/aria-query",
+      "version": "5.0.4",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@types/chai",
+      "version": "5.2.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@types/deep-eql",
+      "version": "4.0.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@types/estree",
+      "version": "1.0.9",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@types/node",
+      "version": "22.20.4",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@types/react",
+      "version": "19.3.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@types/react-dom",
+      "version": "19.3.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@vitejs/plugin-react",
+      "version": "6.1.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@vitest/mocker",
+      "version": "5.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "@vitest/spy",
+      "version": "5.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "agent-base",
+      "version": "7.1.4",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "ansi-colors",
+      "version": "4.1.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "ansi-regex",
+      "version": "5.0.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "ansi-styles",
+      "version": "5.2.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "argparse",
+      "version": "2.0.1",
+      "license": "Python-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "aria-query",
+      "version": "5.3.0",
+      "license": "Apache-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "assertion-error",
+      "version": "2.0.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "axe-core",
+      "version": "4.13.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "balanced-match",
+      "version": "1.0.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "bidi-js",
+      "version": "1.1.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "brace-expansion",
+      "version": "2.1.7",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "chai",
+      "version": "6.3.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "change-case",
+      "version": "5.4.4",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "colorette",
+      "version": "1.4.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "css-tree",
+      "version": "3.2.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "css.escape",
+      "version": "1.5.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "csstype",
+      "version": "3.2.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "data-urls",
+      "version": "7.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "debug",
+      "version": "4.4.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "decimal.js",
+      "version": "10.6.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "dequal",
+      "version": "2.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "detect-libc",
+      "version": "2.1.2",
+      "license": "Apache-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "dom-accessibility-api",
+      "version": "0.6.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "dom-accessibility-api",
+      "version": "0.5.16",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "entities",
+      "version": "8.1.0",
+      "license": "BSD-2-Clause",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "es-module-lexer",
+      "version": "2.3.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "estree-walker",
+      "version": "3.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "expect-type",
+      "version": "1.4.0",
+      "license": "Apache-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "fast-deep-equal",
+      "version": "3.1.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "fdir",
+      "version": "6.5.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "fsevents",
+      "version": "2.3.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "html-encoding-sniffer",
+      "version": "7.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "https-proxy-agent",
+      "version": "7.0.6",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "indent-string",
+      "version": "4.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "index-to-position",
+      "version": "1.2.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "is-potential-custom-element-name",
+      "version": "1.0.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "js-levenshtein",
+      "version": "1.1.6",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "js-tokens",
+      "version": "4.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "js-yaml",
+      "version": "4.3.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "jsdom",
+      "version": "30.1.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "json-schema-traverse",
+      "version": "1.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-android-arm64",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-darwin-arm64",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-darwin-x64",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-freebsd-x64",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-linux-arm-gnueabihf",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-linux-arm64-gnu",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-linux-arm64-musl",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-linux-x64-gnu",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-linux-x64-musl",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-win32-arm64-msvc",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lightningcss-win32-x64-msvc",
+      "version": "1.33.0",
+      "license": "MPL-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lru-cache",
+      "version": "11.5.3",
+      "license": "BlueOak-1.0.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "lz-string",
+      "version": "1.5.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "magic-string",
+      "version": "1.4.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "mdn-data",
+      "version": "2.27.1",
+      "license": "CC0-1.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "min-indent",
+      "version": "1.0.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "minimatch",
+      "version": "5.1.9",
+      "license": "ISC",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "ms",
+      "version": "2.1.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "nanoid",
+      "version": "3.3.19",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "obug",
+      "version": "2.2.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "openapi-fetch",
+      "version": "0.17.0",
+      "license": "MIT",
+      "dev": "false"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "openapi-typescript",
+      "version": "7.13.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "openapi-typescript-helpers",
+      "version": "0.1.0",
+      "license": "MIT",
+      "dev": "false"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "parse-json",
+      "version": "8.3.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "parse5",
+      "version": "8.0.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "picocolors",
+      "version": "1.1.1",
+      "license": "ISC",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "picomatch",
+      "version": "4.0.7",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "playwright",
+      "version": "1.63.0",
+      "license": "Apache-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "playwright-core",
+      "version": "1.63.0",
+      "license": "Apache-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "pluralize",
+      "version": "8.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "postcss",
+      "version": "8.5.28",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "pretty-format",
+      "version": "27.5.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "punycode",
+      "version": "2.3.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "react",
+      "version": "19.3.0",
+      "license": "MIT",
+      "dev": "false"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "react-dom",
+      "version": "19.3.0",
+      "license": "MIT",
+      "dev": "false"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "react-is",
+      "version": "17.0.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "redent",
+      "version": "3.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "require-from-string",
+      "version": "2.0.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "rolldown",
+      "version": "1.2.12",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "saxes",
+      "version": "6.0.0",
+      "license": "ISC",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "scheduler",
+      "version": "0.28.0",
+      "license": "MIT",
+      "dev": "false"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "source-map-js",
+      "version": "1.2.2",
+      "license": "BSD-3-Clause",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "std-env",
+      "version": "4.3.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "strip-indent",
+      "version": "3.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "supports-color",
+      "version": "10.2.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "tinybench",
+      "version": "6.2.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "tinyexec",
+      "version": "1.3.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "tinyglobby",
+      "version": "0.2.17",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "tldts",
+      "version": "7.4.16",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "tldts-core",
+      "version": "7.4.16",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "tough-cookie",
+      "version": "6.0.2",
+      "license": "BSD-3-Clause",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "tr46",
+      "version": "6.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "type-fest",
+      "version": "4.41.0",
+      "license": "(MIT OR CC0-1.0)",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "typescript",
+      "version": "5.9.3",
+      "license": "Apache-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "undici",
+      "version": "8.11.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "undici-types",
+      "version": "6.21.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "uri-js-replace",
+      "version": "1.0.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "vite",
+      "version": "8.3.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "vitest",
+      "version": "5.0.3",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "w3c-xmlserializer",
+      "version": "6.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "webidl-conversions",
+      "version": "8.0.1",
+      "license": "BSD-2-Clause",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "whatwg-mimetype",
+      "version": "5.0.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "whatwg-url",
+      "version": "16.0.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "whatwg-url",
+      "version": "17.1.2",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "why-is-node-running",
+      "version": "3.2.1",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "xml-name-validator",
+      "version": "5.0.0",
+      "license": "Apache-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "xmlchars",
+      "version": "2.2.0",
+      "license": "MIT",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "yaml-ast-parser",
+      "version": "0.0.43",
+      "license": "Apache-2.0",
+      "dev": "true"
+    },
+    {
+      "ecosystem": "npm:web",
+      "name": "yargs-parser",
+      "version": "21.1.1",
+      "license": "ISC",
+      "dev": "true"
+    }
+  ]
+}

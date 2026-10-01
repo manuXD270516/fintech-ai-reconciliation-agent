@@ -487,6 +487,12 @@ class Smoke:
 
         return ops_drills.backup_restore(ROOT / ".backups")
 
+    def demo_drill(self) -> dict[str, Any]:
+        """M10: isolated demo sessions and the human path with the AI kill switch off."""
+        from scripts import demo  # noqa: PLC0415 - imports this module
+
+        return demo.drill(self.api)
+
     def knowledge_ingest_idempotent(self) -> dict[str, Any]:
         outputs = []
         for _ in range(2):
@@ -743,6 +749,8 @@ def main() -> int:
                     smoke.dead_letter_drill)  # fmt: skip
         smoke.check("M9-T06", "backup + restore check (counts and audit digest)",
                     smoke.backup_restore)  # fmt: skip
+        smoke.check("M10-T03", "demo sessions isolated; AI kill switch keeps human path",
+                    smoke.demo_drill)  # fmt: skip
         smoke.check("T08", "API loopback-only, dependencies private", smoke.isolation)
         smoke.check("T09", "request ID correlated in header and JSON log", smoke.correlation)
         for service in ("postgres", "nats"):
