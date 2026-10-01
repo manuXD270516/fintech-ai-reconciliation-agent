@@ -23,7 +23,7 @@ Ninguna en specs vigentes. La investigación (M5) agrega la revisión y la refle
 
 Módulos `recon_agents.reviewer`, `recon_domain.approval`, `recon_store.cases`, migración `0006`, seis rutas `/v1` y el paso smoke `M6-T08`.
 
-Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md) (D07: RBAC y segregación); diseño: [docs/04-agents.md](../../../docs/04-agents.md#human-in-the-loop).
+Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md) (D07: RBAC y segregación); diseño: [docs/04-agents.md](../../../../docs/04-agents.md#human-in-the-loop).
 
 ## Non-goals
 

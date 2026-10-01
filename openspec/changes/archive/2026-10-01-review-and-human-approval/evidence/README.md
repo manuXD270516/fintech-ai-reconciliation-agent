@@ -45,3 +45,5 @@ Paso smoke `M6-T08` desde el host por HTTP: caso 201; recomendación 201 que ado
 Gate completo en [gate-all.log](gate-all.log), incluido el catálogo exacto de rutas.
 
 Complemento de T04/T08 (lectura auditada): [audit-read-check.txt](audit-read-check.txt) muestra entradas `case.audit_read` escritas por el auditor de los tests de integración (`auditor-1`) y por el del smoke (`aud-smoke`), consultadas con el rol runtime en la base local tras el gate.
+
+El archivo del change se verificó con el gate estático posterior a `openspec archive` ([gate-static-post-archive.log](gate-static-post-archive.log): todos PASS, incluida la regla de trazabilidad para changes archivados).

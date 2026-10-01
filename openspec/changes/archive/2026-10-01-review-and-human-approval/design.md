@@ -1,6 +1,6 @@
 ## Context
 
-Implementa la revisión y el human-in-the-loop de [docs/04-agents.md](../../../docs/04-agents.md) y las transacciones críticas de [docs/02-architecture.md](../../../docs/02-architecture.md#interfaces-y-consistencia), con D07 de [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md).
+Implementa la revisión y el human-in-the-loop de [docs/04-agents.md](../../../../docs/04-agents.md) y las transacciones críticas de [docs/02-architecture.md](../../../../docs/02-architecture.md#interfaces-y-consistencia), con D07 de [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md).
 
 ## Goals / Non-Goals
 
