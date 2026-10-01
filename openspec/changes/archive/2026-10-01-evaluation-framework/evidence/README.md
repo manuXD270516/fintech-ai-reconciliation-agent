@@ -46,3 +46,5 @@ Lectura honesta: la conciliación perfecta indica que el motor reproduce las eti
 ## T07
 
 `test_ci_parity.py` en [gate-all.log](gate-all.log) (el paso `evals` está en `ci.yml` en el mismo orden que en `scripts/gate.py`) y el gate completo verde.
+
+El archivo del change se verificó con el gate estático posterior a `openspec archive` ([gate-static-post-archive.log](gate-static-post-archive.log): todos PASS, incluida la regla de trazabilidad para changes archivados).

@@ -24,7 +24,7 @@ Ninguna en specs vigentes; el gate de calidad agrega el paso `evals` (y `ci.yml`
 
 Nuevo miembro del workspace `evals` (en la imagen para el smoke), paso de gate y de CI, baseline versionado, `evals/reports/` ignorado por git.
 
-Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md); diseño: [docs/07-evals.md](../../../docs/07-evals.md).
+Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md); diseño: [docs/07-evals.md](../../../../docs/07-evals.md).
 
 ## Non-goals
 

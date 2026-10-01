@@ -1,6 +1,6 @@
 ## Context
 
-Unifica la evaluación incremental de M1–M6 según [docs/07-evals.md](../../../docs/07-evals.md) y las decisiones de [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md).
+Unifica la evaluación incremental de M1–M6 según [docs/07-evals.md](../../../../docs/07-evals.md) y las decisiones de [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md).
 
 ## Goals / Non-Goals
 
