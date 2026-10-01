@@ -9,6 +9,7 @@ import nats
 
 from recon_api.config import ConfigurationError, load_settings
 from recon_api.logs import configure_logging
+from recon_store import telemetry
 from recon_store.engine import runtime_engine, runtime_url
 from recon_worker.runner import Worker
 
@@ -32,6 +33,7 @@ async def _main() -> int:
         )
         return EXIT_INVALID_CONFIG
     configure_logging(settings.log_level)
+    telemetry.configure("recon-worker")
     engine = runtime_engine(
         runtime_url(
             settings.db_host,
@@ -60,6 +62,7 @@ async def _main() -> int:
     finally:
         await nc.drain()
         engine.dispose()
+        telemetry.shutdown()
     return 0
 
 

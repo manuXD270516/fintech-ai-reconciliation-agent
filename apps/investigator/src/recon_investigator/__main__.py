@@ -10,6 +10,7 @@ import nats
 from recon_api.config import ConfigurationError, load_settings
 from recon_api.logs import configure_logging
 from recon_investigator.runner import Runner
+from recon_store import telemetry
 from recon_store.engine import runtime_engine, runtime_url
 
 
@@ -21,6 +22,7 @@ async def _main() -> int:
         print(json.dumps({"error": "invalid configuration", "fields": fields}), file=sys.stderr)
         return 2
     configure_logging(settings.log_level)
+    telemetry.configure("recon-investigator")
     engine = runtime_engine(
         runtime_url(
             settings.db_host,
@@ -49,6 +51,7 @@ async def _main() -> int:
     finally:
         await nc.drain()
         engine.dispose()
+        telemetry.shutdown()
     return 0
 
 

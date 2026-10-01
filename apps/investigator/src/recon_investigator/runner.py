@@ -6,15 +6,18 @@ import asyncio
 import json
 import logging
 import os
+import socket
 import uuid
 from collections.abc import AsyncIterator, Callable
 from contextlib import AbstractAsyncContextManager
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from typing import Any
 
 from nats.aio.client import Client as NatsClient
 from nats.aio.msg import Msg
 from nats.js.api import ConsumerConfig
+from opentelemetry.trace import Span, SpanKind, StatusCode
 from sqlalchemy import Engine
 
 from recon_agents.models import CaseSnapshot
@@ -22,13 +25,16 @@ from recon_agents.orchestrator import Investigator
 from recon_agents.providers import ModelProvider, provider_from_env
 from recon_agents.tool_client import ToolClient, stdio_tool_client
 from recon_mcp.contracts import Scope
+from recon_store import telemetry
 from recon_store.investigations import INVESTIGATION_REQUESTED, TERMINAL, InvestigationRepository
+from recon_store.ops import beat
 
 STREAM = "RECON_EVENTS"
 CONSUMER = "investigation-runner"
 SUBJECT = f"recon.events.{INVESTIGATION_REQUESTED}"
 SUBJECT_ID = "svc-investigator"
 MAX_DELIVER = 3
+HEARTBEAT_SECONDS = 10.0
 
 log = logging.getLogger("recon_investigator")
 ToolsFactory = Callable[[str], AbstractAsyncContextManager[ToolClient]]
@@ -99,25 +105,57 @@ class Runner:
             except TimeoutError:
                 continue
 
+    async def heartbeat(self) -> None:
+        instance = f"{socket.gethostname()}-{os.getpid()}"
+        while not self.stop.is_set():
+            try:
+                await asyncio.to_thread(
+                    beat, self.engine, "investigator", instance, datetime.now(UTC)
+                )
+            except Exception:
+                log.exception("heartbeat failed")
+            await asyncio.sleep(HEARTBEAT_SECONDS)
+
     async def run(self) -> None:
-        async for msg in self.messages():
-            try:
-                envelope = json.loads(msg.data)
-                investigation_id = uuid.UUID(str(envelope["payload"]["investigation_id"]))
-            except (ValueError, KeyError, TypeError):
+        beating = asyncio.create_task(self.heartbeat())
+        try:
+            async for msg in self.messages():
+                parent = telemetry.context_from((msg.headers or {}).get(telemetry.TRACEPARENT))
+                with telemetry.tracer().start_as_current_span(
+                    f"process {CONSUMER}",
+                    kind=SpanKind.CONSUMER,
+                    context=parent,
+                    attributes={
+                        "messaging.system": "nats",
+                        "messaging.consumer.group.name": CONSUMER,
+                    },
+                ) as span:
+                    await self.handle(msg, span)
+        finally:
+            beating.cancel()
+
+    async def handle(self, msg: Msg, span: Span) -> None:
+        try:
+            envelope = json.loads(msg.data)
+            investigation_id = uuid.UUID(str(envelope["payload"]["investigation_id"]))
+        except (ValueError, KeyError, TypeError):
+            await msg.term()
+            span.set_attribute("recon.result", "malformed")
+            log.warning("malformed investigation event terminated")
+            return
+        span.set_attribute("recon.investigation_id", str(investigation_id))
+        try:
+            result = await execute(self.engine, investigation_id)
+            await msg.ack()
+            span.set_attribute("recon.result", result)
+            log.info("investigation handled", extra={"result": result})
+        except Exception as exc:
+            span.set_status(StatusCode.ERROR, type(exc).__name__)
+            if msg.metadata.num_delivered >= MAX_DELIVER:
+                await asyncio.to_thread(
+                    mark_failed, self.engine, investigation_id, type(exc).__name__
+                )
                 await msg.term()
-                log.warning("malformed investigation event terminated")
-                continue
-            try:
-                result = await execute(self.engine, investigation_id)
-                await msg.ack()
-                log.info("investigation handled", extra={"result": result})
-            except Exception as exc:
-                if msg.metadata.num_delivered >= MAX_DELIVER:
-                    await asyncio.to_thread(
-                        mark_failed, self.engine, investigation_id, type(exc).__name__
-                    )
-                    await msg.term()
-                else:
-                    await msg.nak(delay=5)
-                log.warning("investigation failed", extra={"error": type(exc).__name__})
+            else:
+                await msg.nak(delay=5)
+            log.warning("investigation failed", extra={"error": type(exc).__name__})

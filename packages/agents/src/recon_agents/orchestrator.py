@@ -20,6 +20,7 @@ from typing import Any, Protocol
 
 import anyio
 from jsonschema import Draft202012Validator
+from opentelemetry import trace
 
 from recon_agents.context import SYSTEM, build
 from recon_agents.evidence import Bundle, Verified, collect, verify
@@ -48,6 +49,8 @@ from recon_agents.reviewer import (
 )
 from recon_agents.routing import route
 from recon_agents.tool_client import ToolClient, ToolOutcome
+
+_tracer = trace.get_tracer("recon")  # no-op unless the process configured the SDK (M9)
 
 QUESTION = (
     "¿Qué evidencia explica el resultado de conciliación y qué falta para que una persona "
@@ -274,7 +277,18 @@ class Investigator:
             budget.exhausted.append("tokens")
             raise BudgetExhaustedError("tokens")
         budget.generative_calls += 1
-        response = await self.provider.generate(ModelRequest(purpose, SYSTEM, context, schema))
+        with _tracer.start_as_current_span(
+            f"model.generate {purpose.value}",
+            attributes={"gen_ai.operation.name": "generate", "recon.purpose": purpose.value},
+        ) as span:
+            response = await self.provider.generate(ModelRequest(purpose, SYSTEM, context, schema))
+            span.set_attributes(
+                {
+                    "gen_ai.usage.input_tokens": response.input_tokens,
+                    "gen_ai.usage.output_tokens": response.output_tokens,
+                    "recon.usage_estimated": response.usage_estimated,
+                }
+            )
         budget.input_tokens += response.input_tokens
         budget.output_tokens += response.output_tokens
         budget.tokens_estimated = budget.tokens_estimated or response.usage_estimated

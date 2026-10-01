@@ -1,0 +1,78 @@
+# Initial alert rules (docs/08-risks.md). Thresholds are EXPECTED, not measured SLOs;
+# adjust them after a baseline. Evaluated by `scripts/ops.py alerts` against /metrics.
+#
+# Fields: metric, op (> >= < <= ==), threshold, optional labels (exact match),
+# absent ("fire" | "ok": what to do when the series does not exist), severity, runbook.
+
+[[alert]]
+name = "MetricsSourceDown"
+metric = "recon_metrics_source_up"
+op = "=="
+threshold = 0
+absent = "ok"
+severity = "critical"
+runbook = "docs/runbooks/broker-down.md"
+summary = "A scrape-time source (database or messaging) did not answer"
+
+[[alert]]
+name = "OutboxStalled"
+metric = "recon_outbox_oldest_pending_age_seconds"
+op = ">"
+threshold = 60
+absent = "fire"
+severity = "critical"
+runbook = "docs/runbooks/broker-down.md"
+summary = "Outbox events pending for more than 60 s (relay or broker unavailable)"
+
+[[alert]]
+name = "DeadLetters"
+metric = "recon_dead_letters_unhandled"
+op = ">"
+threshold = 0
+absent = "fire"
+severity = "warning"
+runbook = "docs/runbooks/dlq-replay.md"
+summary = "Dead letters waiting for triage"
+
+[[alert]]
+name = "WorkerHeartbeatMissing"
+metric = "recon_service_heartbeat_age_seconds"
+labels = { service = "worker" }
+op = ">"
+threshold = 60
+absent = "fire"
+severity = "critical"
+runbook = "docs/runbooks/broker-down.md"
+summary = "Worker without heartbeat for more than 60 s"
+
+[[alert]]
+name = "InvestigatorHeartbeatMissing"
+metric = "recon_service_heartbeat_age_seconds"
+labels = { service = "investigator" }
+op = ">"
+threshold = 60
+absent = "fire"
+severity = "warning"
+runbook = "docs/runbooks/embeddings-unavailable.md"
+summary = "Investigator without heartbeat for more than 60 s (deterministic path still available)"
+
+[[alert]]
+name = "HumanBacklog"
+metric = "recon_human_queue_oldest_age_seconds"
+op = ">"
+threshold = 86400
+absent = "ok"
+severity = "warning"
+runbook = "docs/runbooks/human-backlog.md"
+summary = "A recommendation has waited more than 24 h for a human decision"
+
+[[alert]]
+name = "ToolPermissionRefused"
+metric = "recon_mcp_tool_calls_last_hour"
+labels = { outcome = "FORBIDDEN" }
+op = ">"
+threshold = 0
+absent = "ok"
+severity = "critical"
+runbook = "docs/runbooks/evidence-withdrawn.md"
+summary = "An MCP tool call was refused for scope or tenant (possible permission violation)"

@@ -12,6 +12,8 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import os
+import socket
 import uuid
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
@@ -20,13 +22,23 @@ from datetime import UTC, datetime
 from nats.aio.client import Client as NatsClient
 from nats.aio.msg import Msg
 from nats.js import JetStreamContext
-from nats.js.api import ConsumerConfig, RetentionPolicy, StorageType, StreamConfig
+from nats.js.api import (
+    AckPolicy,
+    ConsumerConfig,
+    DeliverPolicy,
+    RetentionPolicy,
+    StorageType,
+    StreamConfig,
+)
 from nats.js.errors import NotFoundError
+from opentelemetry.trace import Span, SpanKind, StatusCode
 from sqlalchemy import Engine
 
 from recon_domain.ingestion import ArtifactError, rows_to_csv
 from recon_domain.observation import DomainError, SourceKind, require_ident
+from recon_store import telemetry
 from recon_store.artifacts import ArtifactService, IdempotencyConflictError
+from recon_store.ops import beat
 from recon_store.outbox import mark_failed, mark_published, pending
 from recon_store.reconciliation import (
     RECONCILIATION_REQUESTED,
@@ -42,8 +54,10 @@ DLQ_STREAM = "RECON_DLQ"
 DLQ_PREFIX = "recon.dlq"
 RUN_CONSUMER = "reconciliation-runner"
 INGEST_CONSUMER = "observation-ingestor"
+DLQ_TRIAGE = "dlq-triage"
 MAX_DELIVER = 5
 MAX_EVENT_BYTES = 16_384
+HEARTBEAT_SECONDS = 10.0
 
 log = logging.getLogger("recon_worker")
 Handler = Callable[[Engine, dict[str, object], str], str]
@@ -86,6 +100,17 @@ async def ensure_stream(js: JetStreamContext) -> None:
                 max_age=7 * 24 * 3600.0,
             ),
         )
+    # Operators triage dead letters through this durable consumer (recon_worker.dlq);
+    # its pending count is the `recon_dead_letters_unhandled` metric.
+    await js.add_consumer(
+        DLQ_STREAM,
+        ConsumerConfig(
+            durable_name=DLQ_TRIAGE,
+            ack_policy=AckPolicy.EXPLICIT,
+            deliver_policy=DeliverPolicy.ALL,
+            ack_wait=30,
+        ),
+    )
 
 
 async def relay_once(engine: Engine, js: JetStreamContext, limit: int = 100) -> int:
@@ -93,12 +118,22 @@ async def relay_once(engine: Engine, js: JetStreamContext, limit: int = 100) -> 
     published: list[uuid.UUID] = []
     for event in events:
         try:
-            await js.publish(
-                subject(event.event_type),
-                json.dumps(event.envelope, separators=(",", ":")).encode(),
-                headers={"Nats-Msg-Id": str(event.event_id)},
-                timeout=5,
-            )
+            with telemetry.tracer().start_as_current_span(
+                f"publish {event.event_type}",
+                kind=SpanKind.PRODUCER,
+                context=telemetry.context_from(event.trace_context),
+                attributes={
+                    "messaging.system": "nats",
+                    "messaging.destination.name": subject(event.event_type),
+                    "messaging.message.id": str(event.event_id),
+                },
+            ):
+                await js.publish(
+                    subject(event.event_type),
+                    json.dumps(event.envelope, separators=(",", ":")).encode(),
+                    headers=telemetry.headers_with_trace({"Nats-Msg-Id": str(event.event_id)}),
+                    timeout=5,
+                )
             published.append(event.event_id)
         except Exception as exc:
             await asyncio.to_thread(mark_failed, engine, event.event_id, type(exc).__name__)
@@ -223,31 +258,62 @@ class Worker:
             except TimeoutError:
                 continue
             for msg in msgs:
-                try:
-                    if len(msg.data) > MAX_EVENT_BYTES:
-                        raise PoisonMessageError("event exceeds size limit")
-                    envelope = json.loads(msg.data)
-                    if not isinstance(envelope, dict):
-                        raise PoisonMessageError("envelope must be a JSON object")
-                    result = await asyncio.to_thread(handler, self.engine, envelope, msg.subject)
-                    await msg.ack()
-                    log.info("event handled", extra={"consumer": durable, "result": result})
-                except (PoisonMessageError, json.JSONDecodeError) as exc:
-                    await self._dead_letter(js, durable, msg, f"poison: {exc}")
-                    await msg.term()
-                    log.warning("poison message dead-lettered", extra={"consumer": durable})
-                except Exception as exc:
-                    deliveries = msg.metadata.num_delivered
-                    if deliveries >= MAX_DELIVER:
-                        await self._dead_letter(
-                            js, durable, msg, f"exhausted: {type(exc).__name__}"
-                        )
-                        if on_exhausted is not None:
-                            await on_exhausted(json.loads(msg.data), type(exc).__name__)
-                        await msg.term()
-                    else:
-                        await msg.nak(delay=min(30, 2**deliveries))
-                    log.warning("event handling failed", extra={"consumer": durable})
+                parent = telemetry.context_from((msg.headers or {}).get(telemetry.TRACEPARENT))
+                with telemetry.tracer().start_as_current_span(
+                    f"process {durable}",
+                    kind=SpanKind.CONSUMER,
+                    context=parent,
+                    attributes={
+                        "messaging.system": "nats",
+                        "messaging.consumer.group.name": durable,
+                    },
+                ) as span:
+                    await self._handle(js, durable, msg, handler, on_exhausted, span)
+
+    async def _handle(
+        self,
+        js: JetStreamContext,
+        durable: str,
+        msg: Msg,
+        handler: Handler,
+        on_exhausted: Callable[[dict[str, object], str], Awaitable[None]] | None,
+        span: Span,
+    ) -> None:
+        try:
+            if len(msg.data) > MAX_EVENT_BYTES:
+                raise PoisonMessageError("event exceeds size limit")
+            envelope = json.loads(msg.data)
+            if not isinstance(envelope, dict):
+                raise PoisonMessageError("envelope must be a JSON object")
+            result = await asyncio.to_thread(handler, self.engine, envelope, msg.subject)
+            await msg.ack()
+            span.set_attribute("recon.result", result)
+            log.info("event handled", extra={"consumer": durable, "result": result})
+        except (PoisonMessageError, json.JSONDecodeError) as exc:
+            span.set_attribute("recon.result", "dead_lettered")
+            await self._dead_letter(js, durable, msg, f"poison: {exc}")
+            await msg.term()
+            log.warning("poison message dead-lettered", extra={"consumer": durable})
+        except Exception as exc:
+            span.set_status(StatusCode.ERROR, type(exc).__name__)
+            deliveries = msg.metadata.num_delivered
+            if deliveries >= MAX_DELIVER:
+                await self._dead_letter(js, durable, msg, f"exhausted: {type(exc).__name__}")
+                if on_exhausted is not None:
+                    await on_exhausted(json.loads(msg.data), type(exc).__name__)
+                await msg.term()
+            else:
+                await msg.nak(delay=min(30, 2**deliveries))
+            log.warning("event handling failed", extra={"consumer": durable})
+
+    async def _heartbeat_loop(self) -> None:
+        instance = f"{socket.gethostname()}-{os.getpid()}"
+        while not self.stop.is_set():
+            try:
+                await asyncio.to_thread(beat, self.engine, "worker", instance, datetime.now(UTC))
+            except Exception:
+                log.exception("heartbeat failed")
+            await asyncio.sleep(HEARTBEAT_SECONDS)
 
     async def _run_exhausted(self, envelope: dict[str, object], error: str) -> None:
         payload = envelope.get("payload")
@@ -259,6 +325,7 @@ class Worker:
         js = self.nc.jetstream()
         await ensure_stream(js)
         await asyncio.gather(
+            self._heartbeat_loop(),
             self._relay_loop(js),
             self._consume(
                 js,

@@ -8,6 +8,7 @@ import uvicorn
 from recon_api.app import create_app
 from recon_api.config import ConfigurationError, load_settings
 from recon_api.logs import configure_logging
+from recon_store import telemetry
 
 EXIT_INVALID_CONFIG = 2
 
@@ -30,6 +31,7 @@ def main() -> int:
         return EXIT_INVALID_CONFIG
 
     configure_logging(settings.log_level)
+    telemetry.configure("recon-api")
     uvicorn.run(
         create_app(settings),
         host=settings.http_host,
@@ -38,6 +40,7 @@ def main() -> int:
         access_log=False,
         server_header=False,
     )
+    telemetry.shutdown()
     return 0
 
 

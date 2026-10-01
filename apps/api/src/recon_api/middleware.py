@@ -5,14 +5,26 @@ import re
 import time
 import uuid
 
+from opentelemetry import trace
+from opentelemetry.trace import SpanKind, StatusCode
 from starlette.datastructures import Headers, MutableHeaders
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
+
+from recon_api.metrics import UNMATCHED_ROUTE, HttpMetrics
+from recon_store import telemetry
 
 REQUEST_ID_HEADER = "X-Request-ID"
 _VALID_REQUEST_ID = re.compile(r"[A-Za-z0-9._-]{1,64}")
 _MAX_LOGGED_PATH = 256
 
 logger = logging.getLogger("recon_api.access")
+
+
+def route_template(scope: Scope) -> str:
+    """Matched route template (e.g. `/v1/runs/{run_id}`), never the raw path."""
+    route = scope.get("route")
+    path = getattr(route, "path", None)
+    return path if isinstance(path, str) else UNMATCHED_ROUTE
 
 
 def resolve_request_id(candidate: str | None) -> tuple[str, str]:
@@ -27,15 +39,17 @@ class RequestContextMiddleware:
     Query strings and bodies are never logged.
     """
 
-    def __init__(self, app: ASGIApp) -> None:
+    def __init__(self, app: ASGIApp, metrics: HttpMetrics | None = None) -> None:
         self.app = app
+        self.metrics = metrics
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http":
             await self.app(scope, receive, send)
             return
 
-        request_id, source = resolve_request_id(Headers(scope=scope).get(REQUEST_ID_HEADER))
+        headers = Headers(scope=scope)
+        request_id, source = resolve_request_id(headers.get(REQUEST_ID_HEADER))
         scope.setdefault("state", {})["request_id"] = request_id
         started = time.perf_counter()
         status_code = 500
@@ -47,9 +61,25 @@ class RequestContextMiddleware:
                 MutableHeaders(scope=message)[REQUEST_ID_HEADER] = request_id
             await send(message)
 
+        span = telemetry.tracer().start_span(
+            f"{scope['method']} request",
+            kind=SpanKind.SERVER,
+            context=telemetry.context_from(headers.get(telemetry.TRACEPARENT)),
+            attributes={"http.request.method": scope["method"], "recon.request_id": request_id},
+        )
         try:
-            await self.app(scope, receive, send_with_request_id)
+            with trace.use_span(span, end_on_exit=False):
+                await self.app(scope, receive, send_with_request_id)
         finally:
+            route = route_template(scope)
+            elapsed = time.perf_counter() - started
+            span.update_name(f"{scope['method']} {route}")
+            span.set_attributes({"http.route": route, "http.response.status_code": status_code})
+            if status_code >= 500:
+                span.set_status(StatusCode.ERROR)
+            span.end()
+            if self.metrics is not None:
+                self.metrics.observe(scope["method"], route, status_code, elapsed)
             logger.info(
                 "request",
                 extra={

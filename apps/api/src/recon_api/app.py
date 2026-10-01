@@ -1,17 +1,28 @@
 from __future__ import annotations
 
+import asyncio
+from datetime import UTC, datetime
 from typing import Literal
 
+import nats
 from fastapi import FastAPI, Request, Response
+from fastapi.responses import PlainTextResponse
+from nats.js.errors import NotFoundError as JsNotFoundError
 from pydantic import BaseModel
 from sqlalchemy import Engine
 
 from recon_api.auth import JwtVerifier
 from recon_api.config import Settings
+from recon_api.metrics import CONTENT_TYPE, DlqSource, HttpMetrics, SnapshotSource, render
 from recon_api.middleware import RequestContextMiddleware
 from recon_api.readiness import CheckStatus, ReadinessChecker
 from recon_api.routes_v1 import router as v1_router
 from recon_store.engine import runtime_engine, runtime_url
+from recon_store.ops import OpsSnapshot, snapshot
+
+# Owned by recon_worker (runner/dlq); the API only reads the triage backlog.
+DLQ_STREAM = "RECON_DLQ"
+DLQ_TRIAGE = "dlq-triage"
 
 
 class LiveResponse(BaseModel):
@@ -29,6 +40,43 @@ class ReadyResponse(BaseModel):
     status: Literal["ready", "not_ready"]
     request_id: str
     checks: ReadyChecks
+
+
+def _snapshot_source(engine: Engine) -> SnapshotSource:
+    async def source() -> OpsSnapshot:
+        return await asyncio.to_thread(snapshot, engine, datetime.now(UTC))
+
+    return source
+
+
+def _dlq_source(settings: Settings) -> DlqSource:
+    async def source() -> int:
+        async def _silence(_: Exception) -> None:
+            return None
+
+        nc = await nats.connect(
+            servers=[settings.nats_url],
+            user=settings.nats_user,
+            password=settings.nats_password.get_secret_value(),
+            name="recon-api-metrics",
+            connect_timeout=2,
+            allow_reconnect=False,
+            max_reconnect_attempts=0,
+            error_cb=_silence,
+        )
+        js = nc.jetstream(timeout=2)
+        try:
+            consumer = await js.consumer_info(DLQ_STREAM, DLQ_TRIAGE)
+            return int(consumer.num_pending) + int(consumer.num_ack_pending)
+        except JsNotFoundError:
+            try:  # no triage consumer yet: every stored dead letter is unhandled
+                return int((await js.stream_info(DLQ_STREAM)).state.messages)
+            except JsNotFoundError:
+                return 0  # the worker creates the stream on start
+        finally:
+            await nc.close()
+
+    return source
 
 
 def create_app(
@@ -67,11 +115,27 @@ def create_app(
         ),
         redoc_url=None,
     )
-    app.add_middleware(RequestContextMiddleware)
+    http_metrics = HttpMetrics()
+    app.add_middleware(RequestContextMiddleware, metrics=http_metrics)
     app.state.verifier = verifier
     app.state.engine = engine
+    app.state.http_metrics = http_metrics
     app.include_router(v1_router)
     readiness = checker
+    snapshot_source = _snapshot_source(engine) if engine is not None else None
+    dlq_source = _dlq_source(settings) if settings is not None else None
+
+    @app.get(
+        "/metrics",
+        response_class=PlainTextResponse,
+        tags=["observability"],
+        summary="Prometheus metrics (aggregated; no tenant or resource IDs)",
+    )
+    async def metrics() -> PlainTextResponse:
+        body = await render(http_metrics, snapshot_source, dlq_source)
+        return PlainTextResponse(
+            body, media_type=CONTENT_TYPE, headers={"Cache-Control": "no-store"}
+        )
 
     @app.get("/health/live", response_model=LiveResponse, tags=["health"])
     async def live(request: Request, response: Response) -> LiveResponse:

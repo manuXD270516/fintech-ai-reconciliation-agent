@@ -1488,6 +1488,27 @@
         ]
       }
     },
+    "/metrics": {
+      "get": {
+        "operationId": "metrics_metrics_get",
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Prometheus metrics (aggregated; no tenant or resource IDs)",
+        "tags": [
+          "observability"
+        ]
+      }
+    },
     "/v1/artifacts": {
       "post": {
         "operationId": "post_artifact_v1_artifacts_post",
