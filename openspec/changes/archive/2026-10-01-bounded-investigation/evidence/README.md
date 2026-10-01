@@ -47,3 +47,5 @@ Paso smoke `M5-T09` en [smoke.json](smoke.json), desde el host por HTTP: diferen
 ## T10
 
 Gate completo en [gate-all.log](gate-all.log): incluye el catálogo exacto de rutas (`test_scope.py`) y el test AST que mantiene a `recon_domain`, `recon_store` y `recon_worker` sin clientes de modelos.
+
+El archivo del change se verificó con el gate estático posterior a `openspec archive` ([gate-static-post-archive.log](gate-static-post-archive.log): todos PASS, incluida la regla de trazabilidad para changes archivados).

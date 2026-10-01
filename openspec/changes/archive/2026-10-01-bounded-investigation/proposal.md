@@ -24,7 +24,7 @@ Ninguna en specs vigentes.
 
 Paquetes `packages/agents` y `apps/investigator`, dependencias fijadas `httpx==0.28.1` (runtime del agente), migración `0005`, servicio Compose `investigator` y perfil opcional `ollama` (`ollama/ollama:0.35.0@sha256:2a6e…`), dos rutas `/v1` y un paso smoke `M5-T09`.
 
-Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md) (D03, D05); diseño: [docs/04-agents.md](../../../docs/04-agents.md).
+Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md) (D03, D05); diseño: [docs/04-agents.md](../../../../docs/04-agents.md).
 
 ## Non-goals
 

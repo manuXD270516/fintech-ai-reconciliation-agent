@@ -1,6 +1,6 @@
 ## Context
 
-Implementa la investigación de [docs/04-agents.md](../../../docs/04-agents.md) con D03 (proveedor scripted + Ollama local) y D05 (máquina de estados propia) de [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md), sobre el servidor MCP de M4.
+Implementa la investigación de [docs/04-agents.md](../../../../docs/04-agents.md) con D03 (proveedor scripted + Ollama local) y D05 (máquina de estados propia) de [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md), sobre el servidor MCP de M4.
 
 ## Goals / Non-Goals
 
