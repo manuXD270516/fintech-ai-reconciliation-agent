@@ -18,6 +18,13 @@ x-app-env: &app-env
   APP_LOG_LEVEL: ${APP_LOG_LEVEL:-INFO}
   APP_READY_TIMEOUT_SECONDS: ${APP_READY_TIMEOUT_SECONDS:-2.5}
 
+x-mcp-db-env: &mcp-db-env
+  MCP_DB_HOST: postgres
+  MCP_DB_PORT: "5432"
+  MCP_DB_NAME: ${POSTGRES_DB:?set POSTGRES_DB in .env (copy .env.example)}
+  MCP_DB_USER: ${MCP_DB_USER:?set MCP_DB_USER in .env (copy .env.example)}
+  MCP_DB_PASSWORD: ${MCP_DB_PASSWORD:?set MCP_DB_PASSWORD in .env (copy .env.example)}
+
 services:
   postgres:
     image: *postgres-image
@@ -48,6 +55,8 @@ services:
       PGPASSWORD: ${POSTGRES_ADMIN_PASSWORD:?set POSTGRES_ADMIN_PASSWORD in .env (copy .env.example)}
       APP_DB_USER: ${APP_DB_USER:?set APP_DB_USER in .env (copy .env.example)}
       APP_DB_PASSWORD: ${APP_DB_PASSWORD:?set APP_DB_PASSWORD in .env (copy .env.example)}
+      MCP_DB_USER: ${MCP_DB_USER:?set MCP_DB_USER in .env (copy .env.example)}
+      MCP_DB_PASSWORD: ${MCP_DB_PASSWORD:?set MCP_DB_PASSWORD in .env (copy .env.example)}
     volumes:
       - ./infra/postgres/init.sql:/init/init.sql:ro
     entrypoint: ["psql", "--no-psqlrc", "--quiet", "-f", "/init/init.sql"]
@@ -73,6 +82,7 @@ services:
       MIGRATE_DB_USER: ${POSTGRES_ADMIN_USER:?set POSTGRES_ADMIN_USER in .env (copy .env.example)}
       MIGRATE_DB_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?set POSTGRES_ADMIN_PASSWORD in .env (copy .env.example)}
       APP_DB_USER: ${APP_DB_USER:?set APP_DB_USER in .env (copy .env.example)}
+      MCP_DB_USER: ${MCP_DB_USER:?set MCP_DB_USER in .env (copy .env.example)}
     networks: [backend]
     read_only: true
     tmpfs: [/tmp]
@@ -84,7 +94,7 @@ services:
   # document version) with the restricted runtime role.
   knowledge-ingest:
     image: recon-m0-api:local
-    command: ["python", "-m", "recon_knowledge", "ingest", "--corpus", "/app/datasets/synthetic/knowledge-v1"]
+    command: ["python", "-m", "recon_knowledge", "ingest", "--corpus", "/app/datasets/synthetic/knowledge-v1", "--provider-status", "/app/datasets/synthetic/provider-status-v1/status.json"]
     environment:
       <<: *app-env
     depends_on:
@@ -177,7 +187,7 @@ services:
       target: smoke
     image: recon-m0-smoke:local
     environment:
-      <<: *app-env
+      <<: [*app-env, *mcp-db-env]
       SMOKE_PG_ADMIN_USER: ${POSTGRES_ADMIN_USER:?set POSTGRES_ADMIN_USER in .env (copy .env.example)}
       SMOKE_PG_ADMIN_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?set POSTGRES_ADMIN_PASSWORD in .env (copy .env.example)}
       SMOKE_NATS_NOJS_URL: nats://nats-nojs:4222

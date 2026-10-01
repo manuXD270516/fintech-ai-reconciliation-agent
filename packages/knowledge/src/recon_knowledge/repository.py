@@ -48,6 +48,8 @@ _AUTHORIZED = """
     AND d.effective_from <= :as_of
     AND (d.effective_to IS NULL OR d.effective_to > :as_of)
     AND d.published_at <= :as_of
+    AND (CAST(:doc_types AS varchar[]) IS NULL
+         OR d.document_type = ANY(CAST(:doc_types AS varchar[])))
 """
 _FROM = "recon.knowledge_chunks c JOIN recon.knowledge_documents d ON d.id = c.document_pk"
 
@@ -89,7 +91,7 @@ LIMIT :k
 _DETAILS = text(f"""
 SELECT c.chunk_id, d.document_id, d.version, c.section_slug, c.section_path, d.title,
        c.content, c.content_hash, c.start_line, c.end_line, d.effective_from,
-       c.flagged_instructions
+       c.flagged_instructions, d.document_type
 FROM {_FROM}
 WHERE {_AUTHORIZED} AND c.chunk_id = ANY(CAST(:ids AS varchar[]))
 """)  # noqa: S608
@@ -246,12 +248,15 @@ class KnowledgeRepository:
     # --- retrieval ------------------------------------------------------------------
 
     @staticmethod
-    def _params(ctx: SearchContext) -> dict[str, Any]:
+    def _params(
+        ctx: SearchContext, document_types: tuple[str, ...] | None = None
+    ) -> dict[str, Any]:
         return {
             "tenant": ctx.tenant_id,
             "roles": list(ctx.roles),
             "provider": ctx.provider_id,
             "as_of": ctx.as_of,
+            "doc_types": list(document_types) if document_types else None,
         }
 
     def search(
@@ -262,8 +267,9 @@ class KnowledgeRepository:
         *,
         top_k: int = TOP_K,
         threshold: float = ABSTAIN_COVERAGE,
+        document_types: tuple[str, ...] | None = None,
     ) -> SearchResult:
-        params = self._params(ctx)
+        params = self._params(ctx, document_types)
         rankings: list[tuple[str, list[str]]] = []
         with self.engine.connect() as conn:
             if mode in (Mode.LEXICAL, Mode.HYBRID):
@@ -303,6 +309,7 @@ class KnowledgeRepository:
                 rrf_score=round(score, 6),
                 branches=tuple(name for name, ids in rankings if chunk_id in ids),
                 flagged_instructions=details[chunk_id].flagged_instructions,
+                document_type=details[chunk_id].document_type,
             )
             for chunk_id, score in fused
             if chunk_id in details
@@ -341,4 +348,5 @@ class KnowledgeRepository:
             rrf_score=0.0,
             branches=(),
             flagged_instructions=row.flagged_instructions,
+            document_type=row.document_type,
         )

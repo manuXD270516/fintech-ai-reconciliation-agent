@@ -1,0 +1,14 @@
+{
+  "dataset_id": "provider-status",
+  "version": "v1",
+  "data_origin": "SYNTHETIC",
+  "note": "Fictitious providers; snapshots describe the provider platform, never an individual transaction.",
+  "snapshots": [
+    {"provider_id": "prov-alfa", "status": "operational", "valid_from": "2026-01-01T00:00:00+00:00", "valid_to": "2026-08-15T00:00:00+00:00", "observed_at": "2026-01-01T00:05:00+00:00", "details": {}},
+    {"provider_id": "prov-alfa", "status": "degraded", "valid_from": "2026-08-15T00:00:00+00:00", "valid_to": "2026-08-17T00:00:00+00:00", "observed_at": "2026-08-15T02:00:00+00:00", "details": {"incident": "INC-0815", "summary": "settlement files net of fees for gross-plan accounts"}},
+    {"provider_id": "prov-alfa", "status": "operational", "valid_from": "2026-08-17T00:00:00+00:00", "valid_to": null, "observed_at": "2026-08-17T00:10:00+00:00", "details": {}},
+    {"provider_id": "prov-beta", "status": "operational", "valid_from": "2026-01-01T00:00:00+00:00", "valid_to": "2026-09-02T00:00:00+00:00", "observed_at": "2026-01-01T00:05:00+00:00", "details": {}},
+    {"provider_id": "prov-beta", "status": "degraded", "valid_from": "2026-09-02T00:00:00+00:00", "valid_to": "2026-09-03T00:00:00+00:00", "observed_at": "2026-09-02T06:30:00+00:00", "details": {"incident": "INC-0902", "summary": "daily file delayed about six hours"}},
+    {"provider_id": "prov-beta", "status": "operational", "valid_from": "2026-09-03T00:00:00+00:00", "valid_to": null, "observed_at": "2026-09-03T00:10:00+00:00", "details": {}}
+  ]
+}
