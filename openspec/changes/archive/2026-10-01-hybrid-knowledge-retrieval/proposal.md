@@ -25,7 +25,7 @@ Ninguna. El engine runtime agrega `public` al `search_path` después de `recon` 
 
 Nuevo paquete `packages/knowledge` (`recon_knowledge`), tipo `Vector` en `recon_store`, migración `0003_knowledge`, job Compose `knowledge-ingest`, corpus en `datasets/synthetic/knowledge-v1` (copiado a la imagen runtime), pasos de smoke `M3-T04`/`M3-T07`. Sin dependencias nuevas de terceros.
 
-Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md) (D04: embeddings determinísticos locales; FTS + vector + RRF reales en pgvector).
+Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md) (D04: embeddings determinísticos locales; FTS + vector + RRF reales en pgvector).
 
 ## Non-goals
 

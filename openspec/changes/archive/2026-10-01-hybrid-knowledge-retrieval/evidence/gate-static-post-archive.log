@@ -1,0 +1,76 @@
+gate: removed AI credential variables from environment: ANTHROPIC_BASE_URL
+
+=== gate: lock ===
+Resolved 51 packages in 2ms
+
+=== gate: lint ===
+All checks passed!
+141 files already formatted
+
+=== gate: types ===
+Success: no issues found in 81 source files
+
+=== gate: test ===
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent
+configfile: pyproject.toml
+testpaths: tests/unit
+plugins: anyio-4.15.1, hypothesis-6.168.3, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 174 items
+
+tests\unit\test_auth.py ............                                     [  6%]
+tests\unit\test_ci_parity.py ....                                        [  9%]
+tests\unit\test_config.py ..........                                     [ 14%]
+tests\unit\test_doctor_and_policy.py ...........                         [ 21%]
+tests\unit\test_health_contract.py ...........                           [ 27%]
+tests\unit\test_ingestion_and_rules.py ..................                [ 37%]
+tests\unit\test_knowledge.py ...............                             [ 46%]
+tests\unit\test_money.py ..................                              [ 56%]
+tests\unit\test_observation.py ................                          [ 66%]
+tests\unit\test_reconciliation_catalog.py .............                  [ 73%]
+tests\unit\test_reconciliation_oracle.py ....                            [ 75%]
+tests\unit\test_request_logging.py ........                              [ 80%]
+tests\unit\test_revisions_batches_mappings.py ............               [ 87%]
+tests\unit\test_scope.py ....                                            [ 89%]
+tests\unit\test_synthetic_dataset.py ....                                [ 91%]
+tests\unit\test_traceability_gate.py ..............                      [100%]
+
+============================ 174 passed in 13.61s =============================
+
+=== gate: policy ===
+policy: OK
+
+=== gate: trace ===
+traceability: OK
+
+=== gate: openspec ===
+✓ change/bootstrap-mvp-foundation
+✓ spec/deterministic-reconciliation
+✓ spec/hybrid-knowledge-retrieval
+✓ spec/transaction-domain
+Totals: 4 passed, 0 failed (4 items)
+
+=== gate: negative ===
+[OK] control: openspec: step=openspec expected=pass exit=0 :: Totals: 4 passed, 0 failed (4 items)
+[OK] control: traceability: step=trace expected=pass exit=0 :: traceability: OK
+[OK] control: contract tests: step=contract expected=pass exit=0 :: 15 passed in 7.36s
+[OK] requirement RF-03 without scenarios: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] requirement RF-03 without SHALL/MUST: step=openspec expected=fail exit=1 :: ? change/bootstrap-mvp-foundation
+[OK] test-strategy.md removed: step=trace expected=fail exit=1 :: traceability: 1 problem(s)
+[OK] criterion references unknown requirement: step=trace expected=fail exit=1 :: traceability: 2 problem(s)
+[OK] readiness returns 200 when a dependency fails: step=contract expected=fail exit=1 :: 10 failed, 5 passed in 7.44s
+[OK] non-health route added: step=contract expected=fail exit=1 :: 3 failed, 12 passed in 7.38s
+[OK] real working tree unchanged
+negative gate: OK
+
+=== gate summary ===
+PASS  lock      exit=0 (0.0s)
+PASS  lint      exit=0 (1.1s)
+PASS  types     exit=0 (1.2s)
+PASS  test      exit=0 (16.2s)
+PASS  policy    exit=0 (0.5s)
+PASS  trace     exit=0 (0.1s)
+PASS  openspec  exit=0 (1.0s)
+PASS  negative  exit=0 (32.1s)

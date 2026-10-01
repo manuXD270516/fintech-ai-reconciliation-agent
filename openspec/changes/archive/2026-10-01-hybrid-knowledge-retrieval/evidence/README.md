@@ -57,3 +57,5 @@ Lectura honesta: el híbrido tiene el mejor MRR en dev, pero en holdout no super
 ## T09
 
 Gate completo en [gate-all.log](gate-all.log), incluido `check_traceability` y `openspec validate --all --strict`.
+
+El archivo del change se verificó con el gate estático posterior a `openspec archive` ([gate-static-post-archive.log](gate-static-post-archive.log): todos PASS, incluida la regla de trazabilidad para changes archivados).

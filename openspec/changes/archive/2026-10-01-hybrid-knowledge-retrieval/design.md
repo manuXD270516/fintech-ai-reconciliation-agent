@@ -1,6 +1,6 @@
 ## Context
 
-Implementa [docs/06-rag.md](../../../docs/06-rag.md) con la decisión D04 de [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md): embeddings determinísticos locales y FTS + vector + RRF reales en pgvector. Los casos RG01–RG04 de [docs/07-evals.md](../../../docs/07-evals.md) son parte de la suite.
+Implementa [docs/06-rag.md](../../../../docs/06-rag.md) con la decisión D04 de [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md): embeddings determinísticos locales y FTS + vector + RRF reales en pgvector. Los casos RG01–RG04 de [docs/07-evals.md](../../../../docs/07-evals.md) son parte de la suite.
 
 ## Goals / Non-Goals
 
