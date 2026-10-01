@@ -118,6 +118,17 @@ class CaseService:
         ).scalar_one()
         return bool(newest == run["run_number"])
 
+    def list_cases(
+        self, tenant_id: str, status: str | None = None, limit: int = 100
+    ) -> list[RowMapping]:
+        stmt = select(cases).where(cases.c.tenant_id == tenant_id)
+        if status is not None:
+            stmt = stmt.where(cases.c.status == status)
+        with self.engine.connect() as conn:
+            return list(
+                conn.execute(stmt.order_by(cases.c.updated_at.desc()).limit(limit)).mappings()
+            )
+
     def get(self, tenant_id: str, case_id: uuid.UUID) -> dict[str, Any]:
         with self.engine.connect() as conn:
             case = dict(self._case(conn, tenant_id, case_id))

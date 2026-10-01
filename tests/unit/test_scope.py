@@ -39,7 +39,12 @@ M6_CASES = {
     ("/v1/cases/{case_id}/close", "POST"),
     ("/v1/cases/{case_id}/audit", "GET"),
 }
-CATALOG = HEALTH | M2_RECONCILIATION | M5_INVESTIGATION | M6_CASES
+M8_READ_MODELS = {
+    ("/v1/batches", "GET"),
+    ("/v1/batches/{batch_id}/runs", "GET"),
+    ("/v1/cases", "GET"),
+}
+CATALOG = HEALTH | M2_RECONCILIATION | M5_INVESTIGATION | M6_CASES | M8_READ_MODELS
 DOCS = {"/openapi.json", "/docs", "/docs/oauth2-redirect"}
 FORBIDDEN_WORDS = ("payment", "refund", "transfer", "payout", "execute", "agent", "approve")
 

@@ -460,6 +460,12 @@ class Smoke:
             "report_file": f".smoke/eval-db-suites-{stamp}.json",
         }
 
+    def web_e2e(self) -> dict[str, Any]:
+        """M8: Playwright drives the built dashboard against this stack."""
+        from scripts.web_e2e import run_e2e  # noqa: PLC0415 - avoids a circular import
+
+        return run_e2e(self.env)
+
     def knowledge_ingest_idempotent(self) -> dict[str, Any]:
         outputs = []
         for _ in range(2):
@@ -703,6 +709,8 @@ def main() -> int:
                     smoke.approval_e2e)  # fmt: skip
         smoke.check("M7-T06", "DB evaluation suites via recon_evals (retrieval)",
                     smoke.eval_db_suites)  # fmt: skip
+        smoke.check("M8-T07", "dashboard E2E (Playwright): analyst -> supervisor -> auditor",
+                    smoke.web_e2e)  # fmt: skip
         smoke.check(
             "M3-T07", "retrieval evaluation (MEASURED, synthetic)", smoke.retrieval_evaluation
         )

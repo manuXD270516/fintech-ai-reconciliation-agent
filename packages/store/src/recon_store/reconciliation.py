@@ -393,6 +393,28 @@ class ReconciliationService:
         with self.engine.connect() as conn:
             return list(conn.execute(stmt.order_by(results.c.ordinal).limit(limit)).mappings())
 
+    def list_batches(self, tenant_id: str, limit: int = 100) -> list[RowMapping]:
+        with self.engine.connect() as conn:
+            return list(
+                conn.execute(
+                    select(batches)
+                    .where(batches.c.tenant_id == tenant_id)
+                    .order_by(batches.c.created_at.desc(), batches.c.batch_id)
+                    .limit(limit)
+                ).mappings()
+            )
+
+    def list_runs(self, tenant_id: str, batch_id: str) -> list[RowMapping]:
+        self.get_batch(tenant_id, batch_id)
+        with self.engine.connect() as conn:
+            return list(
+                conn.execute(
+                    select(runs)
+                    .where(runs.c.tenant_id == tenant_id, runs.c.batch_id == batch_id)
+                    .order_by(runs.c.run_number.desc())
+                ).mappings()
+            )
+
     def status_counts(self, run_id: uuid.UUID) -> dict[str, int]:
         with self.engine.connect() as conn:
             rows = conn.execute(
