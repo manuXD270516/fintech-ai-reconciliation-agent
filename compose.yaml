@@ -80,6 +80,23 @@ services:
     security_opt: ["no-new-privileges:true"]
     restart: "no"
 
+  # One-shot M3 job: publishes the synthetic knowledge corpus (idempotent per
+  # document version) with the restricted runtime role.
+  knowledge-ingest:
+    image: recon-m0-api:local
+    command: ["python", "-m", "recon_knowledge", "ingest", "--corpus", "/app/datasets/synthetic/knowledge-v1"]
+    environment:
+      <<: *app-env
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    networks: [backend]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: "no"
+
   nats:
     image: *nats-image
     command: ["-c", "/etc/nats/nats.conf"]

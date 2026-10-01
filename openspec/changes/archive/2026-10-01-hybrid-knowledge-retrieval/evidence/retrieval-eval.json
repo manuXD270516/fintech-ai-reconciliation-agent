@@ -1,0 +1,551 @@
+{
+  "commit": "see enclosing smoke report",
+  "config": {
+    "branch_k": 20,
+    "configured_abstain_coverage": 0.6,
+    "embedding": {
+      "dimensions": 256,
+      "model": "hashing-ngram",
+      "normalization": "l2",
+      "revision": "v1",
+      "semantic": false,
+      "tokenizer": "ascii-folded lowercase [a-z0-9]+ words + char trigrams"
+    },
+    "index_version": "chunking/v1+hashing-ngram/v1",
+    "rrf_k": 60,
+    "top_k": 5,
+    "tuned_on_dev": {
+      "hybrid": 0.6,
+      "lexical": 0.6,
+      "vector": 0.6
+    },
+    "vector_search": "exact cosine scan (no ANN index)"
+  },
+  "corpus": {
+    "documents": 17,
+    "queries": 38
+  },
+  "generated_utc": "2026-10-01T06:06:47+00:00",
+  "host": "Linux x86_64",
+  "kind": "MEASURED",
+  "results": {
+    "hybrid": {
+      "all": {
+        "acl_violations": 0,
+        "answerable_hit_rate": 0.9667,
+        "answerable_hit_rate_ci95": [
+          0.8333,
+          0.9941
+        ],
+        "false_abstentions": 1,
+        "latency_p50_ms": 2.67,
+        "latency_p95_ms": 3.13,
+        "mrr": 0.95,
+        "n_answerable": 30,
+        "n_queries": 38,
+        "n_unanswerable": 8,
+        "no_answer_abstention": 0.75,
+        "no_answer_abstention_ci95": [
+          0.4093,
+          0.9285
+        ],
+        "precision_at_5_macro": 0.2533,
+        "recall_at_5_macro": 0.9167
+      },
+      "dev": {
+        "acl_violations": 0,
+        "answerable_hit_rate": 1.0,
+        "answerable_hit_rate_ci95": [
+          0.8157,
+          1.0
+        ],
+        "false_abstentions": 0,
+        "latency_p50_ms": 2.66,
+        "latency_p95_ms": 3.09,
+        "mrr": 0.9706,
+        "n_answerable": 17,
+        "n_queries": 21,
+        "n_unanswerable": 4,
+        "no_answer_abstention": 1.0,
+        "no_answer_abstention_ci95": [
+          0.5101,
+          1.0
+        ],
+        "precision_at_5_macro": 0.2706,
+        "recall_at_5_macro": 0.9118
+      },
+      "dev_objective_by_threshold": {
+        "0.0": 0.4559,
+        "0.1": 0.4559,
+        "0.2": 0.5809,
+        "0.3": 0.8309,
+        "0.4": 0.8309,
+        "0.5": 0.8309,
+        "0.6": 0.9559,
+        "0.7": 0.89705,
+        "0.8": 0.7794,
+        "0.9": 0.66175
+      },
+      "failures_all": [
+        {
+          "abstained": false,
+          "case": null,
+          "expected": [
+            "alfa-settlement-guide@1#gross-and-net-settlement",
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision"
+          ],
+          "query_id": "q06",
+          "returned": [
+            "alfa-settlement-guide@1#gross-and-net-settlement",
+            "alfa-settlement-guide@1#report-timing",
+            "alfa-error-codes@2#e17-captura-duplicada-detectada",
+            "alfa-settlement-guide@1#currencies",
+            "incident-inc-0815@1#resumen"
+          ]
+        },
+        {
+          "abstained": false,
+          "case": null,
+          "expected": [
+            "beta-error-codes@1#b12-pago-en-espera-de-confirmacion",
+            "beta-settlement-guide@1#estados-del-archivo-diario"
+          ],
+          "query_id": "q09",
+          "returned": [
+            "beta-error-codes@1#b12-pago-en-espera-de-confirmacion",
+            "beta-error-codes@1#b31-estado-desconocido-en-reporte",
+            "beta-error-codes@1#intro",
+            "incident-inc-0902@1#resumen",
+            "beta-settlement-guide@1#intro"
+          ]
+        },
+        {
+          "abstained": true,
+          "case": null,
+          "expected": [
+            "runbook-missing-transaction@1#espera-frente-a-ausencia",
+            "runbook-missing-transaction@1#faltante-confirmado"
+          ],
+          "query_id": "q13",
+          "returned": []
+        },
+        {
+          "abstained": false,
+          "case": "temporal",
+          "expected": [
+            "alfa-settlement-guide@1#gross-and-net-settlement",
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision"
+          ],
+          "query_id": "q23",
+          "returned": [
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision",
+            "alfa-error-codes@2#intro",
+            "runbook-amount-mismatch@1#pasos-de-investigacion",
+            "alfa-error-codes@2#e05-autorizacion-expirada",
+            "alfa-error-codes@2#e17-captura-duplicada-detectada"
+          ]
+        },
+        {
+          "abstained": false,
+          "case": "RG03",
+          "expected": [],
+          "query_id": "q37",
+          "returned": [
+            "incident-inc-0815@1#resolucion",
+            "alfa-error-codes@2#intro",
+            "incident-inc-0815@1#resumen",
+            "runbook-amount-mismatch@1#pasos-de-investigacion",
+            "alfa-status-faq@1#nota-del-portal"
+          ]
+        },
+        {
+          "abstained": false,
+          "case": "revoked",
+          "expected": [],
+          "query_id": "q38",
+          "returned": [
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision",
+            "incident-inc-0815@1#resolucion",
+            "alfa-error-codes@2#intro",
+            "incident-inc-0815@1#resumen",
+            "runbook-amount-mismatch@1#pasos-de-investigacion"
+          ]
+        }
+      ],
+      "holdout": {
+        "acl_violations": 0,
+        "answerable_hit_rate": 0.9231,
+        "answerable_hit_rate_ci95": [
+          0.6669,
+          0.9863
+        ],
+        "false_abstentions": 1,
+        "latency_p50_ms": 2.67,
+        "latency_p95_ms": 3.5,
+        "mrr": 0.9231,
+        "n_answerable": 13,
+        "n_queries": 17,
+        "n_unanswerable": 4,
+        "no_answer_abstention": 0.5,
+        "no_answer_abstention_ci95": [
+          0.15,
+          0.85
+        ],
+        "precision_at_5_macro": 0.2308,
+        "recall_at_5_macro": 0.9231
+      }
+    },
+    "lexical": {
+      "all": {
+        "acl_violations": 0,
+        "answerable_hit_rate": 0.9667,
+        "answerable_hit_rate_ci95": [
+          0.8333,
+          0.9941
+        ],
+        "false_abstentions": 1,
+        "latency_p50_ms": 2.69,
+        "latency_p95_ms": 5.13,
+        "mrr": 0.925,
+        "n_answerable": 30,
+        "n_queries": 38,
+        "n_unanswerable": 8,
+        "no_answer_abstention": 0.75,
+        "no_answer_abstention_ci95": [
+          0.4093,
+          0.9285
+        ],
+        "precision_at_5_macro": 0.2483,
+        "recall_at_5_macro": 0.9
+      },
+      "dev": {
+        "acl_violations": 0,
+        "answerable_hit_rate": 1.0,
+        "answerable_hit_rate_ci95": [
+          0.8157,
+          1.0
+        ],
+        "false_abstentions": 0,
+        "latency_p50_ms": 2.72,
+        "latency_p95_ms": 3.95,
+        "mrr": 0.9265,
+        "n_answerable": 17,
+        "n_queries": 21,
+        "n_unanswerable": 4,
+        "no_answer_abstention": 1.0,
+        "no_answer_abstention_ci95": [
+          0.5101,
+          1.0
+        ],
+        "precision_at_5_macro": 0.2588,
+        "recall_at_5_macro": 0.8824
+      },
+      "dev_objective_by_threshold": {
+        "0.0": 0.4412,
+        "0.1": 0.4412,
+        "0.2": 0.5662,
+        "0.3": 0.8162,
+        "0.4": 0.8162,
+        "0.5": 0.8162,
+        "0.6": 0.9412,
+        "0.7": 0.88235,
+        "0.8": 0.7941,
+        "0.9": 0.64705
+      },
+      "failures_all": [
+        {
+          "abstained": false,
+          "case": null,
+          "expected": [
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision",
+            "alfa-settlement-guide@1#gross-and-net-settlement"
+          ],
+          "query_id": "q05",
+          "returned": [
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision",
+            "incident-inc-0815@1#resumen",
+            "incident-inc-0815@1#resolucion",
+            "runbook-amount-mismatch@1#pasos-de-investigacion",
+            "alfa-settlement-guide@1#currencies"
+          ]
+        },
+        {
+          "abstained": false,
+          "case": null,
+          "expected": [
+            "alfa-settlement-guide@1#gross-and-net-settlement",
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision"
+          ],
+          "query_id": "q06",
+          "returned": [
+            "alfa-settlement-guide@1#gross-and-net-settlement",
+            "alfa-error-codes@2#e17-captura-duplicada-detectada",
+            "incident-inc-0815@1#resumen",
+            "alfa-settlement-guide@1#report-timing",
+            "incident-inc-0815@1#resolucion"
+          ]
+        },
+        {
+          "abstained": false,
+          "case": null,
+          "expected": [
+            "beta-error-codes@1#b12-pago-en-espera-de-confirmacion",
+            "beta-settlement-guide@1#estados-del-archivo-diario"
+          ],
+          "query_id": "q09",
+          "returned": [
+            "beta-error-codes@1#b12-pago-en-espera-de-confirmacion",
+            "incident-inc-0902@1#resumen",
+            "beta-settlement-guide@1#intro",
+            "beta-error-codes@1#intro",
+            "beta-error-codes@1#b31-estado-desconocido-en-reporte"
+          ]
+        },
+        {
+          "abstained": true,
+          "case": null,
+          "expected": [
+            "runbook-missing-transaction@1#espera-frente-a-ausencia",
+            "runbook-missing-transaction@1#faltante-confirmado"
+          ],
+          "query_id": "q13",
+          "returned": []
+        },
+        {
+          "abstained": false,
+          "case": "temporal",
+          "expected": [
+            "alfa-settlement-guide@1#gross-and-net-settlement",
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision"
+          ],
+          "query_id": "q23",
+          "returned": [
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision",
+            "alfa-settlement-guide@1#currencies",
+            "alfa-error-codes@2#e33-moneda-no-soportada-para-la-cuenta",
+            "alfa-error-codes@2#e17-captura-duplicada-detectada",
+            "alfa-error-codes@2#intro"
+          ]
+        },
+        {
+          "abstained": false,
+          "case": "RG03",
+          "expected": [],
+          "query_id": "q37",
+          "returned": [
+            "incident-inc-0815@1#resolucion",
+            "incident-inc-0815@1#resumen",
+            "alfa-settlement-guide@1#currencies",
+            "alfa-error-codes@2#e33-moneda-no-soportada-para-la-cuenta",
+            "alfa-status-faq@1#nota-del-portal"
+          ]
+        },
+        {
+          "abstained": false,
+          "case": "revoked",
+          "expected": [],
+          "query_id": "q38",
+          "returned": [
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision",
+            "incident-inc-0815@1#resolucion",
+            "incident-inc-0815@1#resumen",
+            "alfa-settlement-guide@1#currencies",
+            "alfa-error-codes@2#e33-moneda-no-soportada-para-la-cuenta"
+          ]
+        }
+      ],
+      "holdout": {
+        "acl_violations": 0,
+        "answerable_hit_rate": 0.9231,
+        "answerable_hit_rate_ci95": [
+          0.6669,
+          0.9863
+        ],
+        "false_abstentions": 1,
+        "latency_p50_ms": 2.62,
+        "latency_p95_ms": 5.13,
+        "mrr": 0.9231,
+        "n_answerable": 13,
+        "n_queries": 17,
+        "n_unanswerable": 4,
+        "no_answer_abstention": 0.5,
+        "no_answer_abstention_ci95": [
+          0.15,
+          0.85
+        ],
+        "precision_at_5_macro": 0.2346,
+        "recall_at_5_macro": 0.9231
+      }
+    },
+    "vector": {
+      "all": {
+        "acl_violations": 0,
+        "answerable_hit_rate": 0.9333,
+        "answerable_hit_rate_ci95": [
+          0.7868,
+          0.9815
+        ],
+        "false_abstentions": 1,
+        "latency_p50_ms": 1.54,
+        "latency_p95_ms": 2.26,
+        "mrr": 0.8111,
+        "n_answerable": 30,
+        "n_queries": 38,
+        "n_unanswerable": 8,
+        "no_answer_abstention": 0.875,
+        "no_answer_abstention_ci95": [
+          0.5291,
+          0.9776
+        ],
+        "precision_at_5_macro": 0.2467,
+        "recall_at_5_macro": 0.8833
+      },
+      "dev": {
+        "acl_violations": 0,
+        "answerable_hit_rate": 0.9412,
+        "answerable_hit_rate_ci95": [
+          0.7302,
+          0.9895
+        ],
+        "false_abstentions": 0,
+        "latency_p50_ms": 1.5,
+        "latency_p95_ms": 1.81,
+        "mrr": 0.7941,
+        "n_answerable": 17,
+        "n_queries": 21,
+        "n_unanswerable": 4,
+        "no_answer_abstention": 1.0,
+        "no_answer_abstention_ci95": [
+          0.5101,
+          1.0
+        ],
+        "precision_at_5_macro": 0.2588,
+        "recall_at_5_macro": 0.8529
+      },
+      "dev_objective_by_threshold": {
+        "0.0": 0.42645,
+        "0.1": 0.42645,
+        "0.2": 0.55145,
+        "0.3": 0.80145,
+        "0.4": 0.80145,
+        "0.5": 0.80145,
+        "0.6": 0.92645,
+        "0.7": 0.86765,
+        "0.8": 0.7794,
+        "0.9": 0.66175
+      },
+      "failures_all": [
+        {
+          "abstained": false,
+          "case": null,
+          "expected": [
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision",
+            "alfa-settlement-guide@1#gross-and-net-settlement"
+          ],
+          "query_id": "q05",
+          "returned": [
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision",
+            "incident-inc-0815@1#resolucion",
+            "runbook-amount-mismatch@1#pasos-de-investigacion",
+            "alfa-error-codes@2#intro",
+            "incident-inc-0815@1#resumen"
+          ]
+        },
+        {
+          "abstained": false,
+          "case": null,
+          "expected": [
+            "alfa-settlement-guide@1#gross-and-net-settlement",
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision"
+          ],
+          "query_id": "q06",
+          "returned": [
+            "alfa-settlement-guide@1#gross-and-net-settlement",
+            "alfa-settlement-guide@1#report-timing",
+            "alfa-settlement-guide@1#intro",
+            "alfa-settlement-guide@1#currencies",
+            "alfa-error-codes@2#intro"
+          ]
+        },
+        {
+          "abstained": true,
+          "case": null,
+          "expected": [
+            "runbook-missing-transaction@1#espera-frente-a-ausencia",
+            "runbook-missing-transaction@1#faltante-confirmado"
+          ],
+          "query_id": "q13",
+          "returned": []
+        },
+        {
+          "abstained": false,
+          "case": null,
+          "expected": [
+            "incident-inc-0815@1#resumen"
+          ],
+          "query_id": "q22",
+          "returned": [
+            "alfa-error-codes@2#intro",
+            "incident-inc-0815@1#resolucion",
+            "runbook-amount-mismatch@1#pasos-de-investigacion",
+            "alfa-error-codes@2#e05-autorizacion-expirada",
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision"
+          ]
+        },
+        {
+          "abstained": false,
+          "case": "temporal",
+          "expected": [
+            "alfa-settlement-guide@1#gross-and-net-settlement",
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision"
+          ],
+          "query_id": "q23",
+          "returned": [
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision",
+            "alfa-error-codes@2#intro",
+            "alfa-error-codes@2#e05-autorizacion-expirada",
+            "runbook-amount-mismatch@1#pasos-de-investigacion",
+            "alfa-status-faq@1#nota-del-portal"
+          ]
+        },
+        {
+          "abstained": false,
+          "case": "revoked",
+          "expected": [],
+          "query_id": "q38",
+          "returned": [
+            "alfa-error-codes@2#intro",
+            "alfa-error-codes@2#e21-liquidacion-neta-de-comision",
+            "incident-inc-0815@1#resolucion",
+            "runbook-amount-mismatch@1#pasos-de-investigacion",
+            "alfa-error-codes@2#e05-autorizacion-expirada"
+          ]
+        }
+      ],
+      "holdout": {
+        "acl_violations": 0,
+        "answerable_hit_rate": 0.9231,
+        "answerable_hit_rate_ci95": [
+          0.6669,
+          0.9863
+        ],
+        "false_abstentions": 1,
+        "latency_p50_ms": 1.58,
+        "latency_p95_ms": 2.3,
+        "mrr": 0.8333,
+        "n_answerable": 13,
+        "n_queries": 17,
+        "n_unanswerable": 4,
+        "no_answer_abstention": 0.75,
+        "no_answer_abstention_ci95": [
+          0.3006,
+          0.9544
+        ],
+        "precision_at_5_macro": 0.2308,
+        "recall_at_5_macro": 0.9231
+      }
+    }
+  },
+  "scope": "synthetic corpus knowledge-v1; hashing embeddings are not semantic",
+  "split_leakage_families": []
+}

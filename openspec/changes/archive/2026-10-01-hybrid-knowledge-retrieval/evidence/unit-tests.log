@@ -1,0 +1,26 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent\.venv\Scripts\python.exe
+hypothesis profile 'default'
+rootdir: D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent
+configfile: pyproject.toml
+plugins: anyio-4.15.1, hypothesis-6.168.3, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 15 items
+
+tests/unit/test_knowledge.py::test_corpus_is_valid_versioned_and_manifested PASSED [  6%]
+tests/unit/test_knowledge.py::test_queries_point_to_existing_evidence_units_without_split_leakage PASSED [ 13%]
+tests/unit/test_knowledge.py::test_invalid_metadata_is_rejected[mutation0-acl] PASSED [ 20%]
+tests/unit/test_knowledge.py::test_invalid_metadata_is_rejected[mutation1-review_status] PASSED [ 26%]
+tests/unit/test_knowledge.py::test_invalid_metadata_is_rejected[mutation2-language] PASSED [ 33%]
+tests/unit/test_knowledge.py::test_invalid_metadata_is_rejected[mutation3-document_type] PASSED [ 40%]
+tests/unit/test_knowledge.py::test_invalid_metadata_is_rejected[mutation4-missing metadata] PASSED [ 46%]
+tests/unit/test_knowledge.py::test_invalid_metadata_is_rejected[mutation5-effective_to] PASSED [ 53%]
+tests/unit/test_knowledge.py::test_card_like_numbers_and_keys_are_rejected PASSED [ 60%]
+tests/unit/test_knowledge.py::test_chunks_follow_sections_codes_and_flags PASSED [ 66%]
+tests/unit/test_knowledge.py::test_long_sections_split_with_overlap_and_keep_lists PASSED [ 73%]
+tests/unit/test_knowledge.py::test_hashing_embeddings_are_deterministic_normalized_and_lexical PASSED [ 80%]
+tests/unit/test_knowledge.py::test_rrf_fuses_ranks_not_scores PASSED     [ 86%]
+tests/unit/test_knowledge.py::test_abstention_rules PASSED               [ 93%]
+tests/unit/test_knowledge.py::test_authorization_oracle_and_wilson PASSED [100%]
+
+============================= 15 passed in 0.20s ==============================
