@@ -30,6 +30,12 @@ SECRET_PATTERNS = {
     "GitHub token": re.compile(r"\bgh[pousr]_[A-Za-z0-9]{36,}\b"),
     "Slack token": re.compile(r"\bxox[abprs]-[A-Za-z0-9-]{10,}\b"),
 }
+# M10: personal data in committed evidence (current tree only; see docs/demo/report.md).
+TREE_ONLY_PATTERNS = {
+    "local home path": re.compile(
+        r"(?i)\b[a-z]:[\\/]+users[\\/]+(?!<user>|runneradmin\b)[^\\/\s<>\"']+|/home/(?!runner\b)[a-z]"
+    ),
+}
 _PAN_CANDIDATE = re.compile(r"(?<![\w.-])\d(?:[ -]?\d){12,18}(?![\w.-])")
 _SKIP_SCAN = {"uv.lock", "package-lock.json"}
 
@@ -99,7 +105,7 @@ def scan_secrets(root: Path, files: list[Path]) -> list[str]:
         except (UnicodeDecodeError, OSError):
             continue
         rel = path.relative_to(root).as_posix()
-        for label, pattern in SECRET_PATTERNS.items():
+        for label, pattern in (SECRET_PATTERNS | TREE_ONLY_PATTERNS).items():
             if pattern.search(text):
                 errors.append(f"{rel}: possible {label}")
         for match in _PAN_CANDIDATE.finditer(text):

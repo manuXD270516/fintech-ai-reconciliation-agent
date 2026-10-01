@@ -32,6 +32,9 @@ volumes/
 # Test evidence scratch (sanitized evidence is committed under docs/evidence)
 .smoke/
 
+# Demo sessions (dev tokens per demo tenant; scripts/demo.py)
+.demo/
+
 # Local backups (scripts/ops.py backup); synthetic data, still never committed
 .backups/
 

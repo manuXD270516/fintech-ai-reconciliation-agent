@@ -1,8 +1,8 @@
 schema: spec-driven
 
 context: |
-  Project: fintech-ai-reconciliation-agent. M0-M9 implemented and verified locally (one OpenSpec
-  change per milestone; M2-M9 archived); next: M10 public-demo preparation without publishing.
+  Project: fintech-ai-reconciliation-agent. M0-M10 implemented and verified locally (one OpenSpec
+  change per milestone; M1-M10 archived, M0 pending remote CI). Nothing published or deployed.
   FastAPI modular monolith, PostgreSQL + pgvector, NATS JetStream, read-only MCP.
   Synthetic data only. Deterministic reconciliation first; AI only for ambiguity.
   Operational decisions require human approval; no financial execution in M0-M10.

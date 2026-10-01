@@ -41,6 +41,9 @@ class Settings(BaseSettings):
     auth_issuer: str = Field(default="recon-dev-idp", min_length=1)
     auth_audience: str = Field(default="recon-api", min_length=1)
 
+    # M10 kill switch: false refuses new investigations; the deterministic path keeps working.
+    ai_enabled: bool = True
+
     @field_validator("nats_url")
     @classmethod
     def _nats_url_without_credentials(cls, value: str) -> str:

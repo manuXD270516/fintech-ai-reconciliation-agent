@@ -134,6 +134,7 @@ describe("errors and session", () => {
     expect(explain(409, { code: "recommendation_obsolete" }).message).toMatch(/run más nuevo/);
     expect(explain(409, { code: "version_conflict" }).message).toMatch(/recargá/);
     expect(explain(500, "Traceback ... SELECT").message).toBe("Error 500.");
+    expect(explain(503, { code: "ai_disabled" }).message).toMatch(/kill switch/);
   });
 
   it("decodes the dev token only for display", () => {

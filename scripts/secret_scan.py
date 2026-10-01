@@ -30,7 +30,7 @@ PATTERNS: dict[str, re.Pattern[str]] = SECRET_PATTERNS | {
     "JSON Web Token": re.compile(r"\beyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]+"),
     "credential in URL": re.compile(r"\b[a-z][a-z0-9+.-]*://[^/\s:@]+:[^/\s:@'\"{}$]{6,}@"),
 }
-FORBIDDEN_PATHS = re.compile(r"^(\.env(?!\.example$)(\..*)?|\.dev-keys/.*|\.backups/.*)$")
+FORBIDDEN_PATHS = re.compile(r"^(\.env(?!\.example$)(\..*)?|\.dev-keys/.*|\.backups/.*|\.demo/.*)$")
 SKIP_FILES = {"uv.lock", "package-lock.json"}
 
 

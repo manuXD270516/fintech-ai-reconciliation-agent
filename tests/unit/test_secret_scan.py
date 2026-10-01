@@ -4,6 +4,7 @@ runtime so this file never contains a matching literal)."""
 from __future__ import annotations
 
 import pytest
+from scripts.check_scope import TREE_ONLY_PATTERNS
 from scripts.secret_scan import FORBIDDEN_PATHS, PATTERNS
 
 A = "A" * 24
@@ -31,6 +32,17 @@ def test_placeholders_and_env_interpolation_are_not_findings() -> None:
         "Authorization: Bearer <JWT>",
     ]
     assert not [b for b in benign for p in PATTERNS.values() if p.search(b)]
+
+
+@pytest.mark.parametrize(
+    ("text", "found"),
+    [("C:" + "\\Users\\" + "Jane Doe\\AppData", True),
+     ("file:///C:" + "/Users/" + "Jane%20Doe/x", True),
+     ("/ho" + "me/jane/repo", True), ("C:\\Users\\<user>\\AppData", False),
+     ("/home/runner/work", False), ("D:\\projects\\repo", False)],
+)  # fmt: skip
+def test_local_home_paths_are_flagged_in_the_tree(text: str, found: bool) -> None:
+    assert bool(TREE_ONLY_PATTERNS["local home path"].search(text)) is found
 
 
 @pytest.mark.parametrize(

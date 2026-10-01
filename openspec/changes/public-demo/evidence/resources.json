@@ -1,0 +1,43 @@
+{
+  "containers": [
+    [
+      "recon-m0-api-1",
+      "70.12MiB / 15.34GiB",
+      "0.21%"
+    ],
+    [
+      "recon-m0-investigator-1",
+      "76.43MiB / 15.34GiB",
+      "0.08%"
+    ],
+    [
+      "recon-m0-worker-1",
+      "46.66MiB / 15.34GiB",
+      "0.60%"
+    ],
+    [
+      "recon-m0-postgres-1",
+      "44.11MiB / 15.34GiB",
+      "0.20%"
+    ],
+    [
+      "recon-m0-nats-1",
+      "29.82MiB / 15.34GiB",
+      "11.43%"
+    ]
+  ],
+  "images": [
+    [
+      "recon-m0-api:local",
+      "330MB"
+    ],
+    [
+      "nats:2.14.7-alpine3.22",
+      "41.2MB"
+    ],
+    [
+      "pgvector/pgvector:0.8.6-pg17-trixie",
+      "647MB"
+    ]
+  ]
+}
