@@ -19,16 +19,20 @@ COPY --from=uv /uv /usr/local/bin/uv
 COPY pyproject.toml uv.lock .python-version ./
 COPY apps/api/pyproject.toml apps/api/pyproject.toml
 COPY apps/worker/pyproject.toml apps/worker/pyproject.toml
+COPY apps/investigator/pyproject.toml apps/investigator/pyproject.toml
 COPY packages/domain/pyproject.toml packages/domain/pyproject.toml
 COPY packages/knowledge/pyproject.toml packages/knowledge/pyproject.toml
 COPY apps/mcp-server/pyproject.toml apps/mcp-server/pyproject.toml
+COPY packages/agents/pyproject.toml packages/agents/pyproject.toml
 COPY packages/store/pyproject.toml packages/store/pyproject.toml
 RUN uv sync --locked --no-dev --no-install-workspace
 COPY apps/api/src apps/api/src
 COPY apps/worker/src apps/worker/src
+COPY apps/investigator/src apps/investigator/src
 COPY packages/domain/src packages/domain/src
 COPY packages/knowledge/src packages/knowledge/src
 COPY apps/mcp-server/src apps/mcp-server/src
+COPY packages/agents/src packages/agents/src
 COPY packages/store/src packages/store/src
 RUN uv sync --locked --no-dev --no-editable
 

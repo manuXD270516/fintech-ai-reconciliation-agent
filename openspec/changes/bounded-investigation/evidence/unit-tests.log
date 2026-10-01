@@ -1,0 +1,31 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent\.venv\Scripts\python.exe
+hypothesis profile 'default'
+rootdir: D:\projects\repos-ia-exp\fintech-ai-reconciliation-agent
+configfile: pyproject.toml
+plugins: anyio-4.15.1, hypothesis-6.168.3, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 20 items
+
+tests/unit/test_agents.py::test_routing_requires_an_explicit_reason[changes0-False-exact_match] PASSED [  5%]
+tests/unit/test_agents.py::test_routing_requires_an_explicit_reason[changes1-False-waiting_source] PASSED [ 10%]
+tests/unit/test_agents.py::test_routing_requires_an_explicit_reason[changes2-False-deterministic_missing] PASSED [ 15%]
+tests/unit/test_agents.py::test_routing_requires_an_explicit_reason[changes3-True-ambiguous_candidates] PASSED [ 20%]
+tests/unit/test_agents.py::test_routing_requires_an_explicit_reason[changes4-True-unknown_status] PASSED [ 25%]
+tests/unit/test_agents.py::test_routing_requires_an_explicit_reason[changes5-True-duplicate_context] PASSED [ 30%]
+tests/unit/test_agents.py::test_routing_requires_an_explicit_reason[changes6-True-needs_context] PASSED [ 35%]
+tests/unit/test_agents.py::test_exact_match_costs_zero_model_and_tool_calls PASSED [ 40%]
+tests/unit/test_agents.py::test_faithful_investigation_separates_facts_inferences_and_hypotheses PASSED [ 45%]
+tests/unit/test_agents.py::test_ag02_injected_instructions_never_reach_tools_or_actions PASSED [ 50%]
+tests/unit/test_agents.py::test_hallucinated_facts_are_rejected_and_force_abstention PASSED [ 55%]
+tests/unit/test_agents.py::test_ag03_tool_timeouts_become_gaps_and_escalation PASSED [ 60%]
+tests/unit/test_agents.py::test_endless_planning_is_capped_by_the_tool_budget PASSED [ 65%]
+tests/unit/test_agents.py::test_malformed_model_output_never_becomes_a_draft_claim PASSED [ 70%]
+tests/unit/test_agents.py::test_generative_budget_exhaustion_escalates PASSED [ 75%]
+tests/unit/test_agents.py::test_agent_catalog_mirrors_the_server_catalog PASSED [ 80%]
+tests/unit/test_agents.py::test_context_marks_documents_untrusted_and_respects_budget PASSED [ 85%]
+tests/unit/test_agents.py::test_mcp_server_environment_drops_other_credentials PASSED [ 90%]
+tests/unit/test_agents.py::test_ollama_provider_speaks_http_and_reports_usage PASSED [ 95%]
+tests/unit/test_agents.py::test_provider_selection_defaults_to_scripted PASSED [100%]
+
+============================= 20 passed in 1.41s ==============================

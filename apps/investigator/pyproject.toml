@@ -1,0 +1,25 @@
+[project]
+name = "recon-investigator"
+version = "0.1.0"
+description = "Investigation worker: consumes InvestigationRequested and runs the bounded agent over MCP"
+requires-python = "==3.12.*"
+dependencies = [
+    "recon-agents",
+    "recon-api",
+    "recon-mcp",
+    "recon-store",
+    "nats-py==2.16.0",
+]
+
+[tool.uv.sources]
+recon-agents = { workspace = true }
+recon-api = { workspace = true }
+recon-mcp = { workspace = true }
+recon-store = { workspace = true }
+
+[build-system]
+requires = ["hatchling==1.32.4"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/recon_investigator"]

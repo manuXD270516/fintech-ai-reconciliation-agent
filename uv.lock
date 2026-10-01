@@ -5,8 +5,10 @@ requires-python = "==3.12.*"
 [manifest]
 members = [
     "fintech-ai-reconciliation-agent",
+    "recon-agents",
     "recon-api",
     "recon-domain",
+    "recon-investigator",
     "recon-knowledge",
     "recon-mcp",
     "recon-store",
@@ -219,8 +221,10 @@ name = "fintech-ai-reconciliation-agent"
 version = "0.0.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "recon-agents" },
     { name = "recon-api" },
     { name = "recon-domain" },
+    { name = "recon-investigator" },
     { name = "recon-knowledge" },
     { name = "recon-mcp" },
     { name = "recon-store" },
@@ -240,8 +244,10 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "recon-agents", editable = "packages/agents" },
     { name = "recon-api", editable = "apps/api" },
     { name = "recon-domain", editable = "packages/domain" },
+    { name = "recon-investigator", editable = "apps/investigator" },
     { name = "recon-knowledge", editable = "packages/knowledge" },
     { name = "recon-mcp", editable = "apps/mcp-server" },
     { name = "recon-store", editable = "packages/store" },
@@ -790,6 +796,25 @@ wheels = [
 ]
 
 [[package]]
+name = "recon-agents"
+version = "0.1.0"
+source = { editable = "packages/agents" }
+dependencies = [
+    { name = "httpx" },
+    { name = "jsonschema" },
+    { name = "mcp" },
+    { name = "recon-store" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "httpx", specifier = "==0.28.1" },
+    { name = "jsonschema", specifier = "==4.26.0" },
+    { name = "mcp", specifier = "==2.2.0" },
+    { name = "recon-store", editable = "packages/store" },
+]
+
+[[package]]
 name = "recon-api"
 version = "0.1.0"
 source = { editable = "apps/api" }
@@ -830,6 +855,27 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "tzdata", specifier = "==2026.4" }]
+
+[[package]]
+name = "recon-investigator"
+version = "0.1.0"
+source = { editable = "apps/investigator" }
+dependencies = [
+    { name = "nats-py" },
+    { name = "recon-agents" },
+    { name = "recon-api" },
+    { name = "recon-mcp" },
+    { name = "recon-store" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "nats-py", specifier = "==2.16.0" },
+    { name = "recon-agents", editable = "packages/agents" },
+    { name = "recon-api", editable = "apps/api" },
+    { name = "recon-mcp", editable = "apps/mcp-server" },
+    { name = "recon-store", editable = "packages/store" },
+]
 
 [[package]]
 name = "recon-knowledge"

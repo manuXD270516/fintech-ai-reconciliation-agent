@@ -27,7 +27,11 @@ M2_RECONCILIATION = {
     ("/v1/runs/{run_id}", "GET"),
     ("/v1/runs/{run_id}/results", "GET"),
 }
-CATALOG = HEALTH | M2_RECONCILIATION
+M5_INVESTIGATION = {
+    ("/v1/runs/{run_id}/results/{ordinal}/investigations", "POST"),
+    ("/v1/investigations/{investigation_id}", "GET"),
+}
+CATALOG = HEALTH | M2_RECONCILIATION | M5_INVESTIGATION
 DOCS = {"/openapi.json", "/docs", "/docs/oauth2-redirect"}
 FORBIDDEN_WORDS = ("payment", "refund", "transfer", "payout", "execute", "agent", "approve")
 
