@@ -1,0 +1,31 @@
+{
+  "content_hash": "384bf5d9da62696fa8621f2a80fe229f7cb0b4ee2d8a7498f97b590613c4dbb3",
+  "counts": {
+    "documents": 17,
+    "queries": 38
+  },
+  "data_origin": "SYNTHETIC",
+  "dataset_id": "knowledge",
+  "files": {
+    "docs/alfa-error-codes@1.md": "7be70ba05e5d19671fa2f5850dc0defdd01a4561956e45f3208ab528991fba25",
+    "docs/alfa-error-codes@2.md": "42607aff30580428f8e3fc21bd59ffdf1c06ed5c67506366e77837b9909c39a8",
+    "docs/alfa-promo-fees@1.md": "59c58b9af6809c0e4cdf44b7354503303cfa16c8080749f2027c7df94a0f8db0",
+    "docs/alfa-settlement-guide@1.md": "1c19d0c53abe0d3bd4824656a350a4e9336ea7b69a1731cc571929497eb499b5",
+    "docs/alfa-status-faq@1.md": "284a5272ccd80e2b6759ed4e61ddc8be7c43fb7a54b74a58f79108139cf9a327",
+    "docs/beta-error-codes@1.md": "80e217bcbc31c6a7532221eaac58c1d35242201887158954eb9988614d682327",
+    "docs/beta-fee-draft@1.md": "bb179d296d2005b8a44d762e05b7f09c94a734ed3be3714662c6761689dd2694",
+    "docs/beta-settlement-guide@1.md": "014871a4de4849b37de251a7aab4e83938dc36e4e20a1c61b07e69ad5baffec5",
+    "docs/incident-inc-0815@1.md": "3933684f42deb625aaecb49219f3eaa6fa837d3bce677f0199f5b7ca441ccf0c",
+    "docs/incident-inc-0902@1.md": "ead8981515f760bda997f3ebae08297a0cc078634d28b575b45ffdd66a9ae7c3",
+    "docs/other-tenant-runbook@1.md": "257d72434d48bdbfc0cd67d62774c7c4ac31b472a7d9585f36afea18bc47a807",
+    "docs/procedure-fee-waivers@1.md": "6b2227e6192e67f8da7195daf7c1b7835a0c78cfc65e9188b5db5419d50a4d29",
+    "docs/procedure-human-approval@1.md": "6e8d7a21648037057389f404499da23c77b8fda941c1a82b859bdd417ef9288f",
+    "docs/runbook-amount-mismatch@1.md": "bfaa8ede9e080c43421c4af488cd2b60440ce2ea1d1fd288f708cd8195a52934",
+    "docs/runbook-duplicate-charge@1.md": "a234ca68a22c661880f201406407065258f49e3e1c93d5c0f2ecc5dfa10f7f9a",
+    "docs/runbook-missing-transaction@1.md": "5dc25c73a102d1df844d125d0ea1d3d8217847c7a442b7ebc935722d89c70522",
+    "docs/runbook-unknown-status@1.md": "b369a3a9af112e80bb7801280b22b86610fed7b9fa7ae4aa1549ae8e6286ad41",
+    "queries.jsonl": "55d466b8f0fdbf38d096c08f47b98d5b41cc02434060b3fd2b8f1453ec7d6c01"
+  },
+  "generator": "hand-written synthetic corpus (no real providers, people or data)",
+  "version": "v1"
+}

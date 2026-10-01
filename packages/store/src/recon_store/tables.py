@@ -25,7 +25,9 @@ from sqlalchemy import (
     Uuid,
     text,
 )
-from sqlalchemy.dialects.postgresql import ARRAY, JSONB
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB, TSVECTOR
+
+from recon_store.vector import Vector
 
 SCHEMA = "recon"
 metadata = MetaData(schema=SCHEMA)
@@ -242,3 +244,65 @@ inbox = Table(
     Column("processed_at", DateTime(timezone=True), nullable=False, server_default=text("now()")),
     PrimaryKeyConstraint("consumer", "event_id", name="pk_inbox"),
 )
+
+# --- M3 knowledge base (hybrid retrieval) ----------------------------------------
+EMBEDDING_DIMENSIONS = 256
+
+knowledge_documents = Table(
+    "knowledge_documents",
+    metadata,
+    Column("id", BigInteger, Identity(always=True), primary_key=True),
+    Column("document_id", String(128), nullable=False),
+    Column("version", Integer, nullable=False),
+    Column("tenant_scope", String(128), nullable=False),
+    Column("acl", ARRAY(String(32)), nullable=False),
+    Column("provider_id", String(128)),
+    Column("document_type", String(32), nullable=False),
+    Column("title", String(300), nullable=False),
+    Column("language", String(8), nullable=False),
+    Column("source_uri", String(300), nullable=False),
+    Column("content_hash", String(64), nullable=False),
+    Column("effective_from", DateTime(timezone=True), nullable=False),
+    Column("effective_to", DateTime(timezone=True)),
+    Column("published_at", DateTime(timezone=True), nullable=False),
+    Column("ingested_at", DateTime(timezone=True), nullable=False, server_default=text("now()")),
+    Column("review_status", String(16), nullable=False),
+    Column("synthetic", Boolean, nullable=False),
+    Column("supersedes", String(160)),
+    Column("index_version", String(64), nullable=False),
+    UniqueConstraint("document_id", "version", name="uq_knowledge_document_version"),
+    CheckConstraint(
+        "review_status IN ('published', 'draft', 'revoked')", name="ck_knowledge_review_status"
+    ),
+    CheckConstraint(
+        "effective_to IS NULL OR effective_to > effective_from", name="ck_knowledge_validity"
+    ),
+)
+
+knowledge_chunks = Table(
+    "knowledge_chunks",
+    metadata,
+    Column("id", BigInteger, Identity(always=True), primary_key=True),
+    Column("document_pk", BigInteger, ForeignKey("recon.knowledge_documents.id"), nullable=False),
+    Column("chunk_id", String(64), nullable=False),
+    Column("section_slug", String(160), nullable=False),
+    Column("section_path", String(400), nullable=False),
+    Column("ordinal", Integer, nullable=False),
+    Column("start_line", Integer, nullable=False),
+    Column("end_line", Integer, nullable=False),
+    Column("token_count", Integer, nullable=False),
+    Column("error_codes", ARRAY(String(16)), nullable=False),
+    Column("flagged_instructions", Boolean, nullable=False),
+    Column("content", Text, nullable=False),
+    Column("content_hash", String(64), nullable=False),
+    Column("fts_config", String(16), nullable=False),
+    Column("tsv", TSVECTOR, nullable=False),
+    Column("embedding", Vector(EMBEDDING_DIMENSIONS), nullable=False),
+    Column("embedding_model", String(64), nullable=False),
+    Column("embedding_revision", String(32), nullable=False),
+    Column("dimensions", SmallInteger, nullable=False),
+    UniqueConstraint("chunk_id", name="uq_knowledge_chunk_id"),
+    CheckConstraint("fts_config IN ('spanish', 'english')", name="ck_knowledge_fts_config"),
+)
+Index("ix_knowledge_chunks_tsv", knowledge_chunks.c.tsv, postgresql_using="gin")
+Index("ix_knowledge_chunks_codes", knowledge_chunks.c.error_codes, postgresql_using="gin")

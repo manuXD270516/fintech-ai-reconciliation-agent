@@ -314,6 +314,38 @@ class Smoke:
             "seconds_until_all_runs_completed": round(time.perf_counter() - started, 2),
         }
 
+    def knowledge_ingest_idempotent(self) -> dict[str, Any]:
+        outputs = []
+        for _ in range(2):
+            proc = compose("run", "--rm", "knowledge-ingest", check=False, timeout=300)
+            expect(proc.returncode == 0, proc.stderr[-800:])
+            outputs.append(json.loads(proc.stdout.strip().splitlines()[-1]))
+        expect(outputs[-1]["published"] == 0, outputs)
+        expect(outputs[-1]["unchanged"] == outputs[-1]["documents"], outputs)
+        return {"runs": outputs}
+
+    def retrieval_evaluation(self) -> dict[str, Any]:
+        """MEASURED lexical/vector/hybrid baselines on the synthetic corpus (M3)."""
+        proc = compose(
+            "--profile", "smoke", "run", "--rm", "smoke", "python", "-m", "recon_knowledge",
+            "evaluate", "--corpus", "datasets/synthetic/knowledge-v1",
+            check=False, timeout=600,
+        )  # fmt: skip
+        expect(proc.returncode == 0, proc.stderr[-800:])
+        report: dict[str, Any] = json.loads(proc.stdout.strip().splitlines()[-1])
+        expect(report["split_leakage_families"] == [], report["split_leakage_families"])
+        for mode, result in report["results"].items():
+            expect(result["all"]["acl_violations"] == 0, f"{mode}: ACL violation")
+        EVIDENCE_DIR.mkdir(exist_ok=True)
+        stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+        (EVIDENCE_DIR / f"retrieval-eval-{stamp}.json").write_text(
+            json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+        return {
+            mode: {split: result[split] for split in ("dev", "holdout")}
+            for mode, result in report["results"].items()
+        } | {"config": report["config"], "report_file": f".smoke/retrieval-eval-{stamp}.json"}
+
     def isolation(self) -> dict[str, Any]:
         proc = compose("ps", "--format", "json")
         raw = proc.stdout.strip()
@@ -515,6 +547,12 @@ def main() -> int:
             "M2-T07", "HTTP ingest + runs via outbox/NATS/worker match oracle",
             smoke.reconciliation_e2e,
         )  # fmt: skip
+        smoke.check(
+            "M3-T04", "knowledge-ingest idempotent re-run", smoke.knowledge_ingest_idempotent
+        )
+        smoke.check(
+            "M3-T07", "retrieval evaluation (MEASURED, synthetic)", smoke.retrieval_evaluation
+        )
         smoke.check("T08", "API loopback-only, dependencies private", smoke.isolation)
         smoke.check("T09", "request ID correlated in header and JSON log", smoke.correlation)
         for service in ("postgres", "nats"):
