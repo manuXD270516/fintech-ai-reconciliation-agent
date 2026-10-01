@@ -172,6 +172,40 @@ services:
     security_opt: ["no-new-privileges:true"]
     restart: unless-stopped
 
+  # M5 investigation worker: separate process with its own permissions. Launches
+  # fintech-mcp-server (stdio, read-only role) per investigation. The model provider is the
+  # deterministic scripted stand-in unless RECON_MODEL_PROVIDER=ollama (profile `ollama`).
+  investigator:
+    image: recon-m0-api:local
+    command: ["python", "-m", "recon_investigator"]
+    environment:
+      <<: [*app-env, *mcp-db-env]
+      RECON_MODEL_PROVIDER: ${RECON_MODEL_PROVIDER:-scripted}
+      RECON_OLLAMA_URL: http://ollama:11434
+      RECON_OLLAMA_MODEL: ${RECON_OLLAMA_MODEL:-qwen2.5:0.5b}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      nats:
+        condition: service_healthy
+    networks: [backend]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+
+  # Optional local model (D03). Never started by default or by any gate. Internal network
+  # only; the model is pulled on demand: docker compose --profile ollama exec ollama
+  # ollama pull qwen2.5:0.5b   (then set RECON_MODEL_PROVIDER=ollama for the investigator).
+  ollama:
+    profiles: [ollama]
+    image: ollama/ollama:0.35.0@sha256:2a6e883b917fc543389599dae79918f5cac9e1438890506982f44aa4f5625d01
+    networks: [backend]
+    volumes:
+      - ollamadata:/root/.ollama
+    restart: "no"
+
   # --- smoke profile: test-only services, never started by a plain `docker compose up` ---
   nats-nojs:
     profiles: [smoke]
@@ -206,3 +240,4 @@ networks:
 volumes:
   pgdata:
   natsdata:
+  ollamadata:

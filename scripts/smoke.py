@@ -159,6 +159,7 @@ class Smoke:
         self.api = Api(int(env.get("API_HOST_PORT", "18180")))
         self.results: list[Result] = []
         self.secrets = [env[k] for k in SECRET_KEYS if env.get(k)]
+        self.runs: dict[str, str] = {}
 
     def check(self, test_id: str, name: str, fn: Callable[[], dict[str, Any]]) -> None:
         started = time.perf_counter()
@@ -291,6 +292,7 @@ class Smoke:
             run = self.api.get(f"/v1/batches/{batch_id}/runs", method="POST", token=analyst)
             expect(run.status == 202, run.text)
             runs.append(run.body["run_id"])
+            self.runs[batch.batch_id] = run.body["run_id"]
 
         started = time.perf_counter()
         got: dict[str, tuple[str, str]] = {}
@@ -318,6 +320,57 @@ class Smoke:
             "matching_oracle": len(want) - len(wrong),
             "seconds_until_all_runs_completed": round(time.perf_counter() - started, 2),
         }
+
+    def investigation_e2e(self) -> dict[str, Any]:
+        """HTTP request -> outbox -> JetStream -> investigator -> MCP (stdio) -> draft (M5)."""
+        analyst = dev_auth.token("ana-smoke", ["analyst"])
+        auditor = dev_auth.token("aud-smoke", ["auditor"])
+        run_id = self.runs.get("b-prov-alfa-merchant-03-USD")
+        expect(run_id is not None, "reconciliation_e2e must run first")
+        page = self.api.get(f"/v1/runs/{run_id}/results?limit=500", token=auditor).body["items"]
+        mismatch = next(i for i in page if "AMOUNT_MISMATCH" in i["discrepancy_types"])
+        exact = next(i for i in page if i["match_status"] == "EXACT")
+        started = time.perf_counter()
+        outcomes: dict[str, Any] = {}
+        for label, item in (("amount_mismatch", mismatch), ("exact", exact)):
+            path = f"/v1/runs/{run_id}/results/{item['ordinal']}/investigations"
+            first = self.api.get(path, method="POST", token=analyst)
+            expect(first.status in (200, 202), first.text)
+            again = self.api.get(path, method="POST", token=analyst)
+            expect(again.status == 200 and not again.body["created"], again.text)
+            expect(again.body["investigation_id"] == first.body["investigation_id"])
+            inv = first.body["investigation_id"]
+            while True:
+                got = self.api.get(f"/v1/investigations/{inv}", token=auditor)
+                expect(got.status == 200, got.text)
+                if got.body["state"] in ("NOT_NEEDED", "DRAFTED", "ABSTAINED", "ESCALATED",
+                                         "FAILED"):  # fmt: skip
+                    break
+                expect(time.perf_counter() - started < 120, "investigation did not finish")
+                time.sleep(0.5)
+            record = got.body["record"]
+            outcomes[label] = {
+                "state": got.body["state"],
+                "tool_calls": record["budget"]["tool_calls"],
+                "generative_calls": record["budget"]["generative_calls"],
+                "tokens_estimated": record["budget"]["tokens"],
+                "model": record["model"],
+                "label": (record.get("draft") or {}).get("label"),
+                "facts": len((record.get("draft") or {}).get("facts", [])),
+                "hypotheses": len((record.get("draft") or {}).get("hypotheses", [])),
+            }
+        expect(outcomes["amount_mismatch"]["state"] == "DRAFTED", outcomes)
+        expect(outcomes["amount_mismatch"]["label"] == "SIMULATED", outcomes)
+        expect(outcomes["exact"]["state"] == "NOT_NEEDED", outcomes)
+        expect(outcomes["exact"]["generative_calls"] == 0, outcomes)
+        denied = self.api.get(
+            f"/v1/runs/{run_id}/results/{mismatch['ordinal']}/investigations",
+            method="POST",
+            token=auditor,
+        )
+        expect(denied.status == 403, f"auditor must not request investigations: {denied.status}")
+        outcomes["seconds"] = round(time.perf_counter() - started, 2)
+        return outcomes
 
     def knowledge_ingest_idempotent(self) -> dict[str, Any]:
         outputs = []
@@ -554,6 +607,9 @@ def main() -> int:
         )  # fmt: skip
         smoke.check(
             "M3-T04", "knowledge-ingest idempotent re-run", smoke.knowledge_ingest_idempotent
+        )
+        smoke.check(
+            "M5-T09", "HTTP investigation via outbox/NATS/investigator/MCP", smoke.investigation_e2e
         )
         smoke.check(
             "M3-T07", "retrieval evaluation (MEASURED, synthetic)", smoke.retrieval_evaluation

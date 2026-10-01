@@ -331,3 +331,30 @@ provider_status = Table(
     ),
     CheckConstraint("valid_to IS NULL OR valid_to > valid_from", name="ck_provider_status_window"),
 )
+
+# --- M5 investigations (persisted state machine records) --------------------------
+investigations = Table(
+    "investigations",
+    metadata,
+    Column("id", Uuid, primary_key=True),
+    Column("tenant_id", String(128), nullable=False),
+    Column("case_ref", String(128), nullable=False),
+    Column("run_id", Uuid, ForeignKey("recon.reconciliation_runs.id"), nullable=False),
+    Column("ordinal", Integer, nullable=False),
+    Column("case_version", Integer, nullable=False),
+    Column("input_snapshot_hash", String(64), nullable=False),
+    Column("state", String(16), nullable=False),
+    Column("requested_by", String(128), nullable=False),
+    Column("correlation_id", String(64), nullable=False),
+    Column("record", JSONB, nullable=False, server_default=text("'{}'::jsonb")),
+    Column("created_at", DateTime(timezone=True), nullable=False, server_default=text("now()")),
+    Column("updated_at", DateTime(timezone=True), nullable=False, server_default=text("now()")),
+    UniqueConstraint(
+        "tenant_id", "case_ref", "input_snapshot_hash", name="uq_investigation_per_snapshot"
+    ),
+    CheckConstraint(
+        "state IN ('REQUESTED', 'NOT_NEEDED', 'PLANNED', 'EXECUTED', 'DRAFTED', 'ABSTAINED', "
+        "'ESCALATED', 'FAILED')",
+        name="ck_investigation_state",
+    ),
+)

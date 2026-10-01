@@ -10,7 +10,7 @@ import uuid
 from datetime import UTC, datetime
 from typing import Annotated, Any, Literal
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Path, Query, Request, Response
 from pydantic import AwareDatetime, BaseModel, Field
 from sqlalchemy import Engine
 
@@ -19,6 +19,7 @@ from recon_domain.batch import ReconciliationBatch
 from recon_domain.ingestion import ArtifactError
 from recon_domain.observation import DomainError, SourceKind
 from recon_store.artifacts import ArtifactService, IdempotencyConflictError
+from recon_store.investigations import InvestigationRepository
 from recon_store.reconciliation import ConflictError, NotFoundError, ReconciliationService
 
 MAX_ARTIFACT_CHARS = 2_000_000
@@ -326,3 +327,77 @@ def get_results(
         for r in rows
     ]
     return ResultPage(items=items, next_after=items[-1].ordinal if len(items) == limit else None)
+
+
+# --- M5: bounded investigations (drafts without operational effect) ---------------------
+
+
+class InvestigationAccepted(BaseModel):
+    investigation_id: uuid.UUID
+    created: bool
+    status: Literal["requested", "existing"]
+
+
+class InvestigationOut(BaseModel):
+    investigation_id: uuid.UUID
+    case_ref: str
+    case_version: int
+    state: str
+    requested_by: str
+    created_at: datetime
+    updated_at: datetime
+    record: dict[str, Any]
+
+
+@router.post(
+    "/runs/{run_id}/results/{ordinal}/investigations",
+    response_model=InvestigationAccepted,
+    status_code=202,
+    tags=["investigation"],
+)
+def post_investigation(
+    run_id: uuid.UUID,
+    ordinal: Annotated[int, Path(ge=1)],
+    request: Request,
+    response: Response,
+    principal: Annotated[Principal, Depends(require(Role.ANALYST))],
+) -> InvestigationAccepted:
+    """Request a read-only investigation; repeating it without new evidence is idempotent."""
+    repo = InvestigationRepository(_engine(request))
+    try:
+        investigation_id, created = repo.request(
+            principal.tenant_id, run_id, ordinal, actor=principal.subject,
+            correlation_id=_corr(request),
+        )  # fmt: skip
+    except LookupError:
+        raise HTTPException(404, detail="result not found") from None
+    if not created:
+        response.status_code = 200
+    return InvestigationAccepted(
+        investigation_id=uuid.UUID(investigation_id),
+        created=created,
+        status="requested" if created else "existing",
+    )
+
+
+@router.get(
+    "/investigations/{investigation_id}", response_model=InvestigationOut, tags=["investigation"]
+)
+def get_investigation(
+    investigation_id: uuid.UUID,
+    request: Request,
+    principal: Annotated[Principal, Depends(require(*READ_ROLES))],
+) -> InvestigationOut:
+    row = InvestigationRepository(_engine(request)).get(principal.tenant_id, investigation_id)
+    if row is None:
+        raise HTTPException(404, detail="investigation not found")
+    return InvestigationOut(
+        investigation_id=row["id"],
+        case_ref=row["case_ref"],
+        case_version=row["case_version"],
+        state=row["state"],
+        requested_by=row["requested_by"],
+        created_at=row["created_at"],
+        updated_at=row["updated_at"],
+        record=dict(row["record"]),
+    )
