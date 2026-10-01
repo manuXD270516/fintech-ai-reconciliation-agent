@@ -43,3 +43,5 @@ Cuatro argumentos inválidos (UUID mal formado, revisión 0, propiedad extra `te
 ## T09
 
 Gate completo en [gate-all.log](gate-all.log).
+
+El archivo del change se verificó con el gate estático posterior a `openspec archive` ([gate-static-post-archive.log](gate-static-post-archive.log): todos PASS, incluida la regla de trazabilidad para changes archivados).

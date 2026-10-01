@@ -1,6 +1,6 @@
 ## Context
 
-Implementa [docs/05-mcp.md](../../../docs/05-mcp.md) sobre la evidencia de M2 y el retrieval de M3, con las decisiones de [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md) (D12: dependencias fijadas).
+Implementa [docs/05-mcp.md](../../../../docs/05-mcp.md) sobre la evidencia de M2 y el retrieval de M3, con las decisiones de [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md) (D12: dependencias fijadas).
 
 ## Goals / Non-Goals
 

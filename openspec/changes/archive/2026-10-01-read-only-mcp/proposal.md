@@ -25,7 +25,7 @@ Ninguna en specs vigentes. `recon_knowledge` agrega un filtro opcional por tipo 
 
 Nuevo paquete `apps/mcp-server`, dependencias `mcp==2.2.0` y `jsonschema==4.26.0` (y `types-jsonschema` en dev), migración `0004`, rol `recon_mcp` en `db-init` y variables `MCP_DB_USER`/`MCP_DB_PASSWORD` (`dev-only-*`), dataset `provider-status-v1`.
 
-Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md); diseño de referencia: [docs/05-mcp.md](../../../docs/05-mcp.md).
+Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md); diseño de referencia: [docs/05-mcp.md](../../../../docs/05-mcp.md).
 
 ## Non-goals
 
