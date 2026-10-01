@@ -25,3 +25,5 @@ Ejecución local en Windows 11 + Docker Desktop, 2026-10-01, sobre el árbol de 
 - La sesión por JWT pegado es sólo para desarrollo local; no hay IdP real.
 - La accesibilidad se verifica con axe y recorridos por teclado automatizados; no hubo una auditoría manual con lectores de pantalla.
 - El E2E cubre un flujo feliz más el rechazo por segregación de funciones; los demás errores se cubren con pruebas de componente.
+
+El archivo del change se verificó con el gate estático posterior a `openspec archive` ([gate-static-post-archive.log](gate-static-post-archive.log): todos PASS, incluida la regla de trazabilidad para changes archivados).

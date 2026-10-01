@@ -23,7 +23,7 @@ Ninguna en specs vigentes; la API agrega tres rutas de lectura y modelos de resp
 
 `apps/web` (paquete npm propio), `scripts/export_openapi.py`, `scripts/web_e2e.py`, paso de gate `web`, instalación de dependencias web y Chromium de Playwright en CI, rutas `/v1` de lectura.
 
-Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md) (D08).
+Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md) (D08).
 
 ## Non-goals
 

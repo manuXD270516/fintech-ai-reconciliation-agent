@@ -86,7 +86,7 @@ npx --prefix apps/web playwright install chromium   # una vez, para el E2E
 npm --prefix apps/web run dev                         # http://127.0.0.1:18181 con el stack arriba
 ```
 
-El paso `web` del gate verifica tipos generados, `tsc`, Vitest y build; el smoke (`M8-T07`) ejecuta un E2E Playwright analista → supervisor → auditor contra el stack real, con pasos por teclado y axe (WCAG 2 A/AA) sin violaciones serias ni críticas. Evidencia: [investigation-dashboard](openspec/changes/investigation-dashboard/evidence/README.md).
+El paso `web` del gate verifica tipos generados, `tsc`, Vitest y build; el smoke (`M8-T07`) ejecuta un E2E Playwright analista → supervisor → auditor contra el stack real, con pasos por teclado y axe (WCAG 2 A/AA) sin violaciones serias ni críticas. Evidencia: [investigation-dashboard](openspec/changes/archive/2026-10-01-investigation-dashboard/evidence/README.md).
 
 No hay otras rutas; `tests/unit/test_scope.py` verifica el catálogo exacto. Readiness no escribe filas ni publica mensajes: hace `SELECT 1`, una distancia vectorial sobre literales y `account_info` de JetStream, en paralelo bajo un deadline global (`APP_READY_TIMEOUT_SECONDS`, por defecto 2.5, máximo 3). Las respuestas no incluyen hosts, URLs, SQL, trazas ni secretos. Cada respuesta lleva `X-Request-ID` (se acepta el del cliente si cumple `[A-Za-z0-9._-]{1,64}`; si no, se genera) y produce un log JSON con `request_id`, método, ruta sin query string, status y `duration_ms`.
 

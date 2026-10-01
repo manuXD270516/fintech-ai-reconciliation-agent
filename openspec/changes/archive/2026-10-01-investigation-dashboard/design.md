@@ -1,6 +1,6 @@
 ## Context
 
-Implementa el dashboard de [docs/09-roadmap.md](../../../docs/09-roadmap.md) (M8) con D08 de [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md) sobre la API de M2–M6.
+Implementa el dashboard de [docs/09-roadmap.md](../../../../docs/09-roadmap.md) (M8) con D08 de [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md) sobre la API de M2–M6.
 
 ## Goals / Non-Goals
 
