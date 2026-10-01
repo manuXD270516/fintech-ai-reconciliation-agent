@@ -31,7 +31,15 @@ M5_INVESTIGATION = {
     ("/v1/runs/{run_id}/results/{ordinal}/investigations", "POST"),
     ("/v1/investigations/{investigation_id}", "GET"),
 }
-CATALOG = HEALTH | M2_RECONCILIATION | M5_INVESTIGATION
+M6_CASES = {
+    ("/v1/runs/{run_id}/results/{ordinal}/cases", "POST"),
+    ("/v1/cases/{case_id}", "GET"),
+    ("/v1/cases/{case_id}/recommendations", "POST"),
+    ("/v1/cases/{case_id}/decisions", "POST"),
+    ("/v1/cases/{case_id}/close", "POST"),
+    ("/v1/cases/{case_id}/audit", "GET"),
+}
+CATALOG = HEALTH | M2_RECONCILIATION | M5_INVESTIGATION | M6_CASES
 DOCS = {"/openapi.json", "/docs", "/docs/oauth2-redirect"}
 FORBIDDEN_WORDS = ("payment", "refund", "transfer", "payout", "execute", "agent", "approve")
 

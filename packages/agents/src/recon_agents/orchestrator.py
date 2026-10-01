@@ -39,6 +39,13 @@ from recon_agents.providers import (
     ModelResponse,
     Purpose,
 )
+from recon_agents.reviewer import (
+    REVIEW_SCHEMA,
+    Review,
+    combine,
+    deterministic_review,
+    review_context,
+)
 from recon_agents.routing import route
 from recon_agents.tool_client import ToolClient, ToolOutcome
 
@@ -170,13 +177,65 @@ class Investigator:
         record["issues"] += checked.issues
         record["draft"] = self._draft(case, record, bundle, checked, budget)
         if checked.critical:
-            state = State.ABSTAINED
-        elif bundle.gaps and any("TIMEOUT" in g or "DEPENDENCY" in g for g in bundle.gaps):
-            state = State.ESCALATED
+            return self._checkpoint(record, State.ABSTAINED, budget, started)
+        if bundle.gaps and any("TIMEOUT" in g or "DEPENDENCY" in g for g in bundle.gaps):
             record["issues"].append("evidence gaps from unavailable tools; escalated")
-        else:
+            return self._checkpoint(record, State.ESCALATED, budget, started)
+        return await self._review_and_finish(case, record, bundle, checked, budget, started)
+
+    async def _review_and_finish(
+        self,
+        case: CaseSnapshot,
+        record: dict[str, Any],
+        bundle: Bundle,
+        checked: Verified,
+        budget: Budget,
+        started: float,
+    ) -> dict[str, Any]:
+        review = await self._review(case, record["draft"], checked.issues, budget)
+        reflectable = review.result == "NEEDS_MORE_EVIDENCE" and (
+            review.objections or review.deterministic
+        )
+        if reflectable and budget.max_generative_calls - budget.generative_calls >= 2:
+            record["reflections"] = 1  # one revision at most, only after actionable objections
+            context = build(case, bundle, QUESTION) | {
+                "reviewer_objections": review.objections,
+                "reviewer_findings": review.deterministic,
+            }
+            raw = await self._generate(Purpose.DRAFT, context, {"type": "object"}, budget)
+            checked = verify(self._parse(raw, None), bundle)
+            record["issues"] += checked.issues
+            record["draft"] = self._draft(case, record, bundle, checked, budget)
+            if checked.critical:
+                return self._checkpoint(record, State.ABSTAINED, budget, started)
+            review = await self._review(case, record["draft"], checked.issues, budget)
+        elif reflectable:
+            record["issues"].append("reflection does not fit the generative budget")
+        record["draft"]["review_result"] = review.as_dict()
+        record["draft"]["budget_usage"] = budget.as_dict()
+        if review.result == "SUPPORTED":
             state = State.DRAFTED
+        elif review.result == "REJECTED":
+            state = State.ABSTAINED
+            record["issues"].append("reviewer rejected the draft")
+        else:
+            state = State.ESCALATED
+            record["issues"].append("reviewer needs more evidence; escalated to a person")
         return self._checkpoint(record, state, budget, started)
+
+    async def _review(
+        self, case: CaseSnapshot, draft: dict[str, Any], issues: list[str], budget: Budget
+    ) -> Review:
+        base = deterministic_review(case, draft, issues)
+        if base.result == "REJECTED":
+            return base
+        try:
+            response = await self._generate(
+                Purpose.REVIEW, review_context(case, draft), REVIEW_SCHEMA, budget
+            )
+        except (ModelError, BudgetExhaustedError):
+            return combine(base, None, self.provider.name)
+        return combine(base, self._parse(response, REVIEW_SCHEMA), self.provider.name)
 
     async def _call_tool(self, step: Step, budget: Budget, record: dict[str, Any]) -> ToolOutcome:
         if budget.tool_calls >= budget.max_tool_calls:

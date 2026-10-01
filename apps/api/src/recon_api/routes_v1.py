@@ -15,10 +15,12 @@ from pydantic import AwareDatetime, BaseModel, Field
 from sqlalchemy import Engine
 
 from recon_api.auth import READ_ROLES, Principal, Role, require
+from recon_domain.approval import Action, Decision
 from recon_domain.batch import ReconciliationBatch
 from recon_domain.ingestion import ArtifactError
 from recon_domain.observation import DomainError, SourceKind
 from recon_store.artifacts import ArtifactService, IdempotencyConflictError
+from recon_store.cases import OPERATIONAL_EFFECT, CaseError, CaseService
 from recon_store.investigations import InvestigationRepository
 from recon_store.reconciliation import ConflictError, NotFoundError, ReconciliationService
 
@@ -391,6 +393,10 @@ def get_investigation(
     row = InvestigationRepository(_engine(request)).get(principal.tenant_id, investigation_id)
     if row is None:
         raise HTTPException(404, detail="investigation not found")
+    return _investigation_out(row)
+
+
+def _investigation_out(row: dict[str, Any]) -> InvestigationOut:
     return InvestigationOut(
         investigation_id=row["id"],
         case_ref=row["case_ref"],
@@ -401,3 +407,187 @@ def get_investigation(
         updated_at=row["updated_at"],
         record=dict(row["record"]),
     )
+
+
+# --- M6: cases, recommendations and human decisions ---------------------------------------
+
+STATUS_BY_CODE = {
+    "not_found": 404,
+    "role_not_allowed": 403,
+    "segregation_of_duties": 403,
+    "reason_required": 422,
+}
+
+
+def _case_error(exc: CaseError) -> HTTPException:
+    detail = {"code": exc.code, "message": exc.message}
+    return HTTPException(STATUS_BY_CODE.get(exc.code, 409), detail=detail)
+
+
+class CaseOpened(BaseModel):
+    case_id: uuid.UUID
+    created: bool
+
+
+class RecommendationIn(BaseModel):
+    action: Action
+    rationale: str = Field(min_length=10, max_length=2000)
+    expected_version: int = Field(ge=1)
+    investigation_id: uuid.UUID | None = None
+
+
+class RecommendationCreated(BaseModel):
+    recommendation_id: uuid.UUID
+    status: Literal["PENDING"]
+
+
+class DecisionIn(BaseModel):
+    recommendation_id: uuid.UUID
+    decision: Decision
+    reason: str = Field(min_length=10, max_length=2000)
+    expected_version: int = Field(ge=1)
+    idempotency_key: Ident
+
+
+class DecisionOut(BaseModel):
+    decision_id: uuid.UUID
+    decision: str
+    approved_version: int
+    replayed: bool
+    operational_effect: str
+
+
+class CloseIn(BaseModel):
+    reason: str = Field(min_length=10, max_length=500)
+    expected_version: int = Field(ge=1)
+
+
+@router.post(
+    "/runs/{run_id}/results/{ordinal}/cases",
+    response_model=CaseOpened,
+    status_code=201,
+    tags=["cases"],
+)
+def post_case(
+    run_id: uuid.UUID,
+    ordinal: Annotated[int, Path(ge=1)],
+    request: Request,
+    response: Response,
+    principal: Annotated[Principal, Depends(require(Role.ANALYST))],
+) -> CaseOpened:
+    try:
+        case_id, created = CaseService(_engine(request)).open(
+            principal.tenant_id, run_id, ordinal, actor=principal.subject,
+            correlation_id=_corr(request),
+        )  # fmt: skip
+    except CaseError as exc:
+        raise _case_error(exc) from None
+    if not created:
+        response.status_code = 200
+    return CaseOpened(case_id=case_id, created=created)
+
+
+@router.get("/cases/{case_id}", tags=["cases"])
+def get_case(
+    case_id: uuid.UUID,
+    request: Request,
+    principal: Annotated[Principal, Depends(require(*READ_ROLES))],
+) -> dict[str, Any]:
+    try:
+        return CaseService(_engine(request)).get(principal.tenant_id, case_id)
+    except CaseError as exc:
+        raise _case_error(exc) from None
+
+
+@router.post(
+    "/cases/{case_id}/recommendations",
+    response_model=RecommendationCreated,
+    status_code=201,
+    tags=["cases"],
+)
+def post_recommendation(
+    case_id: uuid.UUID,
+    body: RecommendationIn,
+    request: Request,
+    principal: Annotated[Principal, Depends(require(Role.ANALYST))],
+) -> RecommendationCreated:
+    """An analyst proposes; adopting an investigation draft requires a SUPPORTED review."""
+    try:
+        rec_id = CaseService(_engine(request)).propose(
+            principal.tenant_id, case_id, actor=principal.subject, action=body.action,
+            rationale=body.rationale, expected_version=body.expected_version,
+            investigation_id=body.investigation_id, correlation_id=_corr(request),
+            now=datetime.now(UTC),
+        )  # fmt: skip
+    except CaseError as exc:
+        raise _case_error(exc) from None
+    return RecommendationCreated(recommendation_id=rec_id, status="PENDING")
+
+
+@router.post(
+    "/cases/{case_id}/decisions", response_model=DecisionOut, status_code=201, tags=["cases"]
+)
+def post_decision(
+    case_id: uuid.UUID,
+    body: DecisionIn,
+    request: Request,
+    response: Response,
+    principal: Annotated[Principal, Depends(require(*READ_ROLES))],
+) -> DecisionOut:
+    """A human supervisor decides on the current version. Nothing is executed.
+
+    Any authenticated reader reaches the policy so that refused attempts (wrong role,
+    self-approval, stale version...) are audited; only supervisors can succeed.
+    """
+    try:
+        row, replayed = CaseService(_engine(request)).decide(
+            principal.tenant_id, case_id, actor=principal.subject,
+            roles=frozenset(r.value for r in principal.roles),
+            recommendation_id=body.recommendation_id, decision=body.decision,
+            reason=body.reason, expected_version=body.expected_version,
+            idempotency_key=body.idempotency_key, correlation_id=_corr(request),
+            now=datetime.now(UTC),
+        )  # fmt: skip
+    except CaseError as exc:
+        raise _case_error(exc) from None
+    if replayed:
+        response.status_code = 200
+    return DecisionOut(
+        decision_id=row["id"],
+        decision=row["decision"],
+        approved_version=row["case_version"],
+        replayed=replayed,
+        operational_effect=OPERATIONAL_EFFECT,
+    )
+
+
+@router.post("/cases/{case_id}/close", tags=["cases"])
+def post_close(
+    case_id: uuid.UUID,
+    body: CloseIn,
+    request: Request,
+    principal: Annotated[Principal, Depends(require(Role.SUPERVISOR))],
+) -> dict[str, Any]:
+    try:
+        version = CaseService(_engine(request)).close(
+            principal.tenant_id, case_id, actor=principal.subject,
+            roles=frozenset(r.value for r in principal.roles), reason=body.reason,
+            expected_version=body.expected_version, correlation_id=_corr(request),
+        )  # fmt: skip
+    except CaseError as exc:
+        raise _case_error(exc) from None
+    return {"case_id": str(case_id), "status": "CLOSED", "version": version}
+
+
+@router.get("/cases/{case_id}/audit", tags=["cases"])
+def get_case_audit(
+    case_id: uuid.UUID,
+    request: Request,
+    principal: Annotated[Principal, Depends(require(Role.AUDITOR, Role.SUPERVISOR))],
+) -> dict[str, Any]:
+    try:
+        return CaseService(_engine(request)).audit_trail(
+            principal.tenant_id, case_id, actor=principal.subject, correlation_id=_corr(request)
+        )
+    except CaseError as exc:
+        raise _case_error(exc) from None

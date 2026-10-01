@@ -68,6 +68,8 @@ class Behaviour(StrEnum):
     HALLUCINATOR = "hallucinator"
     ENDLESS_PLANNER = "endless_planner"
     MALFORMED = "malformed"
+    OBJECTS_ONCE = "objects_once"
+    REJECTING_REVIEWER = "rejecting_reviewer"
 
 
 class ScriptedProvider:
@@ -79,6 +81,7 @@ class ScriptedProvider:
         self.behaviour = behaviour
         self.name = f"scripted/{behaviour.value}/v1"
         self.calls: list[ModelRequest] = []
+        self.reviews = 0
 
     async def generate(self, request: ModelRequest) -> ModelResponse:
         self.calls.append(request)
@@ -181,6 +184,15 @@ class ScriptedProvider:
     # --- review (used in M6) ----------------------------------------------------------
 
     def _review(self, ctx: dict[str, Any]) -> dict[str, Any]:
+        self.reviews += 1
+        if self.behaviour is Behaviour.REJECTING_REVIEWER:
+            objection = {"objection": "the cited records do not support the conclusion",
+                         "evidence_refs": []}  # fmt: skip
+            return {"result": "REJECTED", "objections": [objection]}
+        if self.behaviour is Behaviour.OBJECTS_ONCE and self.reviews == 1:
+            objection = {"objection": "state explicitly what evidence would confirm the hypothesis",
+                         "evidence_refs": []}  # fmt: skip
+            return {"result": "NEEDS_MORE_EVIDENCE", "objections": [objection]}
         issues = ctx.get("verification_issues", [])
         if issues:
             objections = [{"objection": i, "evidence_refs": []} for i in issues]

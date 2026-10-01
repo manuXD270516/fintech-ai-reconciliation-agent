@@ -160,6 +160,7 @@ class Smoke:
         self.results: list[Result] = []
         self.secrets = [env[k] for k in SECRET_KEYS if env.get(k)]
         self.runs: dict[str, str] = {}
+        self.investigated: tuple[str, int, str] | None = None
 
     def check(self, test_id: str, name: str, fn: Callable[[], dict[str, Any]]) -> None:
         started = time.perf_counter()
@@ -349,6 +350,8 @@ class Smoke:
                 expect(time.perf_counter() - started < 120, "investigation did not finish")
                 time.sleep(0.5)
             record = got.body["record"]
+            if label == "amount_mismatch":
+                self.investigated = (str(run_id), int(item["ordinal"]), str(inv))
             outcomes[label] = {
                 "state": got.body["state"],
                 "tool_calls": record["budget"]["tool_calls"],
@@ -371,6 +374,63 @@ class Smoke:
         expect(denied.status == 403, f"auditor must not request investigations: {denied.status}")
         outcomes["seconds"] = round(time.perf_counter() - started, 2)
         return outcomes
+
+    def approval_e2e(self) -> dict[str, Any]:
+        """Case -> recommendation adopting the reviewed draft -> human decision (M6)."""
+        if self.investigated is None:
+            raise SmokeFailure("investigation_e2e must run first")
+        run_id, ordinal, inv = self.investigated
+        analyst = dev_auth.token("ana-smoke", ["analyst"])
+        dual = dev_auth.token("ana-smoke", ["analyst", "supervisor"])
+        supervisor = dev_auth.token("sofia-smoke", ["supervisor"])
+        auditor = dev_auth.token("aud-smoke", ["auditor"])
+        opened = self.api.get(f"/v1/runs/{run_id}/results/{ordinal}/cases", method="POST",
+                              token=analyst)  # fmt: skip
+        expect(opened.status == 201, opened.text)
+        case = opened.body["case_id"]
+        proposal = {"action": "REQUEST_PROVIDER_INFO", "expected_version": 1,
+                    "rationale": "adoptar el borrador revisado: pedir reporte corregido",
+                    "investigation_id": inv}  # fmt: skip
+        rec = self.api.get(f"/v1/cases/{case}/recommendations", method="POST", body=proposal,
+                           token=analyst)  # fmt: skip
+        expect(rec.status == 201, rec.text)
+        decision = {
+            "recommendation_id": rec.body["recommendation_id"],
+            "decision": "APPROVE",
+            "reason": "aprobado: solicitar información al proveedor",
+            "expected_version": 2,
+            "idempotency_key": f"smoke-{uuid.uuid4().hex[:10]}",
+        }
+        own_body = decision | {"idempotency_key": f"self-{uuid.uuid4().hex[:8]}"}
+        own = self.api.get(f"/v1/cases/{case}/decisions", method="POST", body=own_body,
+                           token=dual)  # fmt: skip
+        expect(own.status == 403, f"self-approval must be 403: {own.status}")
+        by_analyst = self.api.get(f"/v1/cases/{case}/decisions", method="POST", body=decision,
+                                  token=analyst)  # fmt: skip
+        expect(by_analyst.status == 403, f"analyst must not decide: {by_analyst.status}")
+        stale_body = decision | {"expected_version": 1,
+                                 "idempotency_key": f"stale-{uuid.uuid4().hex[:8]}"}  # fmt: skip
+        stale = self.api.get(f"/v1/cases/{case}/decisions", method="POST", body=stale_body,
+                             token=supervisor)  # fmt: skip
+        expect(stale.status == 409, f"stale version must be 409: {stale.status}")
+        ok = self.api.get(f"/v1/cases/{case}/decisions", method="POST", body=decision,
+                          token=supervisor)  # fmt: skip
+        expect(ok.status == 201 and ok.body["operational_effect"].startswith("none"), ok.text)
+        replay = self.api.get(f"/v1/cases/{case}/decisions", method="POST", body=decision,
+                              token=supervisor)  # fmt: skip
+        expect(replay.status == 200 and replay.body["replayed"], replay.text)
+        trail = self.api.get(f"/v1/cases/{case}/audit", token=auditor)
+        expect(trail.status == 200, trail.text)
+        actions = [e["action"] for e in trail.body["audit"]]
+        for action in ("case.open", "recommendation.create", "decision.denied",
+                       "decision.record", "investigation.finish"):  # fmt: skip
+            expect(action in actions, f"{action} missing from audit trail")
+        denied = [e["outcome"] for e in trail.body["audit"] if e["action"] == "decision.denied"]
+        expect(sorted(denied) == ["role_not_allowed", "segregation_of_duties",
+                                  "version_conflict"], denied)  # fmt: skip
+        forbidden = self.api.get(f"/v1/cases/{case}/audit", token=analyst)
+        expect(forbidden.status == 403, f"analyst audit read must be 403: {forbidden.status}")
+        return {"case_id": case, "decision": ok.body, "audit_actions": actions}
 
     def knowledge_ingest_idempotent(self) -> dict[str, Any]:
         outputs = []
@@ -611,6 +671,8 @@ def main() -> int:
         smoke.check(
             "M5-T09", "HTTP investigation via outbox/NATS/investigator/MCP", smoke.investigation_e2e
         )
+        smoke.check("M6-T08", "HTTP case, reviewed recommendation and human decision",
+                    smoke.approval_e2e)  # fmt: skip
         smoke.check(
             "M3-T07", "retrieval evaluation (MEASURED, synthetic)", smoke.retrieval_evaluation
         )

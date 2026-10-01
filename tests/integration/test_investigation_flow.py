@@ -143,7 +143,8 @@ async def test_amount_mismatch_investigation_end_to_end(world: dict[str, Any]) -
     record = row["record"]
     draft = record["draft"]
     assert draft["operational_effect"] == "none" and draft["label"] == "SIMULATED"
-    assert record["budget"]["tool_calls"] <= 6 and record["budget"]["generative_calls"] == 2
+    assert record["budget"]["tool_calls"] <= 6 and record["budget"]["generative_calls"] == 3
+    assert draft["review_result"]["result"] == "SUPPORTED"
     assert {s["tool"] for s in record["steps"]} <= {
         "get_transaction", "search_provider_docs", "search_incidents", "get_provider_status",
     }  # fmt: skip

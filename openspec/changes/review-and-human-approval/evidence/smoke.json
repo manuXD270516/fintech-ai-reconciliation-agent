@@ -1,0 +1,683 @@
+{
+  "kind": "MEASURED",
+  "scope": "local Compose smoke of M0 infrastructure; not a performance benchmark",
+  "started_utc": "2026-10-01T07:11:18+00:00",
+  "commit": "9278965",
+  "dirty": true,
+  "host": "Windows 11 AMD64",
+  "docker": "linux/amd64 29.8.1",
+  "compose": "5.5.1",
+  "images": "recon-m0-api:local\npgvector/pgvector:0.8.6-pg17-trixie@sha256:724a4041afdb1750446e3f6b5cfa8f3b0ac5a2cf538ddfa6bfee4f94c2fa85c6\nrecon-m0-api:local\nnats:2.14.7-alpine3.22@sha256:4063edae0717ba5f7501bfde75f97fd9b57f5b93597b92c70b6a6fbbf6a74e06\npgvector/pgvector:0.8.6-pg17-trixie@sha256:724a4041afdb1750446e3f6b5cfa8f3b0ac5a2cf538ddfa6bfee4f94c2fa85c6\nnats:2.14.7-alpine3.22@sha256:4063edae0717ba5f7501bfde75f97fd9b57f5b93597b92c70b6a6fbbf6a74e06\nrecon-m0-api:local\nrecon-m0-smoke:local\nrecon-m0-api:local\nrecon-m0-api:local",
+  "results": [
+    {
+      "test_id": "T03",
+      "name": "startup: compose up, API ready",
+      "ok": true,
+      "seconds": 28.3,
+      "details": {
+        "seconds_until_ready": 2.11
+      }
+    },
+    {
+      "test_id": "T05",
+      "name": "healthy live/ready contract from host",
+      "ok": true,
+      "seconds": 0.02,
+      "details": {
+        "live": {
+          "status": "alive",
+          "request_id": "897bb2ace6c34153bf8fe7db661b1262"
+        },
+        "ready": {
+          "status": "ready",
+          "request_id": "e02bc73656c649b7b984e4ee78c0a8ca",
+          "checks": {
+            "database": "ok",
+            "vector": "ok",
+            "messaging": "ok"
+          }
+        },
+        "ready_seconds": 0.014
+      }
+    },
+    {
+      "test_id": "T03",
+      "name": "vector + JetStream + role + readiness integration",
+      "ok": true,
+      "seconds": 42.24,
+      "details": {
+        "pytest": [
+          "tests/integration/test_cases_flow.py::test_reviewed_draft_to_human_decision_and_audit_trail PASSED [  1%]",
+          "tests/integration/test_cases_flow.py::test_hu01_self_approval_is_denied_and_audited PASSED [  2%]",
+          "tests/integration/test_cases_flow.py::test_hu02_concurrent_decisions_produce_one_transition PASSED [  3%]",
+          "tests/integration/test_cases_flow.py::test_stale_version_and_expired_recommendation PASSED [  5%]",
+          "tests/integration/test_cases_flow.py::test_rc10_newer_run_makes_the_recommendation_obsolete PASSED [  6%]",
+          "tests/integration/test_cases_flow.py::test_unreviewed_or_unneeded_drafts_cannot_be_adopted PASSED [  7%]",
+          "tests/integration/test_cases_flow.py::test_runtime_role_cannot_rewrite_decisions[UPDATE recon.decisions SET decision = 'REJECT' WHERE false] PASSED [  8%]",
+          "tests/integration/test_cases_flow.py::test_runtime_role_cannot_rewrite_decisions[DELETE FROM recon.decisions WHERE false] PASSED [ 10%]",
+          "tests/integration/test_cases_flow.py::test_runtime_role_cannot_rewrite_decisions[UPDATE recon.recommendations SET rationale = 'x' WHERE false] PASSED [ 11%]",
+          "tests/integration/test_cases_flow.py::test_runtime_role_cannot_rewrite_decisions[UPDATE recon.cases SET opened_by = 'x' WHERE false] PASSED [ 12%]",
+          "tests/integration/test_cases_flow.py::test_runtime_role_cannot_rewrite_decisions[DELETE FROM recon.cases WHERE false] PASSED [ 13%]",
+          "tests/integration/test_event_ingestion.py::test_events_are_ingested_once_by_the_worker PASSED [ 15%]",
+          "tests/integration/test_event_ingestion.py::test_body_cannot_override_subject_tenant PASSED [ 16%]",
+          "tests/integration/test_event_ingestion.py::test_poison_event_goes_to_dead_letter_stream PASSED [ 17%]",
+          "tests/integration/test_event_ingestion.py::test_rc10_late_arrival_creates_new_run_and_keeps_previous PASSED [ 18%]",
+          "tests/integration/test_infrastructure.py::test_vector_extension_supports_knn_query PASSED [ 20%]",
+          "tests/integration/test_infrastructure.py::test_runtime_role_can_use_vector_type PASSED [ 21%]",
+          "tests/integration/test_infrastructure.py::test_runtime_role_has_no_initialization_privileges PASSED [ 22%]",
+          "tests/integration/test_infrastructure.py::test_jetstream_durable_publish_consume_ack PASSED [ 23%]",
+          "tests/integration/test_investigation_flow.py::test_snapshot_hash_is_shared_by_store_and_agent PASSED [ 25%]",
+          "tests/integration/test_investigation_flow.py::test_amount_mismatch_investigation_end_to_end PASSED [ 26%]",
+          "tests/integration/test_investigation_flow.py::test_exact_result_needs_no_investigation PASSED [ 27%]",
+          "tests/integration/test_investigation_flow.py::test_other_tenant_cannot_read_investigations PASSED [ 28%]",
+          "tests/integration/test_investigation_flow.py::test_runtime_role_cannot_rewrite_investigation_identity[DELETE FROM recon.investigations WHERE false] PASSED [ 30%]",
+          "tests/integration/test_investigation_flow.py::test_runtime_role_cannot_rewrite_investigation_identity[UPDATE recon.investigations SET requested_by = 'x' WHERE false] PASSED [ 31%]",
+          "tests/integration/test_investigation_flow.py::test_runtime_role_cannot_rewrite_investigation_identity[UPDATE recon.investigations SET input_snapshot_hash = 'x' WHERE false] PASSED [ 32%]",
+          "tests/integration/test_knowledge_retrieval.py::test_publication_is_idempotent_and_versions_are_immutable PASSED [ 33%]",
+          "tests/integration/test_knowledge_retrieval.py::test_failed_embedding_leaves_previous_version_active PASSED [ 35%]",
+          "tests/integration/test_knowledge_retrieval.py::test_rg01_error_code_lookup_returns_current_document PASSED [ 36%]",
+          "tests/integration/test_knowledge_retrieval.py::test_rg02_as_of_selects_the_applicable_version PASSED [ 37%]",
+          "tests/integration/test_knowledge_retrieval.py::test_rg03_abstains_without_evidence PASSED [ 38%]",
+          "tests/integration/test_knowledge_retrieval.py::test_rg04_other_tenant_content_is_never_exposed PASSED [ 40%]",
+          "tests/integration/test_knowledge_retrieval.py::test_acl_draft_and_revoked_are_hard_filters PASSED [ 41%]",
+          "tests/integration/test_knowledge_retrieval.py::test_revocation_removes_from_every_branch PASSED [ 42%]",
+          "tests/integration/test_knowledge_retrieval.py::test_untrusted_instructions_are_returned_as_flagged_data PASSED [ 43%]",
+          "tests/integration/test_knowledge_retrieval.py::test_index_stores_versioned_embedding_metadata PASSED [ 45%]",
+          "tests/integration/test_knowledge_retrieval.py::test_runtime_role_cannot_rewrite_knowledge[DELETE FROM recon.knowledge_documents WHERE false] PASSED [ 46%]",
+          "tests/integration/test_knowledge_retrieval.py::test_runtime_role_cannot_rewrite_knowledge[UPDATE recon.knowledge_documents SET acl = '{}' WHERE false] PASSED [ 47%]",
+          "tests/integration/test_knowledge_retrieval.py::test_runtime_role_cannot_rewrite_knowledge[UPDATE recon.knowledge_chunks SET content = '' WHERE false] PASSED [ 48%]",
+          "tests/integration/test_knowledge_retrieval.py::test_runtime_role_cannot_rewrite_knowledge[DELETE FROM recon.knowledge_chunks WHERE false] PASSED [ 50%]",
+          "tests/integration/test_mcp_sql.py::test_generated_uid_matches_python_twin PASSED [ 51%]",
+          "tests/integration/test_mcp_sql.py::test_sql_backend_end_to_end_over_stdio PASSED [ 52%]",
+          "tests/integration/test_mcp_sql.py::test_mcp_role_reads_evidence PASSED   [ 53%]",
+          "tests/integration/test_mcp_sql.py::test_mcp_role_cannot_write_or_read_beyond_evidence[INSERT INTO recon.reconciliation_batches (tenant_id) VALUES ('x')] PASSED [ 55%]",
+          "tests/integration/test_mcp_sql.py::test_mcp_role_cannot_write_or_read_beyond_evidence[UPDATE recon.match_results SET match_status = 'EXACT' WHERE false] PASSED [ 56%]",
+          "tests/integration/test_mcp_sql.py::test_mcp_role_cannot_write_or_read_beyond_evidence[DELETE FROM recon.transaction_observations WHERE false] PASSED [ 57%]",
+          "tests/integration/test_mcp_sql.py::test_mcp_role_cannot_write_or_read_beyond_evidence[UPDATE recon.knowledge_documents SET review_status = 'revoked' WHERE false] PASSED [ 58%]",
+          "tests/integration/test_mcp_sql.py::test_mcp_role_cannot_write_or_read_beyond_evidence[DELETE FROM recon.audit_entries WHERE false] PASSED [ 60%]",
+          "tests/integration/test_mcp_sql.py::test_mcp_role_cannot_write_or_read_beyond_evidence[UPDATE recon.audit_entries SET outcome = 'x' WHERE false] PASSED [ 61%]",
+          "tests/integration/test_mcp_sql.py::test_mcp_role_cannot_write_or_read_beyond_evidence[SELECT * FROM recon.outbox LIMIT 1] PASSED [ 62%]",
+          "tests/integration/test_mcp_sql.py::test_mcp_role_cannot_write_or_read_beyond_evidence[SELECT * FROM recon.source_artifacts LIMIT 1] PASSED [ 63%]",
+          "tests/integration/test_mcp_sql.py::test_mcp_role_cannot_write_or_read_beyond_evidence[CREATE TABLE recon.intruder (id int)] PASSED [ 65%]",
+          "tests/integration/test_mcp_sql.py::test_unique_tenant_ids_do_not_collide PASSED [ 66%]",
+          "tests/integration/test_readiness_real.py::test_ready_with_real_dependencies PASSED [ 67%]",
+          "tests/integration/test_readiness_real.py::test_not_ready_when_vector_extension_missing PASSED [ 68%]",
+          "tests/integration/test_readiness_real.py::test_not_ready_when_jetstream_disabled PASSED [ 70%]",
+          "tests/integration/test_readiness_real.py::test_hung_dependency_is_bounded_by_deadline[database] PASSED [ 71%]",
+          "tests/integration/test_readiness_real.py::test_hung_dependency_is_bounded_by_deadline[messaging] PASSED [ 72%]",
+          "tests/integration/test_reconciliation_flow.py::test_dataset_end_to_end_matches_oracle PASSED [ 73%]",
+          "tests/integration/test_reconciliation_flow.py::test_rerun_creates_new_version_and_keeps_previous PASSED [ 75%]",
+          "tests/integration/test_reconciliation_flow.py::test_idempotency_key_reuse_with_other_content_conflicts PASSED [ 76%]",
+          "tests/integration/test_reconciliation_flow.py::test_tenant_isolation_on_reads PASSED [ 77%]",
+          "tests/integration/test_store.py::test_schema_matches_sqlalchemy_metadata PASSED [ 78%]",
+          "tests/integration/test_store.py::test_ingest_outcomes_and_effects PASSED [ 80%]",
+          "tests/integration/test_store.py::test_failed_transaction_leaves_no_partial_effects PASSED [ 81%]",
+          "tests/integration/test_store.py::test_concurrent_ingest_of_same_key_creates_one_row PASSED [ 82%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[UPDATE recon.transaction_observations SET amount_minor = 1 WHERE false] PASSED [ 83%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[DELETE FROM recon.transaction_observations WHERE false] PASSED [ 85%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[DELETE FROM recon.audit_entries WHERE false] PASSED [ 86%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[UPDATE recon.audit_entries SET outcome = 'x' WHERE false] PASSED [ 87%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[UPDATE recon.outbox SET payload = '{}' WHERE false] PASSED [ 88%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[CREATE TABLE recon.intruder (id int)] PASSED [ 90%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[UPDATE recon.source_artifacts SET accepted = 0 WHERE false] PASSED [ 91%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[DELETE FROM recon.ingestion_rejections WHERE false] PASSED [ 92%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[UPDATE recon.match_results SET match_status = 'EXACT' WHERE false] PASSED [ 93%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[DELETE FROM recon.match_results WHERE false] PASSED [ 95%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[UPDATE recon.reconciliation_runs SET ruleset_version = 'x' WHERE false] PASSED [ 96%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[DELETE FROM recon.reconciliation_runs WHERE false] PASSED [ 97%]",
+          "tests/integration/test_store.py::test_runtime_role_cannot_rewrite_history[DELETE FROM recon.inbox WHERE false] PASSED [ 98%]",
+          "tests/integration/test_store.py::test_database_rejects_invalid_rows PASSED [100%]"
+        ]
+      }
+    },
+    {
+      "test_id": "T03",
+      "name": "db-init idempotent re-run",
+      "ok": true,
+      "seconds": 3.18,
+      "details": {
+        "db_init_exit_codes": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "test_id": "M1-T08",
+      "name": "alembic migrate idempotent re-run",
+      "ok": true,
+      "seconds": 7.37,
+      "details": {
+        "migrate": [
+          [
+            "migrate ok: revision 0006_cases"
+          ],
+          [
+            "migrate ok: revision 0006_cases"
+          ]
+        ]
+      }
+    },
+    {
+      "test_id": "M2-T07",
+      "name": "HTTP ingest + runs via outbox/NATS/worker match oracle",
+      "ok": true,
+      "seconds": 1.87,
+      "details": {
+        "receipts": [
+          {
+            "accepted": 22,
+            "rejected": 0,
+            "replayed": true
+          },
+          {
+            "accepted": 22,
+            "rejected": 0,
+            "replayed": true
+          },
+          {
+            "accepted": 18,
+            "rejected": 4,
+            "replayed": true
+          },
+          {
+            "accepted": 18,
+            "rejected": 4,
+            "replayed": true
+          }
+        ],
+        "runs": 12,
+        "labelled_payments": 44,
+        "matching_oracle": 44,
+        "seconds_until_all_runs_completed": 0.81
+      }
+    },
+    {
+      "test_id": "M3-T04",
+      "name": "knowledge-ingest idempotent re-run",
+      "ok": true,
+      "seconds": 8.95,
+      "details": {
+        "runs": [
+          {
+            "documents": 17,
+            "index_version": "chunking/v1+hashing-ngram/v1",
+            "provider_status": {
+              "inserted": 0,
+              "snapshots": 6
+            },
+            "published": 0,
+            "unchanged": 17
+          },
+          {
+            "documents": 17,
+            "index_version": "chunking/v1+hashing-ngram/v1",
+            "provider_status": {
+              "inserted": 0,
+              "snapshots": 6
+            },
+            "published": 0,
+            "unchanged": 17
+          }
+        ]
+      }
+    },
+    {
+      "test_id": "M5-T09",
+      "name": "HTTP investigation via outbox/NATS/investigator/MCP",
+      "ok": true,
+      "seconds": 3.28,
+      "details": {
+        "amount_mismatch": {
+          "state": "DRAFTED",
+          "tool_calls": 6,
+          "generative_calls": 3,
+          "tokens_estimated": 4522,
+          "model": "scripted/faithful/v1",
+          "label": "SIMULATED",
+          "facts": 4,
+          "hypotheses": 1
+        },
+        "exact": {
+          "state": "NOT_NEEDED",
+          "tool_calls": 0,
+          "generative_calls": 0,
+          "tokens_estimated": 0,
+          "model": "scripted/faithful/v1",
+          "label": null,
+          "facts": 0,
+          "hypotheses": 0
+        },
+        "seconds": 3.15
+      }
+    },
+    {
+      "test_id": "M6-T08",
+      "name": "HTTP case, reviewed recommendation and human decision",
+      "ok": true,
+      "seconds": 0.29,
+      "details": {
+        "case_id": "10755a78-acfe-40ca-b3ea-b7c9b39e5d0a",
+        "decision": {
+          "decision_id": "4fa77b98-a9b6-47b7-88fc-49b6d82e84f0",
+          "decision": "APPROVE",
+          "approved_version": 2,
+          "replayed": false,
+          "operational_effect": "none: the decision is recorded; no money movement is executed"
+        },
+        "audit_actions": [
+          "investigation.request",
+          "investigation.finish",
+          "case.open",
+          "recommendation.create",
+          "decision.denied",
+          "decision.denied",
+          "decision.denied",
+          "decision.record"
+        ]
+      }
+    },
+    {
+      "test_id": "M3-T07",
+      "name": "retrieval evaluation (MEASURED, synthetic)",
+      "ok": true,
+      "seconds": 4.34,
+      "details": {
+        "hybrid": {
+          "dev": {
+            "acl_violations": 0,
+            "answerable_hit_rate": 1.0,
+            "answerable_hit_rate_ci95": [
+              0.8157,
+              1.0
+            ],
+            "false_abstentions": 0,
+            "latency_p50_ms": 3.12,
+            "latency_p95_ms": 3.86,
+            "mrr": 0.9706,
+            "n_answerable": 17,
+            "n_queries": 21,
+            "n_unanswerable": 4,
+            "no_answer_abstention": 1.0,
+            "no_answer_abstention_ci95": [
+              0.5101,
+              1.0
+            ],
+            "precision_at_5_macro": 0.2706,
+            "recall_at_5_macro": 0.9118
+          },
+          "holdout": {
+            "acl_violations": 0,
+            "answerable_hit_rate": 0.9231,
+            "answerable_hit_rate_ci95": [
+              0.6669,
+              0.9863
+            ],
+            "false_abstentions": 1,
+            "latency_p50_ms": 3.15,
+            "latency_p95_ms": 4.0,
+            "mrr": 0.9231,
+            "n_answerable": 13,
+            "n_queries": 17,
+            "n_unanswerable": 4,
+            "no_answer_abstention": 0.5,
+            "no_answer_abstention_ci95": [
+              0.15,
+              0.85
+            ],
+            "precision_at_5_macro": 0.2308,
+            "recall_at_5_macro": 0.9231
+          }
+        },
+        "lexical": {
+          "dev": {
+            "acl_violations": 0,
+            "answerable_hit_rate": 1.0,
+            "answerable_hit_rate_ci95": [
+              0.8157,
+              1.0
+            ],
+            "false_abstentions": 0,
+            "latency_p50_ms": 2.35,
+            "latency_p95_ms": 3.52,
+            "mrr": 0.9265,
+            "n_answerable": 17,
+            "n_queries": 21,
+            "n_unanswerable": 4,
+            "no_answer_abstention": 1.0,
+            "no_answer_abstention_ci95": [
+              0.5101,
+              1.0
+            ],
+            "precision_at_5_macro": 0.2588,
+            "recall_at_5_macro": 0.8824
+          },
+          "holdout": {
+            "acl_violations": 0,
+            "answerable_hit_rate": 0.9231,
+            "answerable_hit_rate_ci95": [
+              0.6669,
+              0.9863
+            ],
+            "false_abstentions": 1,
+            "latency_p50_ms": 2.31,
+            "latency_p95_ms": 2.74,
+            "mrr": 0.9231,
+            "n_answerable": 13,
+            "n_queries": 17,
+            "n_unanswerable": 4,
+            "no_answer_abstention": 0.5,
+            "no_answer_abstention_ci95": [
+              0.15,
+              0.85
+            ],
+            "precision_at_5_macro": 0.2346,
+            "recall_at_5_macro": 0.9231
+          }
+        },
+        "vector": {
+          "dev": {
+            "acl_violations": 0,
+            "answerable_hit_rate": 0.9412,
+            "answerable_hit_rate_ci95": [
+              0.7302,
+              0.9895
+            ],
+            "false_abstentions": 0,
+            "latency_p50_ms": 1.59,
+            "latency_p95_ms": 1.8,
+            "mrr": 0.7941,
+            "n_answerable": 17,
+            "n_queries": 21,
+            "n_unanswerable": 4,
+            "no_answer_abstention": 1.0,
+            "no_answer_abstention_ci95": [
+              0.5101,
+              1.0
+            ],
+            "precision_at_5_macro": 0.2588,
+            "recall_at_5_macro": 0.8529
+          },
+          "holdout": {
+            "acl_violations": 0,
+            "answerable_hit_rate": 0.9231,
+            "answerable_hit_rate_ci95": [
+              0.6669,
+              0.9863
+            ],
+            "false_abstentions": 1,
+            "latency_p50_ms": 1.54,
+            "latency_p95_ms": 1.9,
+            "mrr": 0.8333,
+            "n_answerable": 13,
+            "n_queries": 17,
+            "n_unanswerable": 4,
+            "no_answer_abstention": 0.75,
+            "no_answer_abstention_ci95": [
+              0.3006,
+              0.9544
+            ],
+            "precision_at_5_macro": 0.2308,
+            "recall_at_5_macro": 0.9231
+          }
+        },
+        "config": {
+          "branch_k": 20,
+          "configured_abstain_coverage": 0.6,
+          "embedding": {
+            "dimensions": 256,
+            "model": "hashing-ngram",
+            "normalization": "l2",
+            "revision": "v1",
+            "semantic": false,
+            "tokenizer": "ascii-folded lowercase [a-z0-9]+ words + char trigrams"
+          },
+          "index_version": "chunking/v1+hashing-ngram/v1",
+          "rrf_k": 60,
+          "top_k": 5,
+          "tuned_on_dev": {
+            "hybrid": 0.6,
+            "lexical": 0.6,
+            "vector": 0.6
+          },
+          "vector_search": "exact cosine scan (no ANN index)"
+        },
+        "report_file": ".smoke/retrieval-eval-20261001T071258Z.json"
+      }
+    },
+    {
+      "test_id": "T08",
+      "name": "API loopback-only, dependencies private",
+      "ok": true,
+      "seconds": 2.56,
+      "details": {
+        "published": {
+          "api": [
+            "127.0.0.1:18180"
+          ],
+          "investigator": [],
+          "nats": [],
+          "nats-nojs": [],
+          "postgres": [],
+          "worker": []
+        },
+        "backend_internal": true,
+        "lan_ip_checked": true
+      }
+    },
+    {
+      "test_id": "T09",
+      "name": "request ID correlated in header and JSON log",
+      "ok": true,
+      "seconds": 1.47,
+      "details": {
+        "log_entry": {
+          "ts": "2026-10-01T07:13:00.773+00:00",
+          "level": "INFO",
+          "logger": "recon_api.access",
+          "message": "request",
+          "request_id": "smoke-7669278f4bd0",
+          "request_id_source": "client",
+          "method": "GET",
+          "path": "/health/ready",
+          "status": 200,
+          "duration_ms": 7.96
+        }
+      }
+    },
+    {
+      "test_id": "T06",
+      "name": "postgres stop: ready 503 <= 3s, live 200, recovery",
+      "ok": true,
+      "seconds": 9.53,
+      "details": {
+        "samples": [
+          {
+            "ready": 503,
+            "seconds": 2.504,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.517,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.517,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          }
+        ],
+        "max_ready_seconds": 2.517,
+        "recovery_seconds": 1.02
+      }
+    },
+    {
+      "test_id": "T06",
+      "name": "postgres pause: ready 503 <= 3s, live 200, recovery",
+      "ok": true,
+      "seconds": 8.02,
+      "details": {
+        "samples": [
+          {
+            "ready": 503,
+            "seconds": 2.526,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.502,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.503,
+            "checks": {
+              "database": "timeout",
+              "vector": "timeout",
+              "messaging": "ok"
+            },
+            "live": 200
+          }
+        ],
+        "max_ready_seconds": 2.526,
+        "recovery_seconds": 0.03
+      }
+    },
+    {
+      "test_id": "T06",
+      "name": "nats stop: ready 503 <= 3s, live 200, recovery",
+      "ok": true,
+      "seconds": 8.38,
+      "details": {
+        "samples": [
+          {
+            "ready": 503,
+            "seconds": 2.504,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.519,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.503,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          }
+        ],
+        "max_ready_seconds": 2.519,
+        "recovery_seconds": 0.01
+      }
+    },
+    {
+      "test_id": "T06",
+      "name": "nats pause: ready 503 <= 3s, live 200, recovery",
+      "ok": true,
+      "seconds": 7.98,
+      "details": {
+        "samples": [
+          {
+            "ready": 503,
+            "seconds": 2.504,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.502,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          },
+          {
+            "ready": 503,
+            "seconds": 2.503,
+            "checks": {
+              "database": "ok",
+              "vector": "ok",
+              "messaging": "timeout"
+            },
+            "live": 200
+          }
+        ],
+        "max_ready_seconds": 2.504,
+        "recovery_seconds": 0.02
+      }
+    },
+    {
+      "test_id": "T04",
+      "name": "marker and pending message survive stop/start",
+      "ok": true,
+      "seconds": 14.2,
+      "details": {
+        "write": {
+          "step": "write",
+          "marker_rows": 1,
+          "stream_seq": 1,
+          "num_pending": 1
+        },
+        "verify": {
+          "step": "verify",
+          "marker_survived": true,
+          "pending_before_consume": 1,
+          "payload_ok": true,
+          "pending_after_ack": 0,
+          "ok": true
+        },
+        "volumes": {
+          "recon-m0_pgdata": "2026-09-29T05:26:57Z",
+          "recon-m0_natsdata": "2026-09-29T05:26:57Z"
+        }
+      }
+    }
+  ]
+}
