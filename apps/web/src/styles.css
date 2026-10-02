@@ -87,6 +87,19 @@ a {
   color: var(--muted);
 }
 
+.demo-banner {
+  border: 1px solid var(--border);
+  border-left: 4px solid #8a5a00;
+  padding: 0.4rem 0.75rem;
+  background: var(--panel);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 .session {
   margin-left: auto;
   color: var(--muted);

@@ -137,6 +137,8 @@ services:
       APP_HTTP_PORT: "8000"
       # M10 kill switch: false refuses new AI investigations (deterministic path unaffected).
       APP_AI_ENABLED: ${APP_AI_ENABLED:-true}
+      # Ruleset for new runs (runbook ruleset-rollback); rules/v2 is a synthetic drill variant.
+      APP_RULESET: ${APP_RULESET:-rules/v1}
     ports:
       - "127.0.0.1:${API_HOST_PORT:-18180}:8000"
     volumes:

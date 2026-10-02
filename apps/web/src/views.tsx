@@ -9,6 +9,7 @@ import {
   unwrap,
 } from "./api/client";
 import { type Session, hasRole, setToken } from "./auth";
+import { DEMO_MODE, demoToken, loadFixture } from "./demo";
 import {
   type Citation,
   type Claim,
@@ -38,7 +39,48 @@ function useLoad<T>(load: () => Promise<T>, deps: unknown[]) {
   return { data, error, reload, setError };
 }
 
+const DEMO_ROLES: [string, string][] = [
+  ["analyst", "Analista"],
+  ["supervisor", "Supervisora"],
+  ["auditor", "Auditor"],
+];
+
+function DemoLoginView({ onLogin }: { onLogin: () => void }) {
+  async function enter(role: string) {
+    const data = await loadFixture();
+    setToken(demoToken(role, data.subjects[role] ?? role, data.tenant));
+    onLogin();
+  }
+  return (
+    <section className="panel" aria-labelledby="demo-login">
+      <h2 id="demo-login">Demo estática (sólo lectura)</h2>
+      <p>
+        Datos sintéticos capturados de una ejecución real del stack local: lotes, resultados, una
+        investigación con borrador <strong>SIMULATED</strong>, un caso con su decisión humana y la
+        auditoría. No hay backend: las acciones que modifican datos se rechazan. El flujo completo
+        corre en local siguiendo el{" "}
+        <a href="https://github.com/manuXD270516/fintech-ai-reconciliation-agent/blob/main/docs/demo/walkthrough.md">
+          walkthrough
+        </a>
+        .
+      </p>
+      <div className="actions">
+        {DEMO_ROLES.map(([role, label]) => (
+          <button key={role} type="button" onClick={() => void enter(role)}>
+            Entrar como {label}
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export function LoginView({ onLogin }: { onLogin: () => void }) {
+  if (DEMO_MODE) return <DemoLoginView onLogin={onLogin} />;
+  return <TokenLoginView onLogin={onLogin} />;
+}
+
+function TokenLoginView({ onLogin }: { onLogin: () => void }) {
   const [token, setValue] = useState("");
   function submit(event: FormEvent) {
     event.preventDefault();

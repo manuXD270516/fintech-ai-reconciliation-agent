@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { decode, getToken, setToken } from "./auth";
+import { DEMO_MODE } from "./demo";
 import {
   AuditView,
   BatchView,
@@ -62,6 +63,12 @@ export function App() {
       <header>
         <h1>Conciliación · panel de investigación</h1>
         <p className="muted">Datos sintéticos. Ninguna acción de este panel mueve dinero.</p>
+        {DEMO_MODE ? (
+          <p className="demo-banner" role="note">
+            Demo estática de sólo lectura (GitHub Pages): datos capturados de una ejecución local;
+            la IA es un proveedor scripted (SIMULATED).
+          </p>
+        ) : null}
         {session ? (
           <nav aria-label="Principal">
             <a href="#/batches">Lotes</a>

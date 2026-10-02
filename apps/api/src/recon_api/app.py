@@ -124,6 +124,7 @@ def create_app(
     if ai_enabled is None:
         ai_enabled = settings.ai_enabled if settings is not None else True
     app.state.ai_enabled = ai_enabled
+    app.state.ruleset = settings.ruleset if settings is not None else "rules/v1"
     http_metrics.ai_enabled = ai_enabled
     app.include_router(v1_router)
     readiness = checker

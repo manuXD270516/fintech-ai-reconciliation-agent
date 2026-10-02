@@ -1,0 +1,67 @@
+# Static read-only demo of the dashboard on GitHub Pages (no backend, synthetic data).
+# Runs only after the `ci` workflow (the full gate) succeeded on main, for that same commit.
+# Actions are pinned by commit SHA.
+name: pages
+
+on:
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - name: Build the static demo (VITE_DEMO_MODE=1)
+        env:
+          VITE_DEMO_MODE: "1"
+          VITE_BASE: /${{ github.event.repository.name }}/
+        run: |
+          npm ci --prefix apps/web --no-audit --no-fund
+          npm --prefix apps/web run test
+          npm --prefix apps/web run build:pages
+
+      - name: Guard against publishing anything but the demo bundle
+        run: |
+          cd apps/web/dist-pages
+          ! grep -rIlE 'eyJ[A-Za-z0-9_-]{10,}\.|127\.0\.0\.1|/home/|[A-Za-z]:\\\\Users' .
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: apps/web/dist-pages
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

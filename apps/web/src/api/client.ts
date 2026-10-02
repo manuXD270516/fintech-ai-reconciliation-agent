@@ -2,6 +2,7 @@
 import createClient, { type Middleware } from "openapi-fetch";
 
 import { getToken } from "../auth";
+import { DEMO_MODE, demoMiddleware } from "../demo";
 import type { components, paths } from "./schema";
 
 export type Schemas = components["schemas"];
@@ -21,6 +22,7 @@ const auth: Middleware = {
   },
 };
 api.use(auth);
+if (DEMO_MODE) api.use(demoMiddleware);
 
 export class ApiError extends Error {
   constructor(
@@ -45,6 +47,8 @@ const CODE_MESSAGES: Record<string, string> = {
   idempotency_conflict: "La clave de idempotencia ya se usó con otro contenido.",
   reason_required: "El motivo es obligatorio (mínimo 10 caracteres).",
   not_found: "No encontrado.",
+  demo_read_only:
+    "Demo estática de sólo lectura: las acciones se ejecutan en el stack local (ver el walkthrough).",
   ai_disabled:
     "La investigación con IA está desactivada (kill switch). La conciliación determinística, los casos y las decisiones siguen disponibles.",
 };

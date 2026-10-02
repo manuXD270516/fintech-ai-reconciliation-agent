@@ -1,4 +1,5 @@
-"""Deterministic 1:1 reconciliation rules (`rules/v1`). Pure: same input, same output.
+"""Deterministic 1:1 reconciliation rules (`rules/v1`; `rules/v2` is a synthetic variant
+for the rollback drill). Pure: same input and ruleset, same output.
 
 Pipeline: batch admission -> duplicate detection -> processing errors -> strong
 reference pairs (exact or linked discrepancies) -> explainable weak ranking ->
@@ -17,9 +18,33 @@ from enum import StrEnum
 from recon_domain.batch import ReconciliationBatch
 from recon_domain.observation import OperationType, SourceKind, TransactionObservation
 
-RULESET_VERSION = "rules/v1"
+RULESET_VERSION = "rules/v1"  # default ruleset of new runs
 WEAK_THRESHOLD = 0.6
 WEAK_WEIGHTS = {"attempt_ref": 0.6, "amount": 0.3, "time_1h": 0.1}
+
+
+@dataclass(frozen=True, slots=True)
+class Ruleset:
+    version: str
+    weak_matching: bool
+    description: str
+
+
+# rules/v2 is SYNTHETIC: it exists to exercise the ruleset rollback runbook (a stricter
+# variant without weak ranking), not because it is better. Default and evals use rules/v1.
+RULESETS: dict[str, Ruleset] = {
+    "rules/v1": Ruleset("rules/v1", True, "strong references + explainable weak ranking"),
+    "rules/v2": Ruleset(
+        "rules/v2", False, "SYNTHETIC rollback drill: strong references only, no weak ranking"
+    ),
+}
+
+
+def ruleset(version: str) -> Ruleset:
+    try:
+        return RULESETS[version]
+    except KeyError:
+        raise ValueError(f"unknown ruleset {version!r}; known: {sorted(RULESETS)}") from None
 
 
 class MatchStatus(StrEnum):
@@ -100,7 +125,8 @@ def _weak_score(left: TransactionObservation, right: TransactionObservation) -> 
     return round(score, 4), "+".join(reasons) or "none"
 
 
-def reconcile(inp: RunInput) -> list[Outcome]:
+def reconcile(inp: RunInput, version: str = RULESET_VERSION) -> list[Outcome]:
+    rules = ruleset(version)
     batch = inp.batch
     left_src, right_src = batch.source_pair
     admitted = [i for i in inp.snapshot if batch.admits(i.observation)]
@@ -218,18 +244,21 @@ def reconcile(inp: RunInput) -> list[Outcome]:
         else:
             right_single.append(right[0])
 
-    outcomes += _weak_phase(left_single, right_single, inp)
+    outcomes += _weak_phase(left_single, right_single, inp, rules.weak_matching)
     return sorted(
         outcomes, key=lambda o: (o.payment_ref, o.operation_type, o.left_ids, o.right_ids)
     )
 
 
 def _weak_phase(
-    left_single: list[SnapshotItem], right_single: list[SnapshotItem], inp: RunInput
+    left_single: list[SnapshotItem],
+    right_single: list[SnapshotItem],
+    inp: RunInput,
+    weak_matching: bool = True,
 ) -> list[Outcome]:
     left_src, right_src = inp.batch.source_pair
     scores: dict[tuple[int, int], tuple[float, str]] = {}
-    for a in left_single:
+    for a in left_single if weak_matching else ():
         for b in right_single:
             if a.observation.operation_type != b.observation.operation_type:
                 continue

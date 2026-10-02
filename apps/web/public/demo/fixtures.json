@@ -1,0 +1,2452 @@
+{
+ "entry": {
+  "case_id": "38550161-febe-4e81-8194-9ce3de7e5630",
+  "investigation_id": "484ee6a7-73b7-4c1d-8e00-c152465b7a18",
+  "ordinal": 2,
+  "run_id": "e79ecf36-2086-417a-85f4-a40e9937193c"
+ },
+ "existing": {
+  "POST /v1/runs/e79ecf36-2086-417a-85f4-a40e9937193c/results/2/cases": {
+   "case_id": "38550161-febe-4e81-8194-9ce3de7e5630",
+   "created": false
+  },
+  "POST /v1/runs/e79ecf36-2086-417a-85f4-a40e9937193c/results/2/investigations": {
+   "created": false,
+   "investigation_id": "484ee6a7-73b7-4c1d-8e00-c152465b7a18",
+   "status": "existing"
+  },
+  "POST /v1/runs/e79ecf36-2086-417a-85f4-a40e9937193c/results/3/cases": {
+   "case_id": "b635df88-1e43-492e-aed7-f2077dcd7d1c",
+   "created": false
+  }
+ },
+ "generated_utc": "2026-10-02T07:46:21+00:00",
+ "get": {
+  "/v1/batches": [
+   {
+    "batch_id": "b-prov-beta-merchant-03-BOB",
+    "currency": "BOB",
+    "cutoff_at": "2026-09-03T10:00:00Z",
+    "left_complete": true,
+    "merchant_account": "merchant-03",
+    "provider_id": "prov-beta",
+    "right_complete": true,
+    "version": 3,
+    "window_end": "2026-09-03T04:00:00Z",
+    "window_start": "2026-09-01T04:00:00Z"
+   },
+   {
+    "batch_id": "b-prov-beta-merchant-03-USD",
+    "currency": "USD",
+    "cutoff_at": "2026-09-03T10:00:00Z",
+    "left_complete": true,
+    "merchant_account": "merchant-03",
+    "provider_id": "prov-beta",
+    "right_complete": true,
+    "version": 3,
+    "window_end": "2026-09-03T04:00:00Z",
+    "window_start": "2026-09-01T04:00:00Z"
+   },
+   {
+    "batch_id": "b-prov-beta-merchant-02-BOB",
+    "currency": "BOB",
+    "cutoff_at": "2026-09-03T10:00:00Z",
+    "left_complete": true,
+    "merchant_account": "merchant-02",
+    "provider_id": "prov-beta",
+    "right_complete": true,
+    "version": 3,
+    "window_end": "2026-09-03T04:00:00Z",
+    "window_start": "2026-09-01T04:00:00Z"
+   },
+   {
+    "batch_id": "b-prov-beta-merchant-02-USD",
+    "currency": "USD",
+    "cutoff_at": "2026-09-03T10:00:00Z",
+    "left_complete": true,
+    "merchant_account": "merchant-02",
+    "provider_id": "prov-beta",
+    "right_complete": true,
+    "version": 3,
+    "window_end": "2026-09-03T04:00:00Z",
+    "window_start": "2026-09-01T04:00:00Z"
+   },
+   {
+    "batch_id": "b-prov-beta-merchant-01-BOB",
+    "currency": "BOB",
+    "cutoff_at": "2026-09-03T10:00:00Z",
+    "left_complete": true,
+    "merchant_account": "merchant-01",
+    "provider_id": "prov-beta",
+    "right_complete": true,
+    "version": 3,
+    "window_end": "2026-09-03T04:00:00Z",
+    "window_start": "2026-09-01T04:00:00Z"
+   },
+   {
+    "batch_id": "b-prov-beta-merchant-01-USD",
+    "currency": "USD",
+    "cutoff_at": "2026-09-03T10:00:00Z",
+    "left_complete": true,
+    "merchant_account": "merchant-01",
+    "provider_id": "prov-beta",
+    "right_complete": true,
+    "version": 3,
+    "window_end": "2026-09-03T04:00:00Z",
+    "window_start": "2026-09-01T04:00:00Z"
+   },
+   {
+    "batch_id": "b-prov-alfa-merchant-03-BOB",
+    "currency": "BOB",
+    "cutoff_at": "2026-09-03T10:00:00Z",
+    "left_complete": true,
+    "merchant_account": "merchant-03",
+    "provider_id": "prov-alfa",
+    "right_complete": true,
+    "version": 3,
+    "window_end": "2026-09-03T04:00:00Z",
+    "window_start": "2026-09-01T04:00:00Z"
+   },
+   {
+    "batch_id": "b-prov-alfa-merchant-03-USD",
+    "currency": "USD",
+    "cutoff_at": "2026-09-03T10:00:00Z",
+    "left_complete": true,
+    "merchant_account": "merchant-03",
+    "provider_id": "prov-alfa",
+    "right_complete": true,
+    "version": 3,
+    "window_end": "2026-09-03T04:00:00Z",
+    "window_start": "2026-09-01T04:00:00Z"
+   },
+   {
+    "batch_id": "b-prov-alfa-merchant-02-BOB",
+    "currency": "BOB",
+    "cutoff_at": "2026-09-03T10:00:00Z",
+    "left_complete": true,
+    "merchant_account": "merchant-02",
+    "provider_id": "prov-alfa",
+    "right_complete": true,
+    "version": 3,
+    "window_end": "2026-09-03T04:00:00Z",
+    "window_start": "2026-09-01T04:00:00Z"
+   },
+   {
+    "batch_id": "b-prov-alfa-merchant-02-USD",
+    "currency": "USD",
+    "cutoff_at": "2026-09-03T10:00:00Z",
+    "left_complete": true,
+    "merchant_account": "merchant-02",
+    "provider_id": "prov-alfa",
+    "right_complete": true,
+    "version": 3,
+    "window_end": "2026-09-03T04:00:00Z",
+    "window_start": "2026-09-01T04:00:00Z"
+   },
+   {
+    "batch_id": "b-prov-alfa-merchant-01-BOB",
+    "currency": "BOB",
+    "cutoff_at": "2026-09-03T10:00:00Z",
+    "left_complete": true,
+    "merchant_account": "merchant-01",
+    "provider_id": "prov-alfa",
+    "right_complete": true,
+    "version": 3,
+    "window_end": "2026-09-03T04:00:00Z",
+    "window_start": "2026-09-01T04:00:00Z"
+   },
+   {
+    "batch_id": "b-prov-alfa-merchant-01-USD",
+    "currency": "USD",
+    "cutoff_at": "2026-09-03T10:00:00Z",
+    "left_complete": true,
+    "merchant_account": "merchant-01",
+    "provider_id": "prov-alfa",
+    "right_complete": true,
+    "version": 3,
+    "window_end": "2026-09-03T04:00:00Z",
+    "window_start": "2026-09-01T04:00:00Z"
+   }
+  ],
+  "/v1/batches/b-prov-alfa-merchant-01-BOB": {
+   "batch_id": "b-prov-alfa-merchant-01-BOB",
+   "business_timezone": "America/La_Paz",
+   "currency": "BOB",
+   "cutoff_at": "2026-09-03T10:00:00Z",
+   "left_complete": true,
+   "left_source": "internal_ledger",
+   "merchant_account": "merchant-01",
+   "provider_id": "prov-alfa",
+   "right_complete": true,
+   "right_source": "provider_report",
+   "version": 3,
+   "window_end": "2026-09-03T04:00:00Z",
+   "window_start": "2026-09-01T04:00:00Z"
+  },
+  "/v1/batches/b-prov-alfa-merchant-01-BOB/runs": [
+   {
+    "completed_at": "2026-10-02T07:46:12.135265Z",
+    "observation_count": 0,
+    "requested_at": "2026-10-02T07:46:11.911410Z",
+    "ruleset_version": "rules/v1",
+    "run_id": "e8d98012-748a-44ae-97cd-84a38efc0d4f",
+    "run_number": 1,
+    "snapshot_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "status": "completed"
+   }
+  ],
+  "/v1/batches/b-prov-alfa-merchant-01-USD": {
+   "batch_id": "b-prov-alfa-merchant-01-USD",
+   "business_timezone": "America/La_Paz",
+   "currency": "USD",
+   "cutoff_at": "2026-09-03T10:00:00Z",
+   "left_complete": true,
+   "left_source": "internal_ledger",
+   "merchant_account": "merchant-01",
+   "provider_id": "prov-alfa",
+   "right_complete": true,
+   "right_source": "provider_report",
+   "version": 3,
+   "window_end": "2026-09-03T04:00:00Z",
+   "window_start": "2026-09-01T04:00:00Z"
+  },
+  "/v1/batches/b-prov-alfa-merchant-01-USD/runs": [
+   {
+    "completed_at": "2026-10-02T07:46:12.119697Z",
+    "observation_count": 12,
+    "requested_at": "2026-10-02T07:46:11.839780Z",
+    "ruleset_version": "rules/v1",
+    "run_id": "e5efe124-8aac-4f20-a351-88eba6a69759",
+    "run_number": 1,
+    "snapshot_hash": "7f77633cfcf5fe108b4fb20ab490a6967147b655e5e095f1fec626752ca7e934",
+    "status": "completed"
+   }
+  ],
+  "/v1/batches/b-prov-alfa-merchant-02-BOB": {
+   "batch_id": "b-prov-alfa-merchant-02-BOB",
+   "business_timezone": "America/La_Paz",
+   "currency": "BOB",
+   "cutoff_at": "2026-09-03T10:00:00Z",
+   "left_complete": true,
+   "left_source": "internal_ledger",
+   "merchant_account": "merchant-02",
+   "provider_id": "prov-alfa",
+   "right_complete": true,
+   "right_source": "provider_report",
+   "version": 3,
+   "window_end": "2026-09-03T04:00:00Z",
+   "window_start": "2026-09-01T04:00:00Z"
+  },
+  "/v1/batches/b-prov-alfa-merchant-02-BOB/runs": [
+   {
+    "completed_at": "2026-10-02T07:46:12.634977Z",
+    "observation_count": 0,
+    "requested_at": "2026-10-02T07:46:12.117564Z",
+    "ruleset_version": "rules/v1",
+    "run_id": "ef1a983b-878e-41ea-a913-411a56080a8a",
+    "run_number": 1,
+    "snapshot_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "status": "completed"
+   }
+  ],
+  "/v1/batches/b-prov-alfa-merchant-02-USD": {
+   "batch_id": "b-prov-alfa-merchant-02-USD",
+   "business_timezone": "America/La_Paz",
+   "currency": "USD",
+   "cutoff_at": "2026-09-03T10:00:00Z",
+   "left_complete": true,
+   "left_source": "internal_ledger",
+   "merchant_account": "merchant-02",
+   "provider_id": "prov-alfa",
+   "right_complete": true,
+   "right_source": "provider_report",
+   "version": 3,
+   "window_end": "2026-09-03T04:00:00Z",
+   "window_start": "2026-09-01T04:00:00Z"
+  },
+  "/v1/batches/b-prov-alfa-merchant-02-USD/runs": [
+   {
+    "completed_at": "2026-10-02T07:46:12.145771Z",
+    "observation_count": 13,
+    "requested_at": "2026-10-02T07:46:12.007329Z",
+    "ruleset_version": "rules/v1",
+    "run_id": "e79ecf36-2086-417a-85f4-a40e9937193c",
+    "run_number": 1,
+    "snapshot_hash": "de95fa9cbafdf587a26c05886ffba221c741eda11a099d5f34441f762ccdc115",
+    "status": "completed"
+   }
+  ],
+  "/v1/batches/b-prov-alfa-merchant-03-BOB": {
+   "batch_id": "b-prov-alfa-merchant-03-BOB",
+   "business_timezone": "America/La_Paz",
+   "currency": "BOB",
+   "cutoff_at": "2026-09-03T10:00:00Z",
+   "left_complete": true,
+   "left_source": "internal_ledger",
+   "merchant_account": "merchant-03",
+   "provider_id": "prov-alfa",
+   "right_complete": true,
+   "right_source": "provider_report",
+   "version": 3,
+   "window_end": "2026-09-03T04:00:00Z",
+   "window_start": "2026-09-01T04:00:00Z"
+  },
+  "/v1/batches/b-prov-alfa-merchant-03-BOB/runs": [
+   {
+    "completed_at": "2026-10-02T07:46:12.662850Z",
+    "observation_count": 0,
+    "requested_at": "2026-10-02T07:46:12.300114Z",
+    "ruleset_version": "rules/v1",
+    "run_id": "40475fbc-6754-4d42-b6ec-55b7d0c8eae0",
+    "run_number": 1,
+    "snapshot_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "status": "completed"
+   }
+  ],
+  "/v1/batches/b-prov-alfa-merchant-03-USD": {
+   "batch_id": "b-prov-alfa-merchant-03-USD",
+   "business_timezone": "America/La_Paz",
+   "currency": "USD",
+   "cutoff_at": "2026-09-03T10:00:00Z",
+   "left_complete": true,
+   "left_source": "internal_ledger",
+   "merchant_account": "merchant-03",
+   "provider_id": "prov-alfa",
+   "right_complete": true,
+   "right_source": "provider_report",
+   "version": 3,
+   "window_end": "2026-09-03T04:00:00Z",
+   "window_start": "2026-09-01T04:00:00Z"
+  },
+  "/v1/batches/b-prov-alfa-merchant-03-USD/runs": [
+   {
+    "completed_at": "2026-10-02T07:46:12.648982Z",
+    "observation_count": 13,
+    "requested_at": "2026-10-02T07:46:12.226489Z",
+    "ruleset_version": "rules/v1",
+    "run_id": "6cca3144-a9ad-484a-8164-f474de04b43c",
+    "run_number": 1,
+    "snapshot_hash": "f7980206357ada9118580082cc7ba792463e9920294885bd577ad06c204a0ddb",
+    "status": "completed"
+   }
+  ],
+  "/v1/batches/b-prov-beta-merchant-01-BOB": {
+   "batch_id": "b-prov-beta-merchant-01-BOB",
+   "business_timezone": "America/La_Paz",
+   "currency": "BOB",
+   "cutoff_at": "2026-09-03T10:00:00Z",
+   "left_complete": true,
+   "left_source": "internal_ledger",
+   "merchant_account": "merchant-01",
+   "provider_id": "prov-beta",
+   "right_complete": true,
+   "right_source": "provider_report",
+   "version": 3,
+   "window_end": "2026-09-03T04:00:00Z",
+   "window_start": "2026-09-01T04:00:00Z"
+  },
+  "/v1/batches/b-prov-beta-merchant-01-BOB/runs": [
+   {
+    "completed_at": "2026-10-02T07:46:12.687924Z",
+    "observation_count": 6,
+    "requested_at": "2026-10-02T07:46:12.490372Z",
+    "ruleset_version": "rules/v1",
+    "run_id": "6c7bf663-6d6b-4beb-968f-4f4d90a6621a",
+    "run_number": 1,
+    "snapshot_hash": "5c16fd2dc40d213c0874e92828576b954b3bef36765a2995cd393ca4975a4d18",
+    "status": "completed"
+   }
+  ],
+  "/v1/batches/b-prov-beta-merchant-01-USD": {
+   "batch_id": "b-prov-beta-merchant-01-USD",
+   "business_timezone": "America/La_Paz",
+   "currency": "USD",
+   "cutoff_at": "2026-09-03T10:00:00Z",
+   "left_complete": true,
+   "left_source": "internal_ledger",
+   "merchant_account": "merchant-01",
+   "provider_id": "prov-beta",
+   "right_complete": true,
+   "right_source": "provider_report",
+   "version": 3,
+   "window_end": "2026-09-03T04:00:00Z",
+   "window_start": "2026-09-01T04:00:00Z"
+  },
+  "/v1/batches/b-prov-beta-merchant-01-USD/runs": [
+   {
+    "completed_at": "2026-10-02T07:46:12.672739Z",
+    "observation_count": 7,
+    "requested_at": "2026-10-02T07:46:12.397514Z",
+    "ruleset_version": "rules/v1",
+    "run_id": "23b3461a-f60c-482c-aba0-1817cc0ac510",
+    "run_number": 1,
+    "snapshot_hash": "f5cb52f8a3ad163048d946f764ac07cc9e013ca44f550180a23601357d4e0e70",
+    "status": "completed"
+   }
+  ],
+  "/v1/batches/b-prov-beta-merchant-02-BOB": {
+   "batch_id": "b-prov-beta-merchant-02-BOB",
+   "business_timezone": "America/La_Paz",
+   "currency": "BOB",
+   "cutoff_at": "2026-09-03T10:00:00Z",
+   "left_complete": true,
+   "left_source": "internal_ledger",
+   "merchant_account": "merchant-02",
+   "provider_id": "prov-beta",
+   "right_complete": true,
+   "right_source": "provider_report",
+   "version": 3,
+   "window_end": "2026-09-03T04:00:00Z",
+   "window_start": "2026-09-01T04:00:00Z"
+  },
+  "/v1/batches/b-prov-beta-merchant-02-BOB/runs": [
+   {
+    "completed_at": "2026-10-02T07:46:13.155811Z",
+    "observation_count": 6,
+    "requested_at": "2026-10-02T07:46:12.639380Z",
+    "ruleset_version": "rules/v1",
+    "run_id": "fd1d6603-adfc-4a98-9903-86ce0c0be8a3",
+    "run_number": 1,
+    "snapshot_hash": "bcf069051996da4d8067a96e3b14522b5fa186312ecdb8e39fb137c135cdd357",
+    "status": "completed"
+   }
+  ],
+  "/v1/batches/b-prov-beta-merchant-02-USD": {
+   "batch_id": "b-prov-beta-merchant-02-USD",
+   "business_timezone": "America/La_Paz",
+   "currency": "USD",
+   "cutoff_at": "2026-09-03T10:00:00Z",
+   "left_complete": true,
+   "left_source": "internal_ledger",
+   "merchant_account": "merchant-02",
+   "provider_id": "prov-beta",
+   "right_complete": true,
+   "right_source": "provider_report",
+   "version": 3,
+   "window_end": "2026-09-03T04:00:00Z",
+   "window_start": "2026-09-01T04:00:00Z"
+  },
+  "/v1/batches/b-prov-beta-merchant-02-USD/runs": [
+   {
+    "completed_at": "2026-10-02T07:46:12.702844Z",
+    "observation_count": 6,
+    "requested_at": "2026-10-02T07:46:12.578962Z",
+    "ruleset_version": "rules/v1",
+    "run_id": "10834e9e-71a2-43be-8f24-7afc839538ec",
+    "run_number": 1,
+    "snapshot_hash": "8608ca434ad7cc9e1a29ada5da44d84de9d2c70830593b913ccac18ea4b621d2",
+    "status": "completed"
+   }
+  ],
+  "/v1/batches/b-prov-beta-merchant-03-BOB": {
+   "batch_id": "b-prov-beta-merchant-03-BOB",
+   "business_timezone": "America/La_Paz",
+   "currency": "BOB",
+   "cutoff_at": "2026-09-03T10:00:00Z",
+   "left_complete": true,
+   "left_source": "internal_ledger",
+   "merchant_account": "merchant-03",
+   "provider_id": "prov-beta",
+   "right_complete": true,
+   "right_source": "provider_report",
+   "version": 3,
+   "window_end": "2026-09-03T04:00:00Z",
+   "window_start": "2026-09-01T04:00:00Z"
+  },
+  "/v1/batches/b-prov-beta-merchant-03-BOB/runs": [
+   {
+    "completed_at": "2026-10-02T07:46:13.188620Z",
+    "observation_count": 7,
+    "requested_at": "2026-10-02T07:46:12.798344Z",
+    "ruleset_version": "rules/v1",
+    "run_id": "cc238465-43b5-4fb3-9c7c-1ba09f71919b",
+    "run_number": 1,
+    "snapshot_hash": "c0b27e48731792d0fae9e58d4e416aa5cac8461f90226034fc32a779bcae8c07",
+    "status": "completed"
+   }
+  ],
+  "/v1/batches/b-prov-beta-merchant-03-USD": {
+   "batch_id": "b-prov-beta-merchant-03-USD",
+   "business_timezone": "America/La_Paz",
+   "currency": "USD",
+   "cutoff_at": "2026-09-03T10:00:00Z",
+   "left_complete": true,
+   "left_source": "internal_ledger",
+   "merchant_account": "merchant-03",
+   "provider_id": "prov-beta",
+   "right_complete": true,
+   "right_source": "provider_report",
+   "version": 3,
+   "window_end": "2026-09-03T04:00:00Z",
+   "window_start": "2026-09-01T04:00:00Z"
+  },
+  "/v1/batches/b-prov-beta-merchant-03-USD/runs": [
+   {
+    "completed_at": "2026-10-02T07:46:13.172935Z",
+    "observation_count": 6,
+    "requested_at": "2026-10-02T07:46:12.724816Z",
+    "ruleset_version": "rules/v1",
+    "run_id": "2c3c216c-b54e-4916-ad38-a6f097eeca08",
+    "run_number": 1,
+    "snapshot_hash": "5840de2e3905ae2792ee82db237a46cdf4d57be24053f1e1e94585eb92623712",
+    "status": "completed"
+   }
+  ],
+  "/v1/cases": [
+   {
+    "case_id": "b635df88-1e43-492e-aed7-f2077dcd7d1c",
+    "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#3",
+    "ordinal": 3,
+    "run_id": "e79ecf36-2086-417a-85f4-a40e9937193c",
+    "status": "HUMAN_REVIEW",
+    "updated_at": "2026-10-02T07:46:16.773522Z",
+    "version": 2
+   },
+   {
+    "case_id": "38550161-febe-4e81-8194-9ce3de7e5630",
+    "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#2",
+    "ordinal": 2,
+    "run_id": "e79ecf36-2086-417a-85f4-a40e9937193c",
+    "status": "APPROVED",
+    "updated_at": "2026-10-02T07:46:16.689261Z",
+    "version": 3
+   }
+  ],
+  "/v1/cases/38550161-febe-4e81-8194-9ce3de7e5630": {
+   "case_id": "38550161-febe-4e81-8194-9ce3de7e5630",
+   "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#2",
+   "closed_reason": null,
+   "created_at": "2026-10-02T07:46:16.632916Z",
+   "decisions": [
+    {
+     "approver": "sofia-demo",
+     "case_version": 2,
+     "created_at": "2026-10-02T07:46:16.689261Z",
+     "decision": "APPROVE",
+     "id": "b886a5c0-a821-4a62-a95f-ecc16d5fe4ac",
+     "reason": "aprobado: solicitar información al proveedor",
+     "recommendation_id": "4170eb3c-71a6-4449-9237-840d36fd1dfd"
+    }
+   ],
+   "opened_by": "ana-demo",
+   "ordinal": 2,
+   "recommendations": [
+    {
+     "action": "REQUEST_PROVIDER_INFO",
+     "case_version": 2,
+     "created_at": "2026-10-02T07:46:16.665040Z",
+     "evidence": {
+      "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#2",
+      "citations": [
+       "calc:difference",
+       "doc:incident-inc-0815@1#05d62720a7be870f0f0f207891c9d3b2",
+       "status:prov-alfa@2026-08-17T00:00:00+00:00",
+       "tx:477c2d6c-9cac-ffb4-54f9-4825ba700755@1",
+       "tx:fbad6741-91a1-b8e6-dfaf-163a85f94514@1"
+      ],
+      "facts": [
+       "internal_ledger registra pay-0007 (capture) por 222161 USD en unidades menores, estado succeeded, revisión 1.",
+       "provider_report registra pay-0007 (capture) por 222061 USD en unidades menores, estado succeeded, revisión 1.",
+       "Estado de plataforma de prov-alfa a 2026-09-02T03:40:00+00:00: operational (no describe una transacción).",
+       "Diferencia proveedor menos ledger: -100 unidades menores de USD (222061 - 222161)."
+      ],
+      "hypotheses": [
+       "El caso podría estar relacionado con INC-0815 liquidación neta inesperada en prov-alfa."
+      ],
+      "investigation_id": "484ee6a7-73b7-4c1d-8e00-c152465b7a18",
+      "label": "SIMULATED",
+      "source": "investigation"
+     },
+     "expires_at": "2026-10-05T07:46:16.663552Z",
+     "id": "4170eb3c-71a6-4449-9237-840d36fd1dfd",
+     "investigation_id": "484ee6a7-73b7-4c1d-8e00-c152465b7a18",
+     "proposer": "ana-demo",
+     "rationale": "adoptar el borrador revisado: pedir reporte corregido",
+     "review_result": "SUPPORTED",
+     "status": "APPROVED"
+    }
+   ],
+   "run_id": "e79ecf36-2086-417a-85f4-a40e9937193c",
+   "run_is_latest": true,
+   "status": "APPROVED",
+   "updated_at": "2026-10-02T07:46:16.689261Z",
+   "version": 3
+  },
+  "/v1/cases/38550161-febe-4e81-8194-9ce3de7e5630/audit": {
+   "audit": [
+    {
+     "action": "investigation.request",
+     "actor": "ana-demo",
+     "details": {
+      "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#2",
+      "input_snapshot_hash": "b22e9b2b322a87cf35cddd05d0001e214aec5abb96423baf105b45c5ab5e800c"
+     },
+     "id": 10883,
+     "occurred_at": "2026-10-02T07:46:13.983289Z",
+     "outcome": "requested",
+     "resource_id": "484ee6a7-73b7-4c1d-8e00-c152465b7a18",
+     "resource_type": "investigation",
+     "resource_version": 1
+    },
+    {
+     "action": "investigation.finish",
+     "actor": "svc-investigator",
+     "details": {
+      "generative_calls": 3,
+      "model": "scripted/faithful/v1",
+      "tool_calls": 6
+     },
+     "id": 10890,
+     "occurred_at": "2026-10-02T07:46:16.222662Z",
+     "outcome": "drafted",
+     "resource_id": "484ee6a7-73b7-4c1d-8e00-c152465b7a18",
+     "resource_type": "investigation",
+     "resource_version": 1
+    },
+    {
+     "action": "case.open",
+     "actor": "ana-demo",
+     "details": {
+      "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#2"
+     },
+     "id": 10891,
+     "occurred_at": "2026-10-02T07:46:16.632916Z",
+     "outcome": "opened",
+     "resource_id": "38550161-febe-4e81-8194-9ce3de7e5630",
+     "resource_type": "case",
+     "resource_version": 1
+    },
+    {
+     "action": "recommendation.create",
+     "actor": "ana-demo",
+     "details": {
+      "action": "REQUEST_PROVIDER_INFO",
+      "case_id": "38550161-febe-4e81-8194-9ce3de7e5630",
+      "review_result": "SUPPORTED"
+     },
+     "id": 10892,
+     "occurred_at": "2026-10-02T07:46:16.665040Z",
+     "outcome": "pending",
+     "resource_id": "4170eb3c-71a6-4449-9237-840d36fd1dfd",
+     "resource_type": "recommendation",
+     "resource_version": 2
+    },
+    {
+     "action": "decision.record",
+     "actor": "sofia-demo",
+     "details": {
+      "action": "REQUEST_PROVIDER_INFO",
+      "approved_version": 2,
+      "decision": "APPROVE",
+      "operational_effect": "none: the decision is recorded; no money movement is executed",
+      "recommendation_id": "4170eb3c-71a6-4449-9237-840d36fd1dfd"
+     },
+     "id": 10893,
+     "occurred_at": "2026-10-02T07:46:16.689261Z",
+     "outcome": "approve",
+     "resource_id": "b886a5c0-a821-4a62-a95f-ecc16d5fe4ac",
+     "resource_type": "decision",
+     "resource_version": 3
+    }
+   ],
+   "case": {
+    "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#2",
+    "closed_reason": null,
+    "created_at": "2026-10-02T07:46:16.632916Z",
+    "id": "38550161-febe-4e81-8194-9ce3de7e5630",
+    "opened_by": "ana-demo",
+    "ordinal": 2,
+    "run_id": "e79ecf36-2086-417a-85f4-a40e9937193c",
+    "run_is_latest": true,
+    "status": "APPROVED",
+    "tenant_id": "demo-d2a38b54",
+    "updated_at": "2026-10-02T07:46:16.689261Z",
+    "version": 3
+   },
+   "decisions": [
+    {
+     "approver": "sofia-demo",
+     "case_version": 2,
+     "created_at": "2026-10-02T07:46:16.689261Z",
+     "decision": "APPROVE",
+     "id": "b886a5c0-a821-4a62-a95f-ecc16d5fe4ac",
+     "reason": "aprobado: solicitar información al proveedor",
+     "recommendation_id": "4170eb3c-71a6-4449-9237-840d36fd1dfd"
+    }
+   ],
+   "investigations": [
+    {
+     "citations": [
+      {
+       "provenance": {
+        "computed_from": [
+         "tx:477c2d6c-9cac-ffb4-54f9-4825ba700755@1",
+         "tx:fbad6741-91a1-b8e6-dfaf-163a85f94514@1"
+        ]
+       },
+       "ref": "calc:difference"
+      },
+      {
+       "provenance": {
+        "content_hash": "f58a489e0be057ee8c4fd8539b51c0aa99e4a5fc2d4c2bb77d3c8f7c1ac07d35",
+        "effective_at": "2026-08-15T00:00:00+00:00",
+        "locator": "resolucion:L22-L24",
+        "record_or_chunk_id": "05d62720a7be870f0f0f207891c9d3b2",
+        "source_id": "incident-inc-0815",
+        "synthetic": true,
+        "version": "1"
+       },
+       "ref": "doc:incident-inc-0815@1#05d62720a7be870f0f0f207891c9d3b2"
+      },
+      {
+       "provenance": {
+        "content_hash": "fe01ebb4b0525218a7ad1280e99b3e05dc1464fba06ee70108667cb169fbc69d",
+        "effective_at": "2026-08-17T00:00:00+00:00",
+        "locator": "valid 2026-08-17T00:00:00+00:00 .. None",
+        "record_or_chunk_id": "prov-alfa@2026-08-17T00:00:00+00:00",
+        "source_id": "provider_status/prov-alfa",
+        "synthetic": true,
+        "version": "provider-status/v1"
+       },
+       "ref": "status:prov-alfa@2026-08-17T00:00:00+00:00"
+      },
+      {
+       "provenance": {
+        "content_hash": "485fb2a19e8d92689e4071387abe62c34a9f4a5b9f2afe92cc445d4193d41a45",
+        "effective_at": "2026-09-02T03:40:00+00:00",
+        "locator": "internal_ledger/led-000007@1",
+        "record_or_chunk_id": "477c2d6c-9cac-ffb4-54f9-4825ba700755",
+        "source_id": "observation/internal_ledger",
+        "synthetic": true,
+        "version": "1"
+       },
+       "ref": "tx:477c2d6c-9cac-ffb4-54f9-4825ba700755@1"
+      },
+      {
+       "provenance": {
+        "content_hash": "cfc12aa96fd52c2f867e1da72908e0c4111fec57c3eaa7fb0005e3b463c1bd48",
+        "effective_at": "2026-09-02T03:40:00+00:00",
+        "locator": "provider_report/alf-000004@1",
+        "record_or_chunk_id": "fbad6741-91a1-b8e6-dfaf-163a85f94514",
+        "source_id": "observation/provider_report",
+        "synthetic": true,
+        "version": "1"
+       },
+       "ref": "tx:fbad6741-91a1-b8e6-dfaf-163a85f94514@1"
+      }
+     ],
+     "input_snapshot_hash": "b22e9b2b322a87cf35cddd05d0001e214aec5abb96423baf105b45c5ab5e800c",
+     "investigation_id": "484ee6a7-73b7-4c1d-8e00-c152465b7a18",
+     "review": {
+      "deterministic_findings": [],
+      "is_human_approval": false,
+      "objections": [],
+      "result": "SUPPORTED",
+      "reviewer_model": "scripted/faithful/v1"
+     },
+     "state": "DRAFTED",
+     "steps": [
+      {
+       "arguments": {
+        "transaction_id": "477c2d6c-9cac-ffb4-54f9-4825ba700755"
+       },
+       "error_code": null,
+       "ok": true,
+       "origin": "template",
+       "provenance_ids": [
+        "477c2d6c-9cac-ffb4-54f9-4825ba700755"
+       ],
+       "retryable": false,
+       "seconds": 0.0594,
+       "tool": "get_transaction"
+      },
+      {
+       "arguments": {
+        "transaction_id": "fbad6741-91a1-b8e6-dfaf-163a85f94514"
+       },
+       "error_code": null,
+       "ok": true,
+       "origin": "template",
+       "provenance_ids": [
+        "fbad6741-91a1-b8e6-dfaf-163a85f94514"
+       ],
+       "retryable": false,
+       "seconds": 0.0116,
+       "tool": "get_transaction"
+      },
+      {
+       "arguments": {
+        "provider_id": "prov-alfa",
+        "query": "diferencia de importe liquidación neta comisión"
+       },
+       "error_code": null,
+       "ok": true,
+       "origin": "template",
+       "provenance_ids": [
+        "c8acea8e3c41d7fee1bbd165d1d6c344",
+        "289d212e5b593b11629792f828182e6f",
+        "e423d132707dd20166f796a4245e9c47",
+        "3dec2193c32c5c8f2b480423339b8de6",
+        "df65b0fb6e1de8de1faeae138e6315be"
+       ],
+       "retryable": false,
+       "seconds": 0.0558,
+       "tool": "search_provider_docs"
+      },
+      {
+       "arguments": {
+        "provider_id": "prov-alfa",
+        "query": "diferencia de importe liquidación neta comisión"
+       },
+       "error_code": null,
+       "ok": true,
+       "origin": "template",
+       "provenance_ids": [
+        "05d62720a7be870f0f0f207891c9d3b2",
+        "2ef4393bcf895020135d7c57a6ea1cfd",
+        "38febb4d915b34d31a5550b1ae95f323"
+       ],
+       "retryable": false,
+       "seconds": 0.0237,
+       "tool": "search_incidents"
+      },
+      {
+       "arguments": {
+        "as_of": "2026-09-02T03:40:00+00:00",
+        "provider_id": "prov-alfa"
+       },
+       "error_code": null,
+       "ok": true,
+       "origin": "template",
+       "provenance_ids": [
+        "prov-alfa@2026-08-17T00:00:00+00:00"
+       ],
+       "retryable": false,
+       "seconds": 0.0194,
+       "tool": "get_provider_status"
+      },
+      {
+       "arguments": {
+        "provider_id": "prov-alfa",
+        "query": "liquidación neta comisión diferencia de importe"
+       },
+       "error_code": null,
+       "ok": true,
+       "origin": "model",
+       "provenance_ids": [
+        "c8acea8e3c41d7fee1bbd165d1d6c344",
+        "289d212e5b593b11629792f828182e6f",
+        "e423d132707dd20166f796a4245e9c47",
+        "3dec2193c32c5c8f2b480423339b8de6",
+        "df65b0fb6e1de8de1faeae138e6315be"
+       ],
+       "retryable": false,
+       "seconds": 0.0131,
+       "tool": "search_provider_docs"
+      }
+     ]
+    }
+   ],
+   "recommendations": [
+    {
+     "action": "REQUEST_PROVIDER_INFO",
+     "case_version": 2,
+     "created_at": "2026-10-02T07:46:16.665040Z",
+     "evidence": {
+      "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#2",
+      "citations": [
+       "calc:difference",
+       "doc:incident-inc-0815@1#05d62720a7be870f0f0f207891c9d3b2",
+       "status:prov-alfa@2026-08-17T00:00:00+00:00",
+       "tx:477c2d6c-9cac-ffb4-54f9-4825ba700755@1",
+       "tx:fbad6741-91a1-b8e6-dfaf-163a85f94514@1"
+      ],
+      "facts": [
+       "internal_ledger registra pay-0007 (capture) por 222161 USD en unidades menores, estado succeeded, revisión 1.",
+       "provider_report registra pay-0007 (capture) por 222061 USD en unidades menores, estado succeeded, revisión 1.",
+       "Estado de plataforma de prov-alfa a 2026-09-02T03:40:00+00:00: operational (no describe una transacción).",
+       "Diferencia proveedor menos ledger: -100 unidades menores de USD (222061 - 222161)."
+      ],
+      "hypotheses": [
+       "El caso podría estar relacionado con INC-0815 liquidación neta inesperada en prov-alfa."
+      ],
+      "investigation_id": "484ee6a7-73b7-4c1d-8e00-c152465b7a18",
+      "label": "SIMULATED",
+      "source": "investigation"
+     },
+     "expires_at": "2026-10-05T07:46:16.663552Z",
+     "id": "4170eb3c-71a6-4449-9237-840d36fd1dfd",
+     "investigation_id": "484ee6a7-73b7-4c1d-8e00-c152465b7a18",
+     "proposer": "ana-demo",
+     "rationale": "adoptar el borrador revisado: pedir reporte corregido",
+     "review_result": "SUPPORTED",
+     "status": "APPROVED"
+    }
+   ],
+   "rules": {
+    "ruleset_version": "rules/v1",
+    "run_number": 1,
+    "snapshot_hash": "de95fa9cbafdf587a26c05886ffba221c741eda11a099d5f34441f762ccdc115"
+   }
+  },
+  "/v1/cases/b635df88-1e43-492e-aed7-f2077dcd7d1c": {
+   "case_id": "b635df88-1e43-492e-aed7-f2077dcd7d1c",
+   "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#3",
+   "closed_reason": null,
+   "created_at": "2026-10-02T07:46:16.736107Z",
+   "decisions": [],
+   "opened_by": "ana-demo",
+   "ordinal": 3,
+   "recommendations": [
+    {
+     "action": "REQUEST_ADJUSTMENT_REVIEW",
+     "case_version": 2,
+     "created_at": "2026-10-02T07:46:16.773522Z",
+     "evidence": {
+      "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#3",
+      "source": "analyst"
+     },
+     "expires_at": "2026-10-05T07:46:16.772253Z",
+     "id": "ee0e2669-140c-4045-8b85-038420238930",
+     "investigation_id": null,
+     "proposer": "ana-demo",
+     "rationale": "revisar el resultado sin par antes de cerrar",
+     "review_result": "NOT_REVIEWED",
+     "status": "PENDING"
+    }
+   ],
+   "run_id": "e79ecf36-2086-417a-85f4-a40e9937193c",
+   "run_is_latest": true,
+   "status": "HUMAN_REVIEW",
+   "updated_at": "2026-10-02T07:46:16.773522Z",
+   "version": 2
+  },
+  "/v1/cases/b635df88-1e43-492e-aed7-f2077dcd7d1c/audit": {
+   "audit": [
+    {
+     "action": "case.open",
+     "actor": "ana-demo",
+     "details": {
+      "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#3"
+     },
+     "id": 10894,
+     "occurred_at": "2026-10-02T07:46:16.736107Z",
+     "outcome": "opened",
+     "resource_id": "b635df88-1e43-492e-aed7-f2077dcd7d1c",
+     "resource_type": "case",
+     "resource_version": 1
+    },
+    {
+     "action": "recommendation.create",
+     "actor": "ana-demo",
+     "details": {
+      "action": "REQUEST_ADJUSTMENT_REVIEW",
+      "case_id": "b635df88-1e43-492e-aed7-f2077dcd7d1c",
+      "review_result": "NOT_REVIEWED"
+     },
+     "id": 10895,
+     "occurred_at": "2026-10-02T07:46:16.773522Z",
+     "outcome": "pending",
+     "resource_id": "ee0e2669-140c-4045-8b85-038420238930",
+     "resource_type": "recommendation",
+     "resource_version": 2
+    }
+   ],
+   "case": {
+    "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#3",
+    "closed_reason": null,
+    "created_at": "2026-10-02T07:46:16.736107Z",
+    "id": "b635df88-1e43-492e-aed7-f2077dcd7d1c",
+    "opened_by": "ana-demo",
+    "ordinal": 3,
+    "run_id": "e79ecf36-2086-417a-85f4-a40e9937193c",
+    "run_is_latest": true,
+    "status": "HUMAN_REVIEW",
+    "tenant_id": "demo-d2a38b54",
+    "updated_at": "2026-10-02T07:46:16.773522Z",
+    "version": 2
+   },
+   "decisions": [],
+   "investigations": [],
+   "recommendations": [
+    {
+     "action": "REQUEST_ADJUSTMENT_REVIEW",
+     "case_version": 2,
+     "created_at": "2026-10-02T07:46:16.773522Z",
+     "evidence": {
+      "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#3",
+      "source": "analyst"
+     },
+     "expires_at": "2026-10-05T07:46:16.772253Z",
+     "id": "ee0e2669-140c-4045-8b85-038420238930",
+     "investigation_id": null,
+     "proposer": "ana-demo",
+     "rationale": "revisar el resultado sin par antes de cerrar",
+     "review_result": "NOT_REVIEWED",
+     "status": "PENDING"
+    }
+   ],
+   "rules": {
+    "ruleset_version": "rules/v1",
+    "run_number": 1,
+    "snapshot_hash": "de95fa9cbafdf587a26c05886ffba221c741eda11a099d5f34441f762ccdc115"
+   }
+  },
+  "/v1/investigations/484ee6a7-73b7-4c1d-8e00-c152465b7a18": {
+   "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#2",
+   "case_version": 1,
+   "created_at": "2026-10-02T07:46:13.983289Z",
+   "investigation_id": "484ee6a7-73b7-4c1d-8e00-c152465b7a18",
+   "record": {
+    "budget": {
+     "exhausted": [],
+     "generative_calls": 3,
+     "input_tokens": 4062,
+     "max_generative_calls": 4,
+     "max_seconds": 60.0,
+     "max_tokens": 16000,
+     "max_tool_calls": 6,
+     "output_tokens": 449,
+     "seconds": 0.2061,
+     "tokens": 4511,
+     "tokens_estimated": true,
+     "tool_calls": 6
+    },
+    "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#2",
+    "case_version": 1,
+    "claimed_at": "2026-10-02 07:46:14.195515+00",
+    "claimed_by": "svc-investigator-1",
+    "created_at": "2026-10-02T07:46:16.015485+00:00",
+    "draft": {
+     "budget_usage": {
+      "exhausted": [],
+      "generative_calls": 3,
+      "input_tokens": 4062,
+      "max_generative_calls": 4,
+      "max_seconds": 60.0,
+      "max_tokens": 16000,
+      "max_tool_calls": 6,
+      "output_tokens": 449,
+      "seconds": 0.1987,
+      "tokens": 4511,
+      "tokens_estimated": true,
+      "tool_calls": 6
+     },
+     "case_id": "e79ecf36-2086-417a-85f4-a40e9937193c#2",
+     "case_version": 1,
+     "citations": [
+      {
+       "provenance": {
+        "computed_from": [
+         "tx:477c2d6c-9cac-ffb4-54f9-4825ba700755@1",
+         "tx:fbad6741-91a1-b8e6-dfaf-163a85f94514@1"
+        ]
+       },
+       "ref": "calc:difference"
+      },
+      {
+       "provenance": {
+        "content_hash": "f58a489e0be057ee8c4fd8539b51c0aa99e4a5fc2d4c2bb77d3c8f7c1ac07d35",
+        "effective_at": "2026-08-15T00:00:00+00:00",
+        "locator": "resolucion:L22-L24",
+        "record_or_chunk_id": "05d62720a7be870f0f0f207891c9d3b2",
+        "source_id": "incident-inc-0815",
+        "synthetic": true,
+        "version": "1"
+       },
+       "ref": "doc:incident-inc-0815@1#05d62720a7be870f0f0f207891c9d3b2"
+      },
+      {
+       "provenance": {
+        "content_hash": "fe01ebb4b0525218a7ad1280e99b3e05dc1464fba06ee70108667cb169fbc69d",
+        "effective_at": "2026-08-17T00:00:00+00:00",
+        "locator": "valid 2026-08-17T00:00:00+00:00 .. None",
+        "record_or_chunk_id": "prov-alfa@2026-08-17T00:00:00+00:00",
+        "source_id": "provider_status/prov-alfa",
+        "synthetic": true,
+        "version": "provider-status/v1"
+       },
+       "ref": "status:prov-alfa@2026-08-17T00:00:00+00:00"
+      },
+      {
+       "provenance": {
+        "content_hash": "485fb2a19e8d92689e4071387abe62c34a9f4a5b9f2afe92cc445d4193d41a45",
+        "effective_at": "2026-09-02T03:40:00+00:00",
+        "locator": "internal_ledger/led-000007@1",
+        "record_or_chunk_id": "477c2d6c-9cac-ffb4-54f9-4825ba700755",
+        "source_id": "observation/internal_ledger",
+        "synthetic": true,
+        "version": "1"
+       },
+       "ref": "tx:477c2d6c-9cac-ffb4-54f9-4825ba700755@1"
+      },
+      {
+       "provenance": {
+        "content_hash": "cfc12aa96fd52c2f867e1da72908e0c4111fec57c3eaa7fb0005e3b463c1bd48",
+        "effective_at": "2026-09-02T03:40:00+00:00",
+        "locator": "provider_report/alf-000004@1",
+        "record_or_chunk_id": "fbad6741-91a1-b8e6-dfaf-163a85f94514",
+        "source_id": "observation/provider_report",
+        "synthetic": true,
+        "version": "1"
+       },
+       "ref": "tx:fbad6741-91a1-b8e6-dfaf-163a85f94514@1"
+      }
+     ],
+     "confidence_assessment": {
+      "calibration": "uncalibrated",
+      "contradiction": false,
+      "evidence_coverage": 0.417,
+      "verification_issues": 0
+     },
+     "contradictions": [],
+     "facts": [
+      {
+       "claim_id": "c1",
+       "evidence_refs": [
+        "tx:477c2d6c-9cac-ffb4-54f9-4825ba700755@1"
+       ],
+       "kind": "FACT",
+       "limitations": "",
+       "needed_evidence": null,
+       "statement": "internal_ledger registra pay-0007 (capture) por 222161 USD en unidades menores, estado succeeded, revisión 1."
+      },
+      {
+       "claim_id": "c2",
+       "evidence_refs": [
+        "tx:fbad6741-91a1-b8e6-dfaf-163a85f94514@1"
+       ],
+       "kind": "FACT",
+       "limitations": "",
+       "needed_evidence": null,
+       "statement": "provider_report registra pay-0007 (capture) por 222061 USD en unidades menores, estado succeeded, revisión 1."
+      },
+      {
+       "claim_id": "c3",
+       "evidence_refs": [
+        "status:prov-alfa@2026-08-17T00:00:00+00:00"
+       ],
+       "kind": "FACT",
+       "limitations": "",
+       "needed_evidence": null,
+       "statement": "Estado de plataforma de prov-alfa a 2026-09-02T03:40:00+00:00: operational (no describe una transacción)."
+      },
+      {
+       "claim_id": "c4",
+       "evidence_refs": [
+        "calc:difference"
+       ],
+       "kind": "FACT",
+       "limitations": "",
+       "needed_evidence": null,
+       "statement": "Diferencia proveedor menos ledger: -100 unidades menores de USD (222061 - 222161)."
+      }
+     ],
+     "hypotheses": [
+      {
+       "claim_id": "h1",
+       "evidence_refs": [
+        "doc:incident-inc-0815@1#05d62720a7be870f0f0f207891c9d3b2"
+       ],
+       "kind": "HYPOTHESIS",
+       "limitations": "Un incidente similar no prueba causalidad para este pago.",
+       "needed_evidence": "Reporte corregido del proveedor o confirmación del plan.",
+       "statement": "El caso podría estar relacionado con INC-0815 liquidación neta inesperada en prov-alfa."
+      }
+     ],
+     "inferences": [],
+     "input_snapshot_hash": "b22e9b2b322a87cf35cddd05d0001e214aec5abb96423baf105b45c5ab5e800c",
+     "label": "SIMULATED",
+     "missing_evidence": [
+      "Plan de liquidación (bruto/neto) de la cuenta"
+     ],
+     "operational_effect": "none",
+     "recommended_next_step": "REQUEST_PROVIDER_INFO",
+     "review_result": {
+      "deterministic_findings": [],
+      "is_human_approval": false,
+      "objections": [],
+      "result": "SUPPORTED",
+      "reviewer_model": "scripted/faithful/v1"
+     },
+     "run_id": "484ee6a7-73b7-4c1d-8e00-c152465b7a18",
+     "status": "DRAFT",
+     "summary": "Borrador generado por el proveedor scripted (SIMULATED).",
+     "untrusted_content_warnings": []
+    },
+    "input_snapshot_hash": "b22e9b2b322a87cf35cddd05d0001e214aec5abb96423baf105b45c5ab5e800c",
+    "investigation_id": "484ee6a7-73b7-4c1d-8e00-c152465b7a18",
+    "issues": [],
+    "model": "scripted/faithful/v1",
+    "model_kind": "SIMULATED",
+    "plan": [
+     {
+      "arguments": {
+       "transaction_id": "477c2d6c-9cac-ffb4-54f9-4825ba700755"
+      },
+      "origin": "template",
+      "tool": "get_transaction",
+      "why": "read the observation behind the result"
+     },
+     {
+      "arguments": {
+       "transaction_id": "fbad6741-91a1-b8e6-dfaf-163a85f94514"
+      },
+      "origin": "template",
+      "tool": "get_transaction",
+      "why": "read the observation behind the result"
+     },
+     {
+      "arguments": {
+       "provider_id": "prov-alfa",
+       "query": "diferencia de importe liquidación neta comisión"
+      },
+      "origin": "template",
+      "tool": "search_provider_docs",
+      "why": "documented causes and procedures"
+     },
+     {
+      "arguments": {
+       "provider_id": "prov-alfa",
+       "query": "diferencia de importe liquidación neta comisión"
+      },
+      "origin": "template",
+      "tool": "search_incidents",
+      "why": "similar historical incidents (context only)"
+     },
+     {
+      "arguments": {
+       "as_of": "2026-09-02T03:40:00+00:00",
+       "provider_id": "prov-alfa"
+      },
+      "origin": "template",
+      "tool": "get_provider_status",
+      "why": "platform status when the payment occurred"
+     },
+     {
+      "arguments": {
+       "provider_id": "prov-alfa",
+       "query": "liquidación neta comisión diferencia de importe"
+      },
+      "origin": "model",
+      "tool": "search_provider_docs",
+      "why": "settlement rules may explain a lower provider amount"
+     }
+    ],
+    "reason": "needs_context",
+    "rejected_steps": [],
+    "requested_by": "ana-demo",
+    "snapshot": {
+     "alternatives": [],
+     "amount_difference_minor": -100,
+     "batch_id": "b-prov-alfa-merchant-02-USD",
+     "case_ref": "e79ecf36-2086-417a-85f4-a40e9937193c#2",
+     "case_version": 1,
+     "currency": "USD",
+     "discrepancy_types": [
+      "AMOUNT_MISMATCH"
+     ],
+     "left_transaction_ids": [
+      "477c2d6c-9cac-ffb4-54f9-4825ba700755"
+     ],
+     "match_status": "UNMATCHED",
+     "merchant_account": "merchant-02",
+     "occurred_at": "2026-09-02T03:40:00+00:00",
+     "operation_type": "capture",
+     "ordinal": 2,
+     "payment_ref": "pay-0007",
+     "provider_id": "prov-alfa",
+     "right_transaction_ids": [
+      "fbad6741-91a1-b8e6-dfaf-163a85f94514"
+     ],
+     "rule": "strong_ref_linked",
+     "run_id": "e79ecf36-2086-417a-85f4-a40e9937193c",
+     "tenant_id": "demo-d2a38b54"
+    },
+    "state": "DRAFTED",
+    "steps": [
+     {
+      "arguments": {
+       "transaction_id": "477c2d6c-9cac-ffb4-54f9-4825ba700755"
+      },
+      "error_code": null,
+      "ok": true,
+      "origin": "template",
+      "provenance_ids": [
+       "477c2d6c-9cac-ffb4-54f9-4825ba700755"
+      ],
+      "retryable": false,
+      "seconds": 0.0594,
+      "tool": "get_transaction"
+     },
+     {
+      "arguments": {
+       "transaction_id": "fbad6741-91a1-b8e6-dfaf-163a85f94514"
+      },
+      "error_code": null,
+      "ok": true,
+      "origin": "template",
+      "provenance_ids": [
+       "fbad6741-91a1-b8e6-dfaf-163a85f94514"
+      ],
+      "retryable": false,
+      "seconds": 0.0116,
+      "tool": "get_transaction"
+     },
+     {
+      "arguments": {
+       "provider_id": "prov-alfa",
+       "query": "diferencia de importe liquidación neta comisión"
+      },
+      "error_code": null,
+      "ok": true,
+      "origin": "template",
+      "provenance_ids": [
+       "c8acea8e3c41d7fee1bbd165d1d6c344",
+       "289d212e5b593b11629792f828182e6f",
+       "e423d132707dd20166f796a4245e9c47",
+       "3dec2193c32c5c8f2b480423339b8de6",
+       "df65b0fb6e1de8de1faeae138e6315be"
+      ],
+      "retryable": false,
+      "seconds": 0.0558,
+      "tool": "search_provider_docs"
+     },
+     {
+      "arguments": {
+       "provider_id": "prov-alfa",
+       "query": "diferencia de importe liquidación neta comisión"
+      },
+      "error_code": null,
+      "ok": true,
+      "origin": "template",
+      "provenance_ids": [
+       "05d62720a7be870f0f0f207891c9d3b2",
+       "2ef4393bcf895020135d7c57a6ea1cfd",
+       "38febb4d915b34d31a5550b1ae95f323"
+      ],
+      "retryable": false,
+      "seconds": 0.0237,
+      "tool": "search_incidents"
+     },
+     {
+      "arguments": {
+       "as_of": "2026-09-02T03:40:00+00:00",
+       "provider_id": "prov-alfa"
+      },
+      "error_code": null,
+      "ok": true,
+      "origin": "template",
+      "provenance_ids": [
+       "prov-alfa@2026-08-17T00:00:00+00:00"
+      ],
+      "retryable": false,
+      "seconds": 0.0194,
+      "tool": "get_provider_status"
+     },
+     {
+      "arguments": {
+       "provider_id": "prov-alfa",
+       "query": "liquidación neta comisión diferencia de importe"
+      },
+      "error_code": null,
+      "ok": true,
+      "origin": "model",
+      "provenance_ids": [
+       "c8acea8e3c41d7fee1bbd165d1d6c344",
+       "289d212e5b593b11629792f828182e6f",
+       "e423d132707dd20166f796a4245e9c47",
+       "3dec2193c32c5c8f2b480423339b8de6",
+       "df65b0fb6e1de8de1faeae138e6315be"
+      ],
+      "retryable": false,
+      "seconds": 0.0131,
+      "tool": "search_provider_docs"
+     }
+    ],
+    "tenant_id": "demo-d2a38b54",
+    "updated_at": "2026-10-02T07:46:16.221588+00:00"
+   },
+   "requested_by": "ana-demo",
+   "state": "DRAFTED",
+   "updated_at": "2026-10-02T07:46:16.222662Z"
+  },
+  "/v1/runs/10834e9e-71a2-43be-8f24-7afc839538ec": {
+   "batch_id": "b-prov-beta-merchant-02-USD",
+   "completed_at": "2026-10-02T07:46:12.702844Z",
+   "counts": {
+    "NOT_EVALUATED": 2,
+    "UNMATCHED": 1
+   },
+   "observation_count": 6,
+   "requested_at": "2026-10-02T07:46:12.578962Z",
+   "requested_by": "ana-demo",
+   "ruleset_version": "rules/v1",
+   "run_id": "10834e9e-71a2-43be-8f24-7afc839538ec",
+   "run_number": 1,
+   "snapshot_hash": "8608ca434ad7cc9e1a29ada5da44d84de9d2c70830593b913ccac18ea4b621d2",
+   "status": "completed"
+  },
+  "/v1/runs/10834e9e-71a2-43be-8f24-7afc839538ec/results": {
+   "items": [
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [
+      "STATUS_MISMATCH"
+     ],
+     "explanation": "shared reference with differences: STATUS_MISMATCH",
+     "left_ids": [
+      6962
+     ],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 1,
+     "payment_ref": "pay-0010",
+     "right_ids": [
+      7002
+     ],
+     "rule": "strong_ref_linked",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "DUPLICATE_CANDIDATE"
+     ],
+     "explanation": "1 internal / 2 external observations share the reference; not forced into a match",
+     "left_ids": [
+      6966
+     ],
+     "match_status": "NOT_EVALUATED",
+     "operation_type": "capture",
+     "ordinal": 2,
+     "payment_ref": "pay-0022",
+     "right_ids": [
+      7006,
+      7007
+     ],
+     "rule": "duplicate_detection",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "PROCESSING_ERROR"
+     ],
+     "explanation": "a row for this reference was quarantined at ingestion",
+     "left_ids": [
+      6974
+     ],
+     "match_status": "NOT_EVALUATED",
+     "operation_type": "capture",
+     "ordinal": 3,
+     "payment_ref": "pay-0034",
+     "right_ids": [],
+     "rule": "processing_error",
+     "score": null
+    }
+   ],
+   "next_after": null
+  },
+  "/v1/runs/23b3461a-f60c-482c-aba0-1817cc0ac510": {
+   "batch_id": "b-prov-beta-merchant-01-USD",
+   "completed_at": "2026-10-02T07:46:12.672739Z",
+   "counts": {
+    "EXACT": 1,
+    "PROBABLE": 1,
+    "UNMATCHED": 2
+   },
+   "observation_count": 7,
+   "requested_at": "2026-10-02T07:46:12.397514Z",
+   "requested_by": "ana-demo",
+   "ruleset_version": "rules/v1",
+   "run_id": "23b3461a-f60c-482c-aba0-1817cc0ac510",
+   "run_number": 1,
+   "snapshot_hash": "f5cb52f8a3ad163048d946f764ac07cc9e013ca44f550180a23601357d4e0e70",
+   "status": "completed"
+  },
+  "/v1/runs/23b3461a-f60c-482c-aba0-1817cc0ac510/results": {
+   "items": [
+    {
+     "alternatives": [],
+     "amount_difference_minor": -100,
+     "discrepancy_types": [
+      "AMOUNT_MISMATCH"
+     ],
+     "explanation": "shared reference with differences: AMOUNT_MISMATCH",
+     "left_ids": [
+      6960
+     ],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 1,
+     "payment_ref": "pay-0006",
+     "right_ids": [
+      7000
+     ],
+     "rule": "strong_ref_linked",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "MISSING_INTERNAL"
+     ],
+     "explanation": "window closed and counterpart source complete",
+     "left_ids": [],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 2,
+     "payment_ref": "pay-0018",
+     "right_ids": [
+      7004
+     ],
+     "rule": "missing_side",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "unique shared reference, identical money and status",
+     "left_ids": [
+      6972
+     ],
+     "match_status": "EXACT",
+     "operation_type": "capture",
+     "ordinal": 3,
+     "payment_ref": "pay-0030",
+     "right_ids": [
+      7012
+     ],
+     "rule": "strong_ref_unique",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "ranking score 1.0 from attempt_ref+amount+time<=1h; not a calibrated probability",
+     "left_ids": [
+      6978
+     ],
+     "match_status": "PROBABLE",
+     "operation_type": "capture",
+     "ordinal": 4,
+     "payment_ref": "pay-0042",
+     "right_ids": [
+      7014
+     ],
+     "rule": "weak_rank",
+     "score": 1.0
+    }
+   ],
+   "next_after": null
+  },
+  "/v1/runs/2c3c216c-b54e-4916-ad38-a6f097eeca08": {
+   "batch_id": "b-prov-beta-merchant-03-USD",
+   "completed_at": "2026-10-02T07:46:13.172935Z",
+   "counts": {
+    "EXACT": 2,
+    "NOT_EVALUATED": 1,
+    "UNMATCHED": 1
+   },
+   "observation_count": 6,
+   "requested_at": "2026-10-02T07:46:12.724816Z",
+   "requested_by": "ana-demo",
+   "ruleset_version": "rules/v1",
+   "run_id": "2c3c216c-b54e-4916-ad38-a6f097eeca08",
+   "run_number": 1,
+   "snapshot_hash": "5840de2e3905ae2792ee82db237a46cdf4d57be24053f1e1e94585eb92623712",
+   "status": "completed"
+  },
+  "/v1/runs/2c3c216c-b54e-4916-ad38-a6f097eeca08/results": {
+   "items": [
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "unique shared reference, identical money and status",
+     "left_ids": [
+      6958
+     ],
+     "match_status": "EXACT",
+     "operation_type": "capture",
+     "ordinal": 1,
+     "payment_ref": "pay-0002",
+     "right_ids": [
+      6998
+     ],
+     "rule": "strong_ref_unique",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "MISSING_EXTERNAL"
+     ],
+     "explanation": "window closed and counterpart source complete",
+     "left_ids": [
+      6964
+     ],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 2,
+     "payment_ref": "pay-0014",
+     "right_ids": [],
+     "rule": "missing_side",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "unique shared reference, identical money and status",
+     "left_ids": [
+      6968
+     ],
+     "match_status": "EXACT",
+     "operation_type": "capture",
+     "ordinal": 3,
+     "payment_ref": "pay-0026",
+     "right_ids": [
+      7010
+     ],
+     "rule": "strong_ref_unique",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "PROCESSING_ERROR"
+     ],
+     "explanation": "a row for this reference was quarantined at ingestion",
+     "left_ids": [
+      6976
+     ],
+     "match_status": "NOT_EVALUATED",
+     "operation_type": "capture",
+     "ordinal": 4,
+     "payment_ref": "pay-0038",
+     "right_ids": [],
+     "rule": "processing_error",
+     "score": null
+    }
+   ],
+   "next_after": null
+  },
+  "/v1/runs/40475fbc-6754-4d42-b6ec-55b7d0c8eae0": {
+   "batch_id": "b-prov-alfa-merchant-03-BOB",
+   "completed_at": "2026-10-02T07:46:12.662850Z",
+   "counts": {},
+   "observation_count": 0,
+   "requested_at": "2026-10-02T07:46:12.300114Z",
+   "requested_by": "ana-demo",
+   "ruleset_version": "rules/v1",
+   "run_id": "40475fbc-6754-4d42-b6ec-55b7d0c8eae0",
+   "run_number": 1,
+   "snapshot_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "status": "completed"
+  },
+  "/v1/runs/40475fbc-6754-4d42-b6ec-55b7d0c8eae0/results": {
+   "items": [],
+   "next_after": null
+  },
+  "/v1/runs/6c7bf663-6d6b-4beb-968f-4f4d90a6621a": {
+   "batch_id": "b-prov-beta-merchant-01-BOB",
+   "completed_at": "2026-10-02T07:46:12.687924Z",
+   "counts": {
+    "NOT_EVALUATED": 2,
+    "UNMATCHED": 1
+   },
+   "observation_count": 6,
+   "requested_at": "2026-10-02T07:46:12.490372Z",
+   "requested_by": "ana-demo",
+   "ruleset_version": "rules/v1",
+   "run_id": "6c7bf663-6d6b-4beb-968f-4f4d90a6621a",
+   "run_number": 1,
+   "snapshot_hash": "5c16fd2dc40d213c0874e92828576b954b3bef36765a2995cd393ca4975a4d18",
+   "status": "completed"
+  },
+  "/v1/runs/6c7bf663-6d6b-4beb-968f-4f4d90a6621a/results": {
+   "items": [
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [
+      "STATUS_MISMATCH"
+     ],
+     "explanation": "shared reference with differences: STATUS_MISMATCH",
+     "left_ids": [
+      6963
+     ],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 1,
+     "payment_ref": "pay-0012",
+     "right_ids": [
+      7003
+     ],
+     "rule": "strong_ref_linked",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "DUPLICATE_CANDIDATE"
+     ],
+     "explanation": "1 internal / 2 external observations share the reference; not forced into a match",
+     "left_ids": [
+      6967
+     ],
+     "match_status": "NOT_EVALUATED",
+     "operation_type": "capture",
+     "ordinal": 2,
+     "payment_ref": "pay-0024",
+     "right_ids": [
+      7008,
+      7009
+     ],
+     "rule": "duplicate_detection",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "PROCESSING_ERROR"
+     ],
+     "explanation": "a row for this reference was quarantined at ingestion",
+     "left_ids": [
+      6975
+     ],
+     "match_status": "NOT_EVALUATED",
+     "operation_type": "capture",
+     "ordinal": 3,
+     "payment_ref": "pay-0036",
+     "right_ids": [],
+     "rule": "processing_error",
+     "score": null
+    }
+   ],
+   "next_after": null
+  },
+  "/v1/runs/6cca3144-a9ad-484a-8164-f474de04b43c": {
+   "batch_id": "b-prov-alfa-merchant-03-USD",
+   "completed_at": "2026-10-02T07:46:12.648982Z",
+   "counts": {
+    "EXACT": 1,
+    "NOT_EVALUATED": 2,
+    "PROBABLE": 1,
+    "UNMATCHED": 3
+   },
+   "observation_count": 13,
+   "requested_at": "2026-10-02T07:46:12.226489Z",
+   "requested_by": "ana-demo",
+   "ruleset_version": "rules/v1",
+   "run_id": "6cca3144-a9ad-484a-8164-f474de04b43c",
+   "run_number": 1,
+   "snapshot_hash": "f7980206357ada9118580082cc7ba792463e9920294885bd577ad06c204a0ddb",
+   "status": "completed"
+  },
+  "/v1/runs/6cca3144-a9ad-484a-8164-f474de04b43c/results": {
+   "items": [
+    {
+     "alternatives": [],
+     "amount_difference_minor": -100,
+     "discrepancy_types": [
+      "AMOUNT_MISMATCH"
+     ],
+     "explanation": "shared reference with differences: AMOUNT_MISMATCH",
+     "left_ids": [
+      6938
+     ],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 1,
+     "payment_ref": "pay-0005",
+     "right_ids": [
+      6982
+     ],
+     "rule": "strong_ref_linked",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [
+      "STATUS_MISMATCH"
+     ],
+     "explanation": "shared reference with differences: STATUS_MISMATCH",
+     "left_ids": [
+      6941
+     ],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 2,
+     "payment_ref": "pay-0011",
+     "right_ids": [
+      6985
+     ],
+     "rule": "strong_ref_linked",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "MISSING_INTERNAL"
+     ],
+     "explanation": "window closed and counterpart source complete",
+     "left_ids": [],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 3,
+     "payment_ref": "pay-0017",
+     "right_ids": [
+      6986
+     ],
+     "rule": "missing_side",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "DUPLICATE_CANDIDATE"
+     ],
+     "explanation": "1 internal / 2 external observations share the reference; not forced into a match",
+     "left_ids": [
+      6945
+     ],
+     "match_status": "NOT_EVALUATED",
+     "operation_type": "capture",
+     "ordinal": 4,
+     "payment_ref": "pay-0023",
+     "right_ids": [
+      6990,
+      6991
+     ],
+     "rule": "duplicate_detection",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "unique shared reference, identical money and status",
+     "left_ids": [
+      6950
+     ],
+     "match_status": "EXACT",
+     "operation_type": "capture",
+     "ordinal": 5,
+     "payment_ref": "pay-0029",
+     "right_ids": [
+      6994
+     ],
+     "rule": "strong_ref_unique",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "PROCESSING_ERROR"
+     ],
+     "explanation": "a row for this reference was quarantined at ingestion",
+     "left_ids": [
+      6953
+     ],
+     "match_status": "NOT_EVALUATED",
+     "operation_type": "capture",
+     "ordinal": 6,
+     "payment_ref": "pay-0035",
+     "right_ids": [],
+     "rule": "processing_error",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "ranking score 1.0 from attempt_ref+amount+time<=1h; not a calibrated probability",
+     "left_ids": [
+      6956
+     ],
+     "match_status": "PROBABLE",
+     "operation_type": "capture",
+     "ordinal": 7,
+     "payment_ref": "pay-0041",
+     "right_ids": [
+      6996
+     ],
+     "rule": "weak_rank",
+     "score": 1.0
+    }
+   ],
+   "next_after": null
+  },
+  "/v1/runs/cc238465-43b5-4fb3-9c7c-1ba09f71919b": {
+   "batch_id": "b-prov-beta-merchant-03-BOB",
+   "completed_at": "2026-10-02T07:46:13.188620Z",
+   "counts": {
+    "EXACT": 1,
+    "PROBABLE": 1,
+    "UNMATCHED": 2
+   },
+   "observation_count": 7,
+   "requested_at": "2026-10-02T07:46:12.798344Z",
+   "requested_by": "ana-demo",
+   "ruleset_version": "rules/v1",
+   "run_id": "cc238465-43b5-4fb3-9c7c-1ba09f71919b",
+   "run_number": 1,
+   "snapshot_hash": "c0b27e48731792d0fae9e58d4e416aa5cac8461f90226034fc32a779bcae8c07",
+   "status": "completed"
+  },
+  "/v1/runs/cc238465-43b5-4fb3-9c7c-1ba09f71919b/results": {
+   "items": [
+    {
+     "alternatives": [],
+     "amount_difference_minor": -100,
+     "discrepancy_types": [
+      "AMOUNT_MISMATCH"
+     ],
+     "explanation": "shared reference with differences: AMOUNT_MISMATCH",
+     "left_ids": [
+      6961
+     ],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 1,
+     "payment_ref": "pay-0008",
+     "right_ids": [
+      7001
+     ],
+     "rule": "strong_ref_linked",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "MISSING_INTERNAL"
+     ],
+     "explanation": "window closed and counterpart source complete",
+     "left_ids": [],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 2,
+     "payment_ref": "pay-0020",
+     "right_ids": [
+      7005
+     ],
+     "rule": "missing_side",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "unique shared reference, identical money and status",
+     "left_ids": [
+      6973
+     ],
+     "match_status": "EXACT",
+     "operation_type": "capture",
+     "ordinal": 3,
+     "payment_ref": "pay-0032",
+     "right_ids": [
+      7013
+     ],
+     "rule": "strong_ref_unique",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "ranking score 1.0 from attempt_ref+amount+time<=1h; not a calibrated probability",
+     "left_ids": [
+      6979
+     ],
+     "match_status": "PROBABLE",
+     "operation_type": "capture",
+     "ordinal": 4,
+     "payment_ref": "pay-0044",
+     "right_ids": [
+      7015
+     ],
+     "rule": "weak_rank",
+     "score": 1.0
+    }
+   ],
+   "next_after": null
+  },
+  "/v1/runs/e5efe124-8aac-4f20-a351-88eba6a69759": {
+   "batch_id": "b-prov-alfa-merchant-01-USD",
+   "completed_at": "2026-10-02T07:46:12.119697Z",
+   "counts": {
+    "EXACT": 2,
+    "NOT_EVALUATED": 3,
+    "UNMATCHED": 2
+   },
+   "observation_count": 12,
+   "requested_at": "2026-10-02T07:46:11.839780Z",
+   "requested_by": "ana-demo",
+   "ruleset_version": "rules/v1",
+   "run_id": "e5efe124-8aac-4f20-a351-88eba6a69759",
+   "run_number": 1,
+   "snapshot_hash": "7f77633cfcf5fe108b4fb20ab490a6967147b655e5e095f1fec626752ca7e934",
+   "status": "completed"
+  },
+  "/v1/runs/e5efe124-8aac-4f20-a351-88eba6a69759/results": {
+   "items": [
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "unique shared reference, identical money and status",
+     "left_ids": [
+      6937
+     ],
+     "match_status": "EXACT",
+     "operation_type": "capture",
+     "ordinal": 1,
+     "payment_ref": "pay-0003",
+     "right_ids": [
+      6981
+     ],
+     "rule": "strong_ref_unique",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [
+      "STATUS_MISMATCH"
+     ],
+     "explanation": "shared reference with differences: STATUS_MISMATCH",
+     "left_ids": [
+      6940
+     ],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 2,
+     "payment_ref": "pay-0009",
+     "right_ids": [
+      6984
+     ],
+     "rule": "strong_ref_linked",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "MISSING_EXTERNAL"
+     ],
+     "explanation": "window closed and counterpart source complete",
+     "left_ids": [
+      6943
+     ],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 3,
+     "payment_ref": "pay-0015",
+     "right_ids": [],
+     "rule": "missing_side",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "DUPLICATE_CANDIDATE"
+     ],
+     "explanation": "1 internal / 2 external observations share the reference; not forced into a match",
+     "left_ids": [
+      6944
+     ],
+     "match_status": "NOT_EVALUATED",
+     "operation_type": "capture",
+     "ordinal": 4,
+     "payment_ref": "pay-0021",
+     "right_ids": [
+      6988,
+      6989
+     ],
+     "rule": "duplicate_detection",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "unique shared reference, identical money and status",
+     "left_ids": [
+      6948
+     ],
+     "match_status": "EXACT",
+     "operation_type": "capture",
+     "ordinal": 5,
+     "payment_ref": "pay-0027",
+     "right_ids": [
+      6993
+     ],
+     "rule": "strong_ref_unique",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "PROCESSING_ERROR"
+     ],
+     "explanation": "a row for this reference was quarantined at ingestion",
+     "left_ids": [
+      6952
+     ],
+     "match_status": "NOT_EVALUATED",
+     "operation_type": "capture",
+     "ordinal": 6,
+     "payment_ref": "pay-0033",
+     "right_ids": [],
+     "rule": "processing_error",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "PROCESSING_ERROR"
+     ],
+     "explanation": "a row for this reference was quarantined at ingestion",
+     "left_ids": [
+      6955
+     ],
+     "match_status": "NOT_EVALUATED",
+     "operation_type": "capture",
+     "ordinal": 7,
+     "payment_ref": "pay-0039",
+     "right_ids": [],
+     "rule": "processing_error",
+     "score": null
+    }
+   ],
+   "next_after": null
+  },
+  "/v1/runs/e79ecf36-2086-417a-85f4-a40e9937193c": {
+   "batch_id": "b-prov-alfa-merchant-02-USD",
+   "completed_at": "2026-10-02T07:46:12.145771Z",
+   "counts": {
+    "EXACT": 3,
+    "NOT_EVALUATED": 1,
+    "PROBABLE": 1,
+    "UNMATCHED": 3
+   },
+   "observation_count": 13,
+   "requested_at": "2026-10-02T07:46:12.007329Z",
+   "requested_by": "ana-demo",
+   "ruleset_version": "rules/v1",
+   "run_id": "e79ecf36-2086-417a-85f4-a40e9937193c",
+   "run_number": 1,
+   "snapshot_hash": "de95fa9cbafdf587a26c05886ffba221c741eda11a099d5f34441f762ccdc115",
+   "status": "completed"
+  },
+  "/v1/runs/e79ecf36-2086-417a-85f4-a40e9937193c/results": {
+   "items": [
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "unique shared reference, identical money and status",
+     "left_ids": [
+      6936
+     ],
+     "match_status": "EXACT",
+     "operation_type": "capture",
+     "ordinal": 1,
+     "payment_ref": "pay-0001",
+     "right_ids": [
+      6980
+     ],
+     "rule": "strong_ref_unique",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": -100,
+     "discrepancy_types": [
+      "AMOUNT_MISMATCH"
+     ],
+     "explanation": "shared reference with differences: AMOUNT_MISMATCH",
+     "left_ids": [
+      6939
+     ],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 2,
+     "payment_ref": "pay-0007",
+     "right_ids": [
+      6983
+     ],
+     "rule": "strong_ref_linked",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "MISSING_EXTERNAL"
+     ],
+     "explanation": "window closed and counterpart source complete",
+     "left_ids": [
+      6942
+     ],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 3,
+     "payment_ref": "pay-0013",
+     "right_ids": [],
+     "rule": "missing_side",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "MISSING_INTERNAL"
+     ],
+     "explanation": "window closed and counterpart source complete",
+     "left_ids": [],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 4,
+     "payment_ref": "pay-0019",
+     "right_ids": [
+      6987
+     ],
+     "rule": "missing_side",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "unique shared reference, identical money and status",
+     "left_ids": [
+      6946
+     ],
+     "match_status": "EXACT",
+     "operation_type": "capture",
+     "ordinal": 5,
+     "payment_ref": "pay-0025",
+     "right_ids": [
+      6992
+     ],
+     "rule": "strong_ref_unique",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "unique shared reference, identical money and status",
+     "left_ids": [
+      6951
+     ],
+     "match_status": "EXACT",
+     "operation_type": "capture",
+     "ordinal": 6,
+     "payment_ref": "pay-0031",
+     "right_ids": [
+      6995
+     ],
+     "rule": "strong_ref_unique",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "PROCESSING_ERROR"
+     ],
+     "explanation": "a row for this reference was quarantined at ingestion",
+     "left_ids": [
+      6954
+     ],
+     "match_status": "NOT_EVALUATED",
+     "operation_type": "capture",
+     "ordinal": 7,
+     "payment_ref": "pay-0037",
+     "right_ids": [],
+     "rule": "processing_error",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "ranking score 1.0 from attempt_ref+amount+time<=1h; not a calibrated probability",
+     "left_ids": [
+      6957
+     ],
+     "match_status": "PROBABLE",
+     "operation_type": "capture",
+     "ordinal": 8,
+     "payment_ref": "pay-0043",
+     "right_ids": [
+      6997
+     ],
+     "rule": "weak_rank",
+     "score": 1.0
+    }
+   ],
+   "next_after": null
+  },
+  "/v1/runs/e8d98012-748a-44ae-97cd-84a38efc0d4f": {
+   "batch_id": "b-prov-alfa-merchant-01-BOB",
+   "completed_at": "2026-10-02T07:46:12.135265Z",
+   "counts": {},
+   "observation_count": 0,
+   "requested_at": "2026-10-02T07:46:11.911410Z",
+   "requested_by": "ana-demo",
+   "ruleset_version": "rules/v1",
+   "run_id": "e8d98012-748a-44ae-97cd-84a38efc0d4f",
+   "run_number": 1,
+   "snapshot_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "status": "completed"
+  },
+  "/v1/runs/e8d98012-748a-44ae-97cd-84a38efc0d4f/results": {
+   "items": [],
+   "next_after": null
+  },
+  "/v1/runs/ef1a983b-878e-41ea-a913-411a56080a8a": {
+   "batch_id": "b-prov-alfa-merchant-02-BOB",
+   "completed_at": "2026-10-02T07:46:12.634977Z",
+   "counts": {},
+   "observation_count": 0,
+   "requested_at": "2026-10-02T07:46:12.117564Z",
+   "requested_by": "ana-demo",
+   "ruleset_version": "rules/v1",
+   "run_id": "ef1a983b-878e-41ea-a913-411a56080a8a",
+   "run_number": 1,
+   "snapshot_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "status": "completed"
+  },
+  "/v1/runs/ef1a983b-878e-41ea-a913-411a56080a8a/results": {
+   "items": [],
+   "next_after": null
+  },
+  "/v1/runs/fd1d6603-adfc-4a98-9903-86ce0c0be8a3": {
+   "batch_id": "b-prov-beta-merchant-02-BOB",
+   "completed_at": "2026-10-02T07:46:13.155811Z",
+   "counts": {
+    "EXACT": 2,
+    "NOT_EVALUATED": 1,
+    "UNMATCHED": 1
+   },
+   "observation_count": 6,
+   "requested_at": "2026-10-02T07:46:12.639380Z",
+   "requested_by": "ana-demo",
+   "ruleset_version": "rules/v1",
+   "run_id": "fd1d6603-adfc-4a98-9903-86ce0c0be8a3",
+   "run_number": 1,
+   "snapshot_hash": "bcf069051996da4d8067a96e3b14522b5fa186312ecdb8e39fb137c135cdd357",
+   "status": "completed"
+  },
+  "/v1/runs/fd1d6603-adfc-4a98-9903-86ce0c0be8a3/results": {
+   "items": [
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "unique shared reference, identical money and status",
+     "left_ids": [
+      6959
+     ],
+     "match_status": "EXACT",
+     "operation_type": "capture",
+     "ordinal": 1,
+     "payment_ref": "pay-0004",
+     "right_ids": [
+      6999
+     ],
+     "rule": "strong_ref_unique",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "MISSING_EXTERNAL"
+     ],
+     "explanation": "window closed and counterpart source complete",
+     "left_ids": [
+      6965
+     ],
+     "match_status": "UNMATCHED",
+     "operation_type": "capture",
+     "ordinal": 2,
+     "payment_ref": "pay-0016",
+     "right_ids": [],
+     "rule": "missing_side",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": 0,
+     "discrepancy_types": [],
+     "explanation": "unique shared reference, identical money and status",
+     "left_ids": [
+      6970
+     ],
+     "match_status": "EXACT",
+     "operation_type": "capture",
+     "ordinal": 3,
+     "payment_ref": "pay-0028",
+     "right_ids": [
+      7011
+     ],
+     "rule": "strong_ref_unique",
+     "score": null
+    },
+    {
+     "alternatives": [],
+     "amount_difference_minor": null,
+     "discrepancy_types": [
+      "PROCESSING_ERROR"
+     ],
+     "explanation": "a row for this reference was quarantined at ingestion",
+     "left_ids": [
+      6977
+     ],
+     "match_status": "NOT_EVALUATED",
+     "operation_type": "capture",
+     "ordinal": 4,
+     "payment_ref": "pay-0040",
+     "right_ids": [],
+     "rule": "processing_error",
+     "score": null
+    }
+   ],
+   "next_after": null
+  }
+ },
+ "kind": "SYNTHETIC",
+ "note": "API responses captured from a local run; AI output is SIMULATED (scripted).",
+ "subjects": {
+  "analyst": "ana-demo",
+  "auditor": "aud-demo",
+  "supervisor": "sofia-demo"
+ },
+ "tenant": "demo-d2a38b54"
+}

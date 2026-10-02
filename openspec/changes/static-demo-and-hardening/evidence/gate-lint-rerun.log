@@ -1,0 +1,8 @@
+gate: removed AI credential variables from environment: ANTHROPIC_BASE_URL
+
+=== gate: lint ===
+All checks passed!
+283 files already formatted
+
+=== gate summary ===
+PASS  lint      exit=0 (0.4s)

@@ -22,6 +22,7 @@ from recon_domain.reconciliation import (
     RunInput,
     SnapshotItem,
     reconcile,
+    ruleset,
     snapshot_hash,
 )
 from recon_store.observations import from_row
@@ -189,8 +190,15 @@ class ReconciliationService:
     # --- runs ---------------------------------------------------------------------
 
     def request_run(
-        self, tenant_id: str, batch_id: str, *, actor: str, correlation_id: str
+        self,
+        tenant_id: str,
+        batch_id: str,
+        *,
+        actor: str,
+        correlation_id: str,
+        ruleset_version: str = RULESET_VERSION,
     ) -> tuple[uuid.UUID, int]:
+        ruleset(ruleset_version)  # unknown versions are refused before any write
         with self.engine.begin() as conn:
             self.get_batch(tenant_id, batch_id, conn)
             token = f"run|{tenant_id}|{batch_id}"
@@ -213,7 +221,7 @@ class ReconciliationService:
                     batch_id=batch_id,
                     run_number=number,
                     status="requested",
-                    ruleset_version=RULESET_VERSION,
+                    ruleset_version=ruleset_version,
                     requested_by=actor,
                     correlation_id=correlation_id,
                 )
@@ -298,7 +306,9 @@ class ReconciliationService:
                 rejected,
                 {left: view.left_complete, right: view.right_complete},
                 now,
-            )
+            ),
+            # The ruleset recorded at request time, so a rollback never rewrites a run.
+            str(run["ruleset_version"]),
         )
         if outcomes:
             conn.execute(
