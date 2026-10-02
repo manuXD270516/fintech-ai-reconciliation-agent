@@ -9,7 +9,7 @@ Specs escritas no equivalen a implementación aceptada. Un criterio sólo pasa a
 | AC03 | Live/ready 200 sanos; cada dependencia caída produce ready 503 <= 3 s manteniendo live 200 | RF-03 | T05, T06 | 3.1, 3.2 | PASS | [T05](evidence/README.md#t05), [T06](evidence/README.md#t06) |
 | AC04 | Config inválida impide arranque; API sólo loopback, dependencias privadas; sin secretos expuestos | RF-04 | T07, T08 | 1.3, 2.1, 3.3 | PASS | [T07](evidence/README.md#t07), [T08](evidence/README.md#t08) |
 | AC05 | Health/log JSON correlacionados con request ID, status y duración; sin filtrar configuración | RF-05 | T09 | 3.3 | PASS | [T09](evidence/README.md#t09) |
-| AC06 | Gate local/CI cubre checks, sin claves IA, y falla ante contrato/spec roto | RF-06 | T10, T11 | 4.1, 4.2, 4.3 | PENDING | [T10 local](evidence/README.md#t10), [T11](evidence/README.md#t11); CI remoto no arrancó (facturación GitHub, run 36532125083) |
+| AC06 | Gate local/CI cubre checks, sin claves IA, y falla ante contrato/spec roto | RF-06 | T10, T11 | 4.1, 4.2, 4.3 | PENDING | [T10 local](evidence/README.md#t10), [T11](evidence/README.md#t11); CI remoto: el éxito está demostrado ([run 36948716393](https://github.com/manuXD270516/fintech-ai-reconciliation-agent/actions/runs/36948716393), gate completo en verde); falta el run del fallo intencional de contrato |
 | AC07 | README/rutas reflejan sólo M0; targets EXPECTED y fixtures sintéticos; sin endpoints financieros/agénticos | RF-07 | T12 | 5.1, 5.2 | PASS | [T12](evidence/README.md#t12) |
 | AC08 | Change incompleto no pasa gate documental; tasks/evidencia y archivo representan estado real | RF-08 | T11, T13 | 4.2, 5.2, 5.3 | PASS | [T11](evidence/README.md#t11), [T13](evidence/README.md#t13) |
 

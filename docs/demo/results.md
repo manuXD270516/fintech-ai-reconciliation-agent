@@ -1,6 +1,6 @@
 # Resultados de la demo (M10)
 
-Resultados sanitizados de lo que el repositorio demuestra al 2026-10-01. Todo se ejecutó en local, sobre datos sintéticos, con Docker Compose en Windows 11. No se usó CI remoto: GitHub Actions está bloqueado por facturación. Tampoco se usaron APIs pagas ni recursos en la nube. El documento no contiene rutas personales, hosts, tokens ni secretos; los pasos `policy` y `secrets` del gate lo verifican.
+Resultados sanitizados de lo que el repositorio demuestra al 2026-10-01. Todo se ejecutó en local, sobre datos sintéticos, con Docker Compose en Windows 11. Las cifras se midieron en local. Después, el repositorio se hizo público y GitHub Actions ejecuta el mismo gate: el run [36948716393](https://github.com/manuXD270516/fintech-ai-reconciliation-agent/actions/runs/36948716393) quedó en verde. No se usaron APIs pagas ni recursos en la nube, y no hay despliegue. El documento no contiene rutas personales, hosts, tokens ni secretos; los pasos `policy` y `secrets` del gate lo verifican.
 
 **Etiquetas:**
 - **MEASURED:** medido aquí, sobre datos sintéticos.
@@ -37,7 +37,7 @@ Resultados sanitizados de lo que el repositorio demuestra al 2026-10-01. Todo se
 
 ## Decisiones pendientes del propietario (antes de publicar)
 
-1. **Licencia del repositorio.** No hay `LICENSE`. El inventario de 314 dependencias no encontró licencias GPL/AGPL ni desconocidas; sí hay 19 con copyleft débil (LGPL/MPL), usadas sin modificar ([license-inventory.json](../../openspec/changes/archive/2026-10-01-public-demo/evidence/license-inventory.json)).
-2. **Historia git.** Los logs de evidencia de M0/M1 contenían la ruta del perfil de usuario local. Se redactaron en el árbol actual, pero siguen en commits anteriores. Publicar el repositorio tal cual las expondría; reescribir la historia es una decisión del propietario y no se hizo.
+1. **Licencia del repositorio.** Resuelta: el propietario agregó MIT (`ff42114`). El inventario de 314 dependencias no encontró licencias GPL/AGPL ni desconocidas; sí hay 19 con copyleft débil (LGPL/MPL), usadas sin modificar ([license-inventory.json](../../openspec/changes/archive/2026-10-01-public-demo/evidence/license-inventory.json)).
+2. **Historia git.** Los logs de evidencia de M0/M1 contenían la ruta del perfil de usuario local. Se redactaron en el árbol actual, pero siguen en commits anteriores, que ahora son públicos. Reescribir la historia es una decisión del propietario y no se hizo.
 3. **Escaneo de secretos.** El de este repo es heurístico (0 hallazgos en todos los commits). Se recomienda ejecutar gitleaks o trufflehog antes de hacerlo público.
-4. **Push, PRs y CI.** Los hitos M2–M10 están integrados en `main` sólo de forma local. El CI remoto nunca se ejecutó por el bloqueo de facturación.
+4. **Push, PRs y CI.** `main` está publicado y el CI remoto pasa (run 36948716393). Falta el run remoto que muestre que el CI rechaza una ruptura intencional de contrato (tarea 4.3 de M0).
