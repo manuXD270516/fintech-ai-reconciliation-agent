@@ -1,6 +1,6 @@
 ## Context
 
-El repo es público y tiene CI gratis. El propietario autorizó GitHub Pages y pidió cerrar los pendientes sin cuentas pagas. Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../docs/11-implementation-decisions.md).
+El repo es público y tiene CI gratis. El propietario autorizó GitHub Pages y pidió cerrar los pendientes sin cuentas pagas. Decisiones vinculantes: [docs/11-implementation-decisions.md](../../../../docs/11-implementation-decisions.md).
 
 ## Decisions
 
