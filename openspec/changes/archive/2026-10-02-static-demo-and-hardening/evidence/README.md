@@ -43,3 +43,5 @@
   - al registrar la decisión aparece "Demo estática de sólo lectura…" y no hay backend al que enviar nada;
   - el fixture servido coincide con el commiteado (`generated_utc` 2026-10-02T07:46:21Z).
 - **Dependabot:** el push disparó sus jobs de actualización (gratis en repos públicos).
+
+El archivo del change se verificó con el gate estático posterior a `openspec archive` ([gate-static-post-archive.log](gate-static-post-archive.log): todos los pasos en PASS). La primera ejecución falló porque los workers de Vitest no arrancaron a tiempo en la máquina local (timeout del pool, ningún test fallido); la reejecución pasó completa.
