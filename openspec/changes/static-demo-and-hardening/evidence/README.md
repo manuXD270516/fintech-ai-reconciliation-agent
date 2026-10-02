@@ -27,6 +27,19 @@
 - `npm run build:pages` con `VITE_DEMO_MODE=1` y la base `/fintech-ai-reconciliation-agent/`, servido en local: entrada por rol, lotes, investigación DRAFTED con el borrador SIMULATED y auditoría restringida por rol.
 - El fixture (55 respuestas) no contiene JWT, hosts locales ni rutas personales. Lo verifican el script de captura y el workflow `pages`.
 
-## Remoto
+## Remoto (push de `0c498f6` a `main`, 2026-10-02)
 
-Pendiente: runs `ci`, `security` y `pages` del push a `main`.
+| Workflow | Run | Resultado |
+|---|---|---|
+| `ci` (gate completo) | [36981447262](https://github.com/manuXD270516/fintech-ai-reconciliation-agent/actions/runs/36981447262) | Verde: 308 unit, smoke 26/26 con `M11-T02` y `M11-T03` en PASS |
+| `security` | [36981447299](https://github.com/manuXD270516/fintech-ai-reconciliation-agent/actions/runs/36981447299) | Verde: gitleaks sobre 36 commits sin leaks (con la allowlist), `pip-audit` sin vulnerabilidades conocidas y `npm audit` con 0 vulnerabilidades en ambos lockfiles |
+| `pages` (después de `ci`) | [36982108229](https://github.com/manuXD270516/fintech-ai-reconciliation-agent/actions/runs/36982108229) | Verde: build, Vitest, guard de contenido y deploy |
+
+- **`M11-T02` en CI, con base limpia:** antes del drill, la antigüedad máxima era 179 s y `HumanBacklog` no estaba activo. Con la copia antedatada pasó a 90 000 s y la alerta disparó. Al resolverla bajó a 183 s y la alerta se limpió. `ToolPermissionRefused` disparó con 1 `FORBIDDEN` en la última hora.
+- **Sitio en vivo:** https://manuxd270516.github.io/fintech-ai-reconciliation-agent/. Lo verifiqué en el navegador:
+  - la entrada como supervisora funciona;
+  - la cola de casos se ve con el filtro `HUMAN_REVIEW`;
+  - el caso vigente muestra el formulario de decisión;
+  - al registrar la decisión aparece "Demo estática de sólo lectura…" y no hay backend al que enviar nada;
+  - el fixture servido coincide con el commiteado (`generated_utc` 2026-10-02T07:46:21Z).
+- **Dependabot:** el push disparó sus jobs de actualización (gratis en repos públicos).
