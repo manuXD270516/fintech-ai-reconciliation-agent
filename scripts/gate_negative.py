@@ -20,8 +20,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CHANGE = Path("openspec/changes/bootstrap-mvp-foundation")
-SPEC = CHANGE / "specs/repository-foundation/spec.md"
+# M0 is archived: mutate its archived artifacts (checked by the traceability gate) and the
+# promoted spec (checked by `openspec validate --all`, which skips archived changes).
+CHANGE = Path("openspec/changes/archive/2026-10-02-bootstrap-mvp-foundation")
+SPEC = Path("openspec/specs/repository-foundation/spec.md")
 IGNORE = shutil.ignore_patterns(
     ".git", ".venv", "node_modules", ".smoke", ".env", "*_cache", "__pycache__"
 )

@@ -10,7 +10,7 @@ import pytest
 from scripts.check_traceability import check_repo
 
 ROOT = Path(__file__).resolve().parents[2]
-CHANGE = "openspec/changes/bootstrap-mvp-foundation"
+CHANGE = "openspec/changes/archive/2026-10-02-bootstrap-mvp-foundation"
 AC03_TAIL = re.compile(r"\| 3\.1, 3\.2 \| \w+ \| [^|\n]+ \|")
 
 
