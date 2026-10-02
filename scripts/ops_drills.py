@@ -83,7 +83,13 @@ def metrics_and_alerts(api: Api, secrets: list[str]) -> dict[str, Any]:
     expect(beats.get("investigator", 999) < STALL_SECONDS, beats)
     routes = {lab["route"] for lab, _ in samples["recon_http_requests_total"]}
     expect(not [r for r in routes if re.search(r"[0-9a-f]{8}-[0-9a-f]{4}", r)], routes)
-    critical = [a.rule for a in firing(evaluate(text, RULES)) if a.severity == "critical"]
+    # ToolPermissionRefused counts refusals over a 1 h audit window, so a previous smoke's
+    # drill (M11-T02) may legitimately keep it active; it is reported, not counted here.
+    critical = [
+        a.rule
+        for a in firing(evaluate(text, RULES))
+        if a.severity == "critical" and a.rule != "ToolPermissionRefused"
+    ]
     expect(critical == [], f"critical alerts on a healthy stack: {critical}")
     return {
         "series": len(samples),
@@ -213,6 +219,133 @@ def dead_letter_triage(api: Api) -> dict[str, Any]:
         "alert_clear_seconds": cleared,
         "audit": audit,
     }
+
+
+# --- M11-T02: alerts that only had unit coverage, fired live ---------------------------
+
+
+def _case_with_pending_recommendation(api: Api, prefix: str) -> dict[str, str]:
+    from scripts.web_e2e import new_batch  # noqa: PLC0415
+
+    analyst = dev_auth.token("ana-drill", ["analyst"])
+    integration = dev_auth.token("svc-drill-ingest", ["integration"])
+    batch_id = new_batch(api, analyst, integration, prefix)
+    run = api.get(f"/v1/batches/{batch_id}/runs", method="POST", token=analyst)
+    expect(run.status == 202, run.text)
+    run_id = run.body["run_id"]
+    deadline = time.monotonic() + 90
+    while api.get(f"/v1/runs/{run_id}", token=analyst).body.get("status") != "completed":
+        expect(time.monotonic() < deadline, "drill run did not complete")
+        time.sleep(0.5)
+    items = api.get(f"/v1/runs/{run_id}/results?limit=500", token=analyst).body["items"]
+    target = next(i for i in items if i["match_status"] != "EXACT")
+    case = api.get(f"/v1/runs/{run_id}/results/{target['ordinal']}/cases", method="POST",
+                   token=analyst)  # fmt: skip
+    expect(case.status == 201, case.text)
+    body = {"action": "REQUEST_PROVIDER_INFO", "expected_version": 1,
+            "rationale": "drill: recomendación pendiente de decisión"}  # fmt: skip
+    rec = api.get(f"/v1/cases/{case.body['case_id']}/recommendations", method="POST", body=body,
+                  token=analyst)  # fmt: skip
+    expect(rec.status == 201, rec.text)
+    return {"batch_id": batch_id, "run_id": run_id, "case_id": case.body["case_id"],
+            "recommendation_id": rec.body["recommendation_id"]}  # fmt: skip
+
+
+def backlog_and_permission_alerts(api: Api) -> dict[str, Any]:
+    """HumanBacklog fires and clears live; ToolPermissionRefused fires on a real refusal."""
+
+    def oldest() -> float:
+        return parse(scrape(api))["recon_human_queue_oldest_age_seconds"][0][1]
+
+    case = _case_with_pending_recommendation(api, "backlog")
+    # A long-lived local stack may already hold genuinely old pending work (e.g. left by
+    # integration tests); the drill then backdates its copy past that baseline so the oldest
+    # age is provably the drill's, and "clear" means returning to the baseline state.
+    baseline_age, baseline_firing = oldest(), "HumanBacklog" in active(api)
+    hours = max(25.0, baseline_age / 3600 + 1)
+    copy = drill("backlog", case["recommendation_id"], f"{hours:.2f}")
+    copy_id = copy["backdated_recommendation_id"]
+    try:
+        fired = wait_alert(api, "HumanBacklog", present=True, timeout=30)
+        age = oldest()
+        expect(abs(age - hours * 3600) < 120, f"oldest age {age} is not the drill copy")
+    finally:
+        # Resolve both the backdated copy and the drill's own pending recommendation, so no
+        # drill leaves work in the human queue.
+        cleared_rows = drill("clear-backlog", copy_id)["superseded"]
+        drill("clear-backlog", case["recommendation_id"])
+    after = oldest()
+    expect(after < hours * 3600 - 1800, f"oldest age did not drop after clearing: {after}")
+    cleared = wait_alert(api, "HumanBacklog", present=baseline_firing, timeout=30)
+
+    refused = drill("forbidden-tool", f"tenant-drill-{uuid.uuid4().hex[:8]}")
+    expect(refused == {"ok": False, "error_code": "FORBIDDEN"}, refused)
+    permission = wait_alert(api, "ToolPermissionRefused", present=True, timeout=30)
+    calls = parse(scrape(api))["recon_mcp_tool_calls_last_hour"]
+    forbidden = sum(v for lab, v in calls if lab.get("outcome") == "FORBIDDEN")
+    return {
+        "human_backlog": {"baseline_oldest_age_seconds": round(baseline_age),
+                          "baseline_firing": baseline_firing, "fire_seconds": fired,
+                          "drill_oldest_age_seconds": round(age),
+                          "superseded_drill_rows": cleared_rows,
+                          "oldest_age_after_clear_seconds": round(after),
+                          "back_to_baseline_seconds": cleared},
+        "tool_permission_refused": {"tool_result": refused, "fire_seconds": permission,
+                                    "forbidden_calls_last_hour": forbidden,
+                                    "clears": "after the 1 h audit window (unit-tested)"},
+    }  # fmt: skip
+
+
+# --- M11-T03: ruleset rollback (runbook ruleset-rollback) ----------------------------
+
+
+def ruleset_rollback(api: Api) -> dict[str, Any]:
+    from scripts.demo import restart_api  # noqa: PLC0415
+
+    analyst = dev_auth.token("ana-drill", ["analyst"])
+    supervisor = dev_auth.token("sofia-drill", ["supervisor"])
+    try:
+        restart_api(api, APP_RULESET="rules/v2")  # "deploy" the synthetic v2
+        on_v2 = _case_with_pending_recommendation(api, "rollback")
+        v2_run = api.get(f"/v1/runs/{on_v2['run_id']}", token=analyst).body
+        v2_items = api.get(f"/v1/runs/{on_v2['run_id']}/results?limit=500", token=analyst).body
+    finally:
+        restart_api(api, APP_RULESET="rules/v1")  # step 1 of the runbook: redeploy v1
+    rerun = api.get(f"/v1/batches/{on_v2['batch_id']}/runs", method="POST", token=analyst)
+    expect(rerun.status == 202, rerun.text)  # step 2: new run of the affected batch
+    deadline = time.monotonic() + 90
+    while (v1_run := api.get(f"/v1/runs/{rerun.body['run_id']}", token=analyst).body).get(
+        "status"
+    ) != "completed":
+        expect(time.monotonic() < deadline, "rollback run did not complete")
+        time.sleep(0.5)
+    expect(v2_run["ruleset_version"] == "rules/v2", v2_run)
+    expect(v1_run["ruleset_version"] == "rules/v1", v1_run)
+    expect(v2_run["counts"].get("PROBABLE", 0) == 0, v2_run["counts"])
+    expect(v1_run["counts"].get("PROBABLE", 0) > 0, v1_run["counts"])
+    expect(v1_run["snapshot_hash"] == v2_run["snapshot_hash"], "same inputs expected")
+    after = api.get(f"/v1/runs/{on_v2['run_id']}/results?limit=500", token=analyst).body
+    expect(after == v2_items, "the v2 run must never be rewritten")
+    decision = {
+        "recommendation_id": on_v2["recommendation_id"],
+        "decision": "APPROVE",
+        "reason": "intento sobre el run de rules/v2 tras el rollback",
+        "expected_version": 2,
+        "idempotency_key": f"rb-{uuid.uuid4().hex[:10]}",
+    }
+    refused = api.get(f"/v1/cases/{on_v2['case_id']}/decisions", method="POST", body=decision,
+                      token=supervisor)  # fmt: skip
+    expect(refused.status == 409, refused.text)
+    expect(refused.body["detail"]["code"] == "recommendation_obsolete", refused.body)
+    drill("clear-backlog", on_v2["recommendation_id"])  # leave no pending human work
+    return {
+        "v2_run": {"ruleset_version": v2_run["ruleset_version"], "counts": v2_run["counts"]},
+        "v1_run_after_rollback": {"ruleset_version": v1_run["ruleset_version"],
+                                  "counts": v1_run["counts"]},
+        "same_snapshot": True,
+        "v2_results_unchanged": True,
+        "decision_on_v2_recommendation": refused.body["detail"]["code"],
+    }  # fmt: skip
 
 
 # --- M9-T06 ---------------------------------------------------------------------

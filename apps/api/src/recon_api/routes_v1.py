@@ -19,6 +19,7 @@ from recon_domain.approval import Action, Decision
 from recon_domain.batch import ReconciliationBatch
 from recon_domain.ingestion import ArtifactError
 from recon_domain.observation import DomainError, SourceKind
+from recon_domain.reconciliation import RULESET_VERSION
 from recon_store.artifacts import ArtifactService, IdempotencyConflictError
 from recon_store.cases import OPERATIONAL_EFFECT, CaseError, CaseService
 from recon_store.investigations import InvestigationRepository
@@ -266,7 +267,12 @@ def post_run(
 ) -> RunAccepted:
     try:
         run_id, number = ReconciliationService(_engine(request)).request_run(
-            principal.tenant_id, batch_id, actor=principal.subject, correlation_id=_corr(request)
+            principal.tenant_id,
+            batch_id,
+            actor=principal.subject,
+            correlation_id=_corr(request),
+            # Deployment-level choice (APP_RULESET); rollback = redeploy + new run.
+            ruleset_version=getattr(request.app.state, "ruleset", RULESET_VERSION),
         )
     except NotFoundError:
         raise HTTPException(404, detail="batch not found") from None

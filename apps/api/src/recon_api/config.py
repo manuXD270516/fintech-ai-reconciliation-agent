@@ -44,6 +44,9 @@ class Settings(BaseSettings):
     # M10 kill switch: false refuses new investigations; the deterministic path keeps working.
     ai_enabled: bool = True
 
+    # Ruleset recorded on new runs (runbook ruleset-rollback). rules/v2 is synthetic.
+    ruleset: Literal["rules/v1", "rules/v2"] = "rules/v1"
+
     @field_validator("nats_url")
     @classmethod
     def _nats_url_without_credentials(cls, value: str) -> str:

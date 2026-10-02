@@ -15,7 +15,14 @@ from datetime import UTC, datetime, timedelta
 from recon_domain.batch import ReconciliationBatch
 from recon_domain.ingestion import parse_csv, rows_to_csv
 from recon_domain.observation import SourceKind, TransactionObservation
-from recon_domain.reconciliation import Outcome, RejectedRef, RunInput, SnapshotItem, reconcile
+from recon_domain.reconciliation import (
+    RULESET_VERSION,
+    Outcome,
+    RejectedRef,
+    RunInput,
+    SnapshotItem,
+    reconcile,
+)
 from recon_domain.revisions import IngestOutcome, StoredRevision, decide
 
 WINDOW_START = datetime(2026, 9, 1, 4, 0, tzinfo=UTC)
@@ -68,7 +75,9 @@ def classify(
     return result
 
 
-def run_files(files: Mapping[str, str], now: datetime | None = None) -> dict[str, Classification]:
+def run_files(
+    files: Mapping[str, str], now: datetime | None = None, version: str = RULESET_VERSION
+) -> dict[str, Classification]:
     labels = list(csv.DictReader(io.StringIO(files["labels.csv"])))
     received = WINDOW_START + WINDOW
     stored: dict[tuple[str, SourceKind, str], dict[int, tuple[str, TransactionObservation]]] = {}
@@ -122,7 +131,8 @@ def run_files(files: Mapping[str, str], now: datetime | None = None) -> dict[str
                 rejections=tuple(rejections),
                 complete={SourceKind.INTERNAL_LEDGER: True, SourceKind.PROVIDER_REPORT: True},
                 now=at,
-            )
+            ),
+            version,
         )
         result.update(classify(outcomes, left_refs))
     return result

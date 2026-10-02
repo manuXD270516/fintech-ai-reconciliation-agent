@@ -13,6 +13,8 @@ const proxy = {
 };
 
 export default defineConfig({
+  // GitHub Pages serves the static demo under /<repo>/ (VITE_BASE); local builds use "/".
+  base: process.env.VITE_BASE ?? "/",
   plugins: [react()],
   server: { host: "127.0.0.1", port: 18181, strictPort: true, proxy },
   preview: { host: "127.0.0.1", port: 18181, strictPort: true, proxy },

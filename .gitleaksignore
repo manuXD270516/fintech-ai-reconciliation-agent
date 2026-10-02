@@ -1,0 +1,8 @@
+# gitleaks allowlist (fingerprint per finding). Each entry was reviewed by the owner and is
+# a FALSE POSITIVE in a public, synthetic-only repository:
+# - tests/unit/conftest.py:17 is CANARY_SECRET, a fake value tests use to prove that secrets
+#   never leak into responses or logs.
+# - the M0 proposal line is prose matched by the generic-api-key rule (no credential).
+# Any new finding fails the `security` workflow until it is fixed or reviewed here.
+7640d391beebcdef9d94ea09f209f6bba2c2f647:tests/unit/conftest.py:generic-api-key:17
+471d8f6e1a555a6e63023ce63272d3cc73566fd4:openspec/changes/bootstrap-mvp-foundation/proposal.md:generic-api-key:25

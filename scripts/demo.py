@@ -121,12 +121,18 @@ def seed(api: Api) -> dict[str, Any]:
     }
 
 
-def kill_switch(enabled: bool, api: Api) -> dict[str, Any]:
-    env = dict(os.environ) | {"APP_AI_ENABLED": "true" if enabled else "false"}
+def restart_api(api: Api, **settings: str) -> float:
+    """Recreate this project's `api` container with APP_* overrides; returns seconds to ready."""
+    env = {k: v for k, v in os.environ.items() if not k.startswith(("APP_AI_", "APP_RULESET"))}
+    env |= settings
     proc = subprocess.run(["docker", "compose", "up", "-d", "api"], cwd=ROOT, env=env,
                           capture_output=True, text=True, check=False, timeout=300)  # fmt: skip
     expect(proc.returncode == 0, proc.stderr[-1500:])
-    waited = api.wait_status("/health/ready", 200, timeout=120)
+    return api.wait_status("/health/ready", 200, timeout=120)
+
+
+def kill_switch(enabled: bool, api: Api) -> dict[str, Any]:
+    waited = restart_api(api, APP_AI_ENABLED="true" if enabled else "false")
     metrics = api.get("/metrics").text
     expect(f"recon_ai_enabled {int(enabled)}" in metrics, "switch state not reflected in /metrics")
     return {"ai_enabled": enabled, "seconds_until_ready": round(waited, 2)}

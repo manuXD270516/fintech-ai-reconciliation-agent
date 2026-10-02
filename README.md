@@ -2,7 +2,7 @@
 
 Diseño de una plataforma de conciliación de pagos: reglas determinísticas primero, investigación con IA sólo cuando aporta contexto y aprobación humana para decisiones operativas.
 
-**Estado: M0 (bootstrap), M1 (dominio transaccional), M2 (conciliación determinística), M3 (knowledge base híbrida), M4 (servidor MCP de sólo lectura), M5 (investigación acotada), M6 (revisión y aprobación humana; cierre del MVP técnico), M7 (framework de evaluación), M8 (dashboard de investigación), M9 (observabilidad y seguridad) y M10 (demo reproducible, sin publicar) implementados y verificados localmente. No está listo para producción.** Recorrido de la demo: [docs/demo/walkthrough.md](docs/demo/walkthrough.md); resultados y límites: [docs/demo/results.md](docs/demo/results.md). Existen PostgreSQL + pgvector y NATS JetStream en Docker Compose, el dominio puro (`packages/domain`), su persistencia (`packages/store`), ingestion sintética por HTTP y eventos con cuarentena, el motor de reglas `rules/v1`, runs versionados, un worker con outbox/inbox y dead letters, una API `/v1` autenticada con JWT de desarrollo, una base de conocimiento sintética con retrieval híbrido (FTS + vector + RRF) y abstención (`packages/knowledge`), `fintech-mcp-server` (`apps/mcp-server`), un proceso MCP con seis tools de sólo lectura, y un agente de investigación acotado (`packages/agents`, proceso `investigator`) que produce borradores sin efecto operativo. Los tests y la demo usan un proveedor de modelo **scripted determinístico** (resultados etiquetados SIMULATED); Ollama local es opcional y está apagado por defecto; no se llama a ningún proveedor de IA externo. Un revisor independiente evalúa cada borrador y las decisiones operativas son comandos humanos versionados, idempotentes y auditados (aprobar sólo registra la decisión; nunca mueve dinero). Decisiones de implementación: [docs/11-implementation-decisions.md](docs/11-implementation-decisions.md). Remoto: [manuXD270516/fintech-ai-reconciliation-agent](https://github.com/manuXD270516/fintech-ai-reconciliation-agent) (público, licencia MIT). GitHub Actions ejecuta el mismo gate (`scripts/gate.py`, 12 pasos, smoke Compose incluido) en cada push a `main`. El run [36948716393](https://github.com/manuXD270516/fintech-ai-reconciliation-agent/actions/runs/36948716393), sobre `f92fe85`, pasó completo con smoke 24/24. El run [36973958452](https://github.com/manuXD270516/fintech-ai-reconciliation-agent/actions/runs/36973958452) demostró que el CI rechaza un contrato roto, sobre una rama temporal ya borrada. Los changes M0–M10 están archivados.
+**Estado: M0 (bootstrap), M1 (dominio transaccional), M2 (conciliación determinística), M3 (knowledge base híbrida), M4 (servidor MCP de sólo lectura), M5 (investigación acotada), M6 (revisión y aprobación humana; cierre del MVP técnico), M7 (framework de evaluación), M8 (dashboard de investigación), M9 (observabilidad y seguridad), M10 (demo reproducible) y M11 (demo estática pública y endurecimiento) implementados y verificados. No está listo para producción.** **Demo pública de sólo lectura:** https://manuxd270516.github.io/fintech-ai-reconciliation-agent/. Es el dashboard real sobre un fixture sintético capturado en local, sin backend. Recorrido local completo: [docs/demo/walkthrough.md](docs/demo/walkthrough.md); resultados y límites: [docs/demo/results.md](docs/demo/results.md). Existen PostgreSQL + pgvector y NATS JetStream en Docker Compose, el dominio puro (`packages/domain`), su persistencia (`packages/store`), ingestion sintética por HTTP y eventos con cuarentena, el motor de reglas `rules/v1`, runs versionados, un worker con outbox/inbox y dead letters, una API `/v1` autenticada con JWT de desarrollo, una base de conocimiento sintética con retrieval híbrido (FTS + vector + RRF) y abstención (`packages/knowledge`), `fintech-mcp-server` (`apps/mcp-server`), un proceso MCP con seis tools de sólo lectura, y un agente de investigación acotado (`packages/agents`, proceso `investigator`) que produce borradores sin efecto operativo. Los tests y la demo usan un proveedor de modelo **scripted determinístico** (resultados etiquetados SIMULATED); Ollama local es opcional y está apagado por defecto; no se llama a ningún proveedor de IA externo. Un revisor independiente evalúa cada borrador y las decisiones operativas son comandos humanos versionados, idempotentes y auditados (aprobar sólo registra la decisión; nunca mueve dinero). Decisiones de implementación: [docs/11-implementation-decisions.md](docs/11-implementation-decisions.md). Remoto: [manuXD270516/fintech-ai-reconciliation-agent](https://github.com/manuXD270516/fintech-ai-reconciliation-agent) (público, licencia MIT). GitHub Actions ejecuta el mismo gate (`scripts/gate.py`, 12 pasos, smoke Compose incluido) en cada push a `main`. El run [36948716393](https://github.com/manuXD270516/fintech-ai-reconciliation-agent/actions/runs/36948716393), sobre `f92fe85`, pasó completo con smoke 24/24. El run [36973958452](https://github.com/manuXD270516/fintech-ai-reconciliation-agent/actions/runs/36973958452) demostró que el CI rechaza un contrato roto, sobre una rama temporal ya borrada. Los changes M0–M10 están archivados.
 
 ## Qué incluye M0
 
@@ -130,11 +130,27 @@ Evidencia: [observability-security](openspec/changes/archive/2026-10-01-observab
   - Escaneo de secretos de toda la historia.
 - **Smoke `M10-T03`:** verifica el aislamiento entre sesiones y el flujo humano completo con la IA apagada.
 
-M10 no publicó ni desplegó nada. Después, el propietario hizo público el repositorio con licencia MIT y habilitó el CI. Nada se despliega. Siguen abiertas:
-- la historia git con rutas locales en logs antiguos;
-- un escáner externo de secretos.
+M10 no publicó nada. Después, el propietario hizo público el repositorio con licencia MIT y habilitó el CI y GitHub Pages (M11).
 
 Evidencia: [public-demo](openspec/changes/archive/2026-10-01-public-demo/evidence/README.md).
+
+## Qué agrega M11
+
+- **Demo estática en GitHub Pages** (https://manuxd270516.github.io/fintech-ai-reconciliation-agent/).
+  - Es el mismo dashboard compilado con `VITE_DEMO_MODE=1`. Lee un fixture de respuestas reales de la API, capturado en local sobre datos sintéticos (`scripts/capture_demo_fixtures.py`): lotes, resultados, una investigación con borrador SIMULATED, un caso aprobado, uno pendiente y la auditoría.
+  - No hay backend. Las acciones que modifican datos muestran "demo de sólo lectura".
+  - El workflow `pages` publica sólo después de que `ci` pase sobre el mismo commit, y rechaza un bundle que contenga JWT, hosts locales o rutas personales.
+- **Alertas disparadas en vivo** (smoke `M11-T02`): `HumanBacklog`, con una recomendación antedatada que dispara y vuelve al estado base, y `ToolPermissionRefused`, con un rechazo MCP real por scope.
+- **Rollback de ruleset ejercitado** (smoke `M11-T03`).
+  - `APP_RULESET` elige el ruleset de los runs nuevos, y cada run conserva el suyo.
+  - `rules/v2` es una variante **sintética** sin ranking débil, que existe sólo para el drill.
+  - El drill sigue el [runbook](docs/runbooks/ruleset-rollback.md): v2 → v1, mismo snapshot, run v2 intacto y recomendación vieja `recommendation_obsolete`.
+- **Supply chain.**
+  - El workflow `security` corre en cada push, en PRs y una vez por semana: gitleaks v8.30.1 sobre toda la historia (2 falsos positivos revisados en `.gitleaksignore`), `pip-audit` sobre `uv.lock` y `npm audit` sobre ambos lockfiles.
+  - Dependabot abre PRs semanales.
+- **Historia git.** Algunos logs de evidencia de M0/M1 en commits antiguos contienen la ruta del perfil de usuario local. Están redactados en el árbol actual, el paso `policy` impide que vuelvan, y la historia no se reescribe por decisión del propietario.
+
+Evidencia: [static-demo-and-hardening](openspec/changes/static-demo-and-hardening/evidence/README.md).
 
 No hay otras rutas (además de `/metrics`, M9); `tests/unit/test_scope.py` verifica el catálogo exacto y `tests/unit/test_access_matrix.py` los roles de cada ruta. Readiness no escribe filas ni publica mensajes: hace `SELECT 1`, una distancia vectorial sobre literales y `account_info` de JetStream, en paralelo bajo un deadline global (`APP_READY_TIMEOUT_SECONDS`, por defecto 2.5, máximo 3). Las respuestas no incluyen hosts, URLs, SQL, trazas ni secretos. Cada respuesta lleva `X-Request-ID` (se acepta el del cliente si cumple `[A-Za-z0-9._-]{1,64}`; si no, se genera) y produce un log JSON con `request_id`, método, ruta sin query string, status y `duration_ms`.
 
@@ -204,7 +220,7 @@ Configuración: la API lee `APP_*`. Si un valor obligatorio falta o es inválido
 | `negative` | En copias temporales, cada defecto inyectado (spec, trazabilidad, contrato, ruta extra) debe romper su paso; el árbol real no cambia |
 | `evals` | Suites offline de `recon_evals`: gates críticos y regresiones frente al baseline (M7) |
 | `web` | Dashboard: tipos generados al día con `openapi.json`, `tsc`, Vitest y build de producción (M8) |
-| `secrets` | Escaneo heurístico de secretos, PAN (Luhn) y rutas prohibidas en toda la historia git (M9; no reemplaza a gitleaks) |
+| `secrets` | Escaneo heurístico de secretos, PAN (Luhn) y rutas prohibidas en toda la historia git (M9). Además, gitleaks, pip-audit y npm audit corren en el workflow `security`, que necesita red (M11) |
 | `smoke` | Compose real (ver [evidencia](openspec/changes/archive/2026-10-02-bootstrap-mvp-foundation/evidence/README.md)) |
 
 ## Versiones fijadas
@@ -274,7 +290,7 @@ Todo objetivo de precisión, latencia o tokens de esos documentos es **EXPECTED*
 
 [deterministic-reconciliation](openspec/changes/archive/2026-10-01-deterministic-reconciliation/proposal.md) (M2) está archivado con AC01–AC11 en PASS; su spec vigente es [openspec/specs/deterministic-reconciliation](openspec/specs/deterministic-reconciliation/spec.md).
 
-M3–M10 siguen el mismo patrón (change archivado con sus AC en PASS y evidencia, spec vigente en `openspec/specs/`): `hybrid-knowledge-retrieval`, `read-only-mcp`, `bounded-investigation`, `review-and-human-approval`, `evaluation-framework`, `investigation-dashboard`, `observability-security` y `public-demo`; los enlaces a cada evidencia están en las secciones "Qué agrega" de arriba.
+M3–M11 siguen el mismo patrón (change archivado con sus AC en PASS y evidencia, spec vigente en `openspec/specs/`): `hybrid-knowledge-retrieval`, `read-only-mcp`, `bounded-investigation`, `review-and-human-approval`, `evaluation-framework`, `investigation-dashboard`, `observability-security`, `public-demo` y `static-demo-and-hardening`; los enlaces a cada evidencia están en las secciones "Qué agrega" de arriba.
 
 [transaction-domain](openspec/changes/archive/2026-09-29-transaction-domain/proposal.md) (M1) está archivado con AC01–AC09 en PASS ([evidencia](openspec/changes/archive/2026-09-29-transaction-domain/evidence/README.md)); su spec vigente es [openspec/specs/transaction-domain](openspec/specs/transaction-domain/spec.md).
 
