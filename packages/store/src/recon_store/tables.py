@@ -399,7 +399,7 @@ recommendations = Table(
     Column("investigation_requester", String(128)),
     Column("review_result", String(24), nullable=False),
     Column("evidence", JSONB, nullable=False),
-    Column("status", String(16), nullable=False),
+    Column("status", String(24), nullable=False),
     Column("expires_at", DateTime(timezone=True), nullable=False),
     Column("created_at", DateTime(timezone=True), nullable=False, server_default=text("now()")),
     CheckConstraint(
