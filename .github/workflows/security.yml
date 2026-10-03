@@ -54,7 +54,7 @@ jobs:
             --disable-pip --no-deps --progress-spinner off
 
   npm-deps:
-    name: npm dependencies (npm audit, high and critical)
+    name: npm dependencies (npm audit, high and critical, reviewed allowlist)
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -64,7 +64,5 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .nvmrc
-      - name: npm audit (tooling and dashboard lockfiles)
-        run: |
-          npm audit --audit-level=high
-          npm --prefix apps/web audit --audit-level=high
+      - name: npm audit (tooling and dashboard lockfiles; reviewed allowlist in security/)
+        run: python3 scripts/npm_audit_gate.py . apps/web

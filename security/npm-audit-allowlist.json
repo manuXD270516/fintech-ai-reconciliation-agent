@@ -1,0 +1,12 @@
+{
+  "comment": "Advisories accepted for the npm audit gate (scripts/npm_audit_gate.py). Each entry needs a reason and an expiry; an expired entry fails the gate so it gets reviewed again.",
+  "accepted": [
+    {
+      "id": "GHSA-vfj7-8cjw-p6xm",
+      "package": "braces",
+      "reason": "Stack-exhaustion DoS on deeply nested brace patterns. No patched release exists (<= 3.0.3, first_patched_version null). Reached only through the OpenSpec CLI dev tooling (@fission-ai/openspec -> fast-glob -> micromatch), which expands globs written in this repository; not part of the API, worker or dashboard runtime.",
+      "accepted_on": "2026-10-03",
+      "expires": "2026-12-31"
+    }
+  ]
+}
