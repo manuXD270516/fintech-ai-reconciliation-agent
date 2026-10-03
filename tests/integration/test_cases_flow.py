@@ -131,10 +131,10 @@ def _proposed(engine: Engine, w: dict[str, Any], inv: uuid.UUID | None = None,
 
 def _decide(cases: CaseService, w: dict[str, Any], case_id: uuid.UUID, rec: uuid.UUID,
             actor: str = "sofia", key: str | None = None, version: int = 2,
-            reason: str = "aprobado: solicitar información al proveedor"
-            ) -> tuple[dict[str, Any], bool]:  # fmt: skip
+            reason: str = "aprobado: solicitar información al proveedor",
+            decision: Decision = Decision.APPROVE) -> tuple[dict[str, Any], bool]:  # fmt: skip
     return cases.decide(w["tenant"], case_id, actor=actor, roles=SUP, recommendation_id=rec,
-                        decision=Decision.APPROVE, reason=reason, expected_version=version,
+                        decision=decision, reason=reason, expected_version=version,
                         idempotency_key=key or f"k-{uuid.uuid4().hex[:8]}",
                         correlation_id="it", now=datetime.now(UTC))  # fmt: skip
 
@@ -220,6 +220,19 @@ def test_hu02_concurrent_decisions_produce_one_transition(engine: Engine) -> Non
             select(func.count()).select_from(decisions).where(decisions.c.case_id == case_id)
         ).scalar_one()
     assert count == 1
+
+
+@pytest.mark.parametrize("decision", list(Decision))
+def test_every_decision_is_persisted(engine: Engine, decision: Decision) -> None:
+    # Regression: NEEDS_INFORMATION (17 chars) overflowed recommendations.status (16).
+    w = _world(engine)
+    cases, case_id, rec = _proposed(engine, w)
+    row, replayed = _decide(cases, w, case_id, rec, decision=decision,
+                            reason=f"decisión {decision.value} sobre la propuesta")  # fmt: skip
+    assert not replayed and row["decision"] == decision.value
+    state = cases.get(w["tenant"], case_id)
+    assert state["status"] == state["recommendations"][0]["status"]
+    assert state["status"] in {"APPROVED", "REJECTED", "NEEDS_INFORMATION"}
 
 
 def test_stale_version_and_expired_recommendation(engine: Engine) -> None:
